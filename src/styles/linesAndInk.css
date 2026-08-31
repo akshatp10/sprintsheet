@@ -1,0 +1,15 @@
+@theme {
+	/* Ink */
+	--color-ink: #2b2a33;
+	--color-ink-2: #5c5a62;
+	--color-ink-3: #75737b;
+	--color-ink-fades-note-copy: rgba(43, 42, 51, 0.82);
+	--color-ink-fades-placeholders: rgba(43, 42, 51, 0.55);
+	--color-ink-fades-ghost-rows: rgba(43, 42, 51, 0.45);
+	--color-ink-fades-disabled: rgba(43, 42, 51, 0.35);
+
+	/* Borders */
+	--color-border-hairline: #d8d5cd;
+	--color-border: #c9c5bb;
+	--color-border-control: #d1cdc3;
+}

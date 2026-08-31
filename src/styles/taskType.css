@@ -1,0 +1,23 @@
+@theme {
+	/* Task Type */
+
+	/* Refactor */
+	--color-task-type-refactor-chip: #ecefdas;
+	--color-task-type-refactor-text: #55631f;
+
+	/* Enhancement */
+	--color-task-type-enhancement-chip: #f9e3f2;
+	--color-task-type-enhancement-text: #8e3070;
+
+	/* Update */
+	--color-task-type-update-chip: #dfe7f8;
+	--color-task-type-update-text: #2b4a8c;
+
+	/* Migration */
+	--color-task-type-migration-chip: #f0e8df;
+	--color-task-type-migration-text: #6b4a2a;
+
+	/* Bug */
+	--color-task-type-bug-chip: #f9e6df;
+	--color-task-type-bug-text: #96432a;
+}

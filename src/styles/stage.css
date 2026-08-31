@@ -1,0 +1,43 @@
+@theme {
+	/* Stage Palette */
+
+	/* Backlog */
+	--color-stage-backlog-dot: #767a8c;
+	--color-stage-backlog-chip: #e6e3db;
+	--color-stage-backlog-text: #5c5a62;
+
+	/* Todo */
+	--color-stage-todo-dot: #2f7f9e;
+	--color-stage-todo-chip: #d6ecf5;
+	--color-stage-todo-bg: #eef7fa;
+	--color-stage-todo-border: #cfe6ef;
+	--color-stage-todo-text: #1f4d61;
+
+	/* In progress */
+	--color-stage-progress-dot: #b3781f;
+	--color-stage-progress-chip: #faeacd;
+	--color-stage-progress-bg: #fdf6ea;
+	--color-stage-progress-border: #f0e0c4;
+	--color-stage-progress-text: #7a5514;
+
+	/* In QA */
+	--color-stage-qa-dot: #5a4fb0;
+	--color-stage-qa-chip: #e7e3f7;
+	--color-stage-qa-bg: #f4f2fb;
+	--color-stage-qa-border: #ddd8f2;
+	--color-stage-qa-text: #3c327f;
+
+	/* Done */
+	--color-stage-done-dot: #2f8f5b;
+	--color-stage-done-chip: #d5eddd;
+	--color-stage-done-bg: #eef8f2;
+	--color-stage-done-border: #cee8db;
+	--color-stage-done-text: #1f5638;
+
+	/* Blocked */
+	--color-stage-blocked-dot: #c0566a;
+	--color-stage-blocked-chip: transparent;
+	--color-stage-blocked-bg: #fdf0f2;
+	--color-stage-blocked-border: #f2d6db;
+	--color-stage-blocked-text: #a3374a;
+}

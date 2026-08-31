@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+/* Importing Colour Systems */
+@import "./styles/stage.css";
+@import "./styles/surface.css";
+@import "./styles/linesAndInk.css";
+@import "./styles/accent.css";
+@import "./styles/taskType.css";
+@import "./styles/identity.css";

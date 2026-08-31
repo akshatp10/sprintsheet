@@ -1,0 +1,9 @@
+@theme {
+	/* Accent */
+	--color-accent: #5a4fb0;
+	--color-accent-deep: #3c327f;
+	--color-accent-mid: #4a3f9c;
+	--color-accent-tint: #e7e3f7;
+	--color-accent-wash-selected: rgba(90, 79, 176, 0.06);
+	--color-accent-wash-active: rgba(90, 79, 176, 0.12);
+}
