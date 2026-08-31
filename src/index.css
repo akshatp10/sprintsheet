@@ -7,3 +7,6 @@
 @import "./styles/accent.css";
 @import "./styles/taskType.css";
 @import "./styles/identity.css";
+
+/* Importing Typography */
+@import "./styles/typography.css";
