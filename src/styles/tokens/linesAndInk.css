@@ -9,7 +9,7 @@
 	--color-ink-fades-disabled: rgba(43, 42, 51, 0.35);
 
 	/* Borders */
-	--color-border-hairline: #d8d5cd;
-	--color-border: #c9c5bb;
-	--color-border-control: #d1cdc3;
+	--color-lines-hairline: #d8d5cd;
+	--color-lines: #c9c5bb;
+	--color-lines-control: #d1cdc3;
 }
