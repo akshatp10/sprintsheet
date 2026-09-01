@@ -1,7 +1,7 @@
 import CircleLayout from './CircleLayout'
 
 interface UserAvatarProps {
-    extraUsers: string;
+    extraUsers: number;
 }
 
 const ChipAvatar = ({ extraUsers }: UserAvatarProps) => {
