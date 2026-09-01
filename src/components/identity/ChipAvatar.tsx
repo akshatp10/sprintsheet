@@ -7,7 +7,7 @@ interface UserAvatarProps {
 const ChipAvatar = ({ extraUsers }: UserAvatarProps) => {
 
     return (
-        <CircleLayout variant={"chip"} overlap={true}>
+        <CircleLayout variant={"chip"}>
             +{extraUsers}
         </CircleLayout>
     )
