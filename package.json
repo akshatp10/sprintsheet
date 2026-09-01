@@ -14,11 +14,14 @@
 		"*.{js,jsx,ts,tsx}": "eslint"
 	},
 	"dependencies": {
+		"@sglara/cn": "^1.0.0",
 		"@tailwindcss/vite": "^4.3.3",
+		"clsx": "^2.1.1",
 		"react": "^19.2.8",
 		"react-dom": "^19.2.8",
 		"react-hook-form": "^7.87.0",
 		"react-router-dom": "^7.18.3",
+		"tailwind-merge": "^3.6.0",
 		"tailwindcss": "^4.3.3",
 		"zustand": "^5.0.15"
 	},
