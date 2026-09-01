@@ -8,13 +8,6 @@ interface ButtonProps {
     className?: string
 }
 
-console.log(
-    cn(
-        "bg-red-200 text-red-400",
-        "bg-accent-deep text-accent-tint text-type-micro"
-    )
-)
-
 const variantClasses = {
     //Filled Button
     primary: "bg-red-200 text-red-400",

@@ -18,8 +18,6 @@ const GlobalChip = ({ text, variant, bgColor = "", borderColor = "", textColor =
         secondary: commonClass + " bg-transparent border border-lines-border"
     }
 
-    console.log(cn(variantClasses[variant], bgColor, borderColor, textColor))
-
     return (
         <div className={cn(variantClasses[variant], bgColor, borderColor, textColor, textType)}>
             {text}
