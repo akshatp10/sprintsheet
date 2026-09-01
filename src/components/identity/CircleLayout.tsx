@@ -4,7 +4,6 @@ interface CircleLayoutProps {
     children: React.ReactNode
     variant: "purple" | "blue" | "amber" | "rose" | "chip"
     isSideBar?: boolean
-    overlap?: boolean
 }
 
 const variantClasses = {
@@ -15,13 +14,12 @@ const variantClasses = {
     chip: "bg-identity-overflow-chip text-identity-overflow-text text-type-mono",
 };
 
-const CircleLayout = ({ children, variant, isSideBar, overlap = false }: CircleLayoutProps) => {
+const CircleLayout = ({ children, variant, isSideBar }: CircleLayoutProps) => {
 
     return (
         <div className={`rounded-full flex items-center justify-center 
         ${variantClasses[variant]} 
-        ${isSideBar ? "w-8 h-8 text-type-body" : "w-6 h-6 text-type-body-sm"} 
-        ${overlap ? "-ml-1.5 border border-white" : ""}`}
+        ${isSideBar ? "w-8 h-8 text-type-body" : "w-6 h-6 text-type-body-sm"}`}
         >
             {children}
         </div>
