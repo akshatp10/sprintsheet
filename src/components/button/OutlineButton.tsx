@@ -1,5 +1,5 @@
 interface OutlineButtonProps {
-    buttonText: string;
+    children: React.ReactNode;
     textColor: string;
     borderColor: string;
     handleClick: () => void;
@@ -9,14 +9,14 @@ interface OutlineButtonProps {
 
 const OutlineButton = (props: OutlineButtonProps) => {
 
-    const { borderColor, handleClick, textColor, buttonText, height, width } = { ...props };
+    const { borderColor, handleClick, textColor, children, height, width } = { ...props };
 
     return (
         <button
             className={`cursor-pointer text-${textColor} border border-${borderColor} bg-transparent text-center m-1 px-2 text-type-body rounded-md ${height} ${width}`}
             onClick={handleClick}
         >
-            {buttonText}
+            {children}
         </button>
     )
 }
