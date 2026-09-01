@@ -17,7 +17,7 @@ const variantClasses = {
 const CircleLayout = ({ children, variant, isSideBar }: CircleLayoutProps) => {
 
     return (
-        <div className={`rounded-full flex items-center justify-center 
+        <div className={`rounded-full flex shrink-0 items-center justify-center 
         ${variantClasses[variant]} 
         ${isSideBar ? "w-8 h-8 text-type-body" : "w-6 h-6 text-type-body-sm"}`}
         >
