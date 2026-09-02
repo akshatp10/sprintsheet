@@ -20,7 +20,7 @@ export function RadioButton({ options, value, onChange, className, name = "radio
 
     return (
         <div
-            className={cn("relative inline-flex w-fit rounded-lg p-1 bg-surface-desk border border-lines-control", className)} {...props}>
+            className={cn("relative inline-flex w-fit rounded-lg px-1 bg-surface-desk border border-lines-control", className)} {...props}>
             <div
                 className="absolute inset-y-1 left-1 rounded-md shadow-sm transition-transform duration-200 ease-out border border-lines-control"
                 style={{
