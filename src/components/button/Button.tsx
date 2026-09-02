@@ -11,11 +11,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses = {
     //Filled Button
-    primary: "bg-red-200 text-red-400",
+    primary: "bg-accent text-accent-deep",
     //Outline Button
-    secondary: "bg-transparent text-red-400 border border-red-400",
+    secondary: "bg-transparent text-accent-deep border border-accent",
     //Default Gray Button
-    tertiary: "bg-transparent text-int-2 border border-lines-control",
+    tertiary: "bg-transparent text-ink-2 border border-lines-control",
 }
 
 const Button = ({ handleClick, children, disabled, variant, className, ...props }: ButtonProps) => {
