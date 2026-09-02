@@ -22,7 +22,7 @@ export const TestPage = () => {
             <Button variant="tertiary" handleClick={testClick}>
                 Default
             </Button>
-            <Avatar userName="Rohit" variant="amber" isSideBar />
+            <Avatar userName="Rohit" isSideBar />
             <AvatarGroup>
                 <Avatar userName="Manya" />
                 <Avatar userName="Saransh" />
