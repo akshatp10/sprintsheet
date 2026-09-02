@@ -1,11 +1,12 @@
 import { cn } from "@/lib/cn";
+import type { ButtonHTMLAttributes } from "react";
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     children: React.ReactNode;
     handleClick: () => void;
-    variant: "primary" | "secondary" | "tertiary"
-    disabled?: boolean
-    className?: string
+    variant: "primary" | "secondary" | "tertiary";
+    disabled?: boolean;
+    className?: string;
 }
 
 const variantClasses = {
@@ -17,7 +18,7 @@ const variantClasses = {
     tertiary: "bg-transparent text-int-2 border border-lines-control",
 }
 
-const Button = ({ handleClick, children, disabled, variant, className }: ButtonProps) => {
+const Button = ({ handleClick, children, disabled, variant, className, ...props }: ButtonProps) => {
 
     return (
         <button
@@ -25,6 +26,7 @@ const Button = ({ handleClick, children, disabled, variant, className }: ButtonP
             className={`cursor-pointer text-center px-2 text-type-body rounded-md + ${cn(variantClasses[variant], className)}`}
             onClick={handleClick}
             disabled={disabled}
+            {...props}
         >
             {children}
         </button>

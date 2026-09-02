@@ -1,3 +1,5 @@
+import { cn } from "@/lib/cn"
+
 type RadioOption = {
     label: string
     value: string
@@ -8,16 +10,17 @@ type RadioButtonProps = {
     value: string
     onChange: (value: string) => void
     name?: string
-}
+    classname?: string
+} & React.HTMLAttributes<HTMLDivElement>
 
-export function RadioButton({ options, value, onChange, name = "radio" }: RadioButtonProps) {
+export function RadioButton({ options, value, onChange, className, name = "radio", ...props }: RadioButtonProps) {
     const selectedIndex = options.findIndex(
         (option) => option.value === value
     )
 
     return (
         <div
-            className="relative inline-flex w-fit rounded-lg p-1 bg-surface-desk border border-lines-control">
+            className={cn("relative inline-flex w-fit rounded-lg p-1 bg-surface-desk border border-lines-control", className)} {...props}>
             <div
                 className="absolute inset-y-1 left-1 rounded-md shadow-sm transition-transform duration-200 ease-out border border-lines-control"
                 style={{
