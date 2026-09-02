@@ -17,6 +17,7 @@ const SidebarNavigations = ({
     return (
         <NavLink
             to={to}
+            end
             className={({ isActive }) =>
                 cn(
                     "flex items-center gap-3 px-3 py-2 rounded-md border border-transparent",

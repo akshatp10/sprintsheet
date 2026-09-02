@@ -9,34 +9,35 @@ import {
 import SidebarNavigations from "./SidebarNavigations";
 import Text from "../common/Text";
 import Button from "../button/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ProjectsSidebar = () => {
+
+    const navigate = useNavigate();
+    const { projectid } = useParams();
+
     const options = [
         {
             label: "Dashboard",
-            to: "/project",
+            to: `project/${projectid}`,
             icon: <ChartPie size={20} strokeWidth={1.5} />,
         },
         {
             label: "Board",
-            to: "/project",
+            to: `project/${projectid}/board`,
             icon: <Table2 size={20} strokeWidth={1.5} />,
         },
         {
             label: "All tasks",
-            to: "/project",
+            to: `project/${projectid}/tasks`,
             icon: <ListChecks size={20} strokeWidth={1.5} />,
         },
         {
             label: "Cycles",
-            to: "/project",
+            to: `project/${projectid}/cycles`,
             icon: <RefreshCcw size={20} strokeWidth={1.5} />,
-            count: 12,
         },
     ];
-
-    const navigate = useNavigate()
 
     return (
         <div className="flex flex-col">
