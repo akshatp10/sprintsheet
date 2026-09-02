@@ -83,7 +83,7 @@ const AllProjectsPage = () => {
     const [projectsView, setProjectsView] = useState("grid")
 
     return (
-        <div className="w-full flex flex-col p-8 gap-8">
+        <div className="w-full flex flex-col px-8 py-6 gap-8">
             <div className="flex w-full items-center justify-between">
                 <div>
                     <Text variant="display">Projects</Text>
