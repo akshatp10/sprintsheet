@@ -11,11 +11,10 @@ const UserAvatar = ({ userName, variant, isSideBar = false, ...props }: UserAvat
 
     if (userName === null)
         return (
-            <>
-                <CircleLayout {...props}>
-                    <UserRound size={15} />
-                </CircleLayout>
-            </>)
+            <CircleLayout {...props}>
+                <UserRound size={15} />
+            </CircleLayout>
+        )
 
     const uiName = userName.slice(0, 2).toUpperCase();
 
