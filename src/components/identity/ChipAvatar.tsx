@@ -1,13 +1,13 @@
 import CircleLayout from './CircleLayout'
 
-interface UserAvatarProps {
+interface UserAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
     extraUsers: number;
 }
 
-const ChipAvatar = ({ extraUsers }: UserAvatarProps) => {
+const ChipAvatar = ({ extraUsers, ...props }: UserAvatarProps) => {
 
     return (
-        <CircleLayout variant={"chip"}>
+        <CircleLayout variant={"chip"} {...props}>
             +{extraUsers}
         </CircleLayout>
     )
