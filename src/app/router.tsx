@@ -15,6 +15,7 @@ import ProjectsSidebar from "@/components/sidebar/ProjectsSidebar";
 // Importing pages
 import { TestPage } from "@/pages/testPage";
 import SidebarBottom from "@/components/sidebar/SidebarBottom";
+import AllProjectsPage from "@/pages/AllProjectsPage";
 
 
 export const router = createBrowserRouter(
@@ -28,7 +29,7 @@ export const router = createBrowserRouter(
                     usersPanel={<SidebarBottom />}
                 />}
             >
-                <Route path="/" element={"Home/Project Page"} />
+                <Route path="/" element={<AllProjectsPage />} />
                 <Route path="/test" element={<TestPage />} />
             </Route>
 
