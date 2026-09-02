@@ -11,7 +11,7 @@ type RadioButtonProps = {
     onChange: (value: string) => void
     name?: string
     classname?: string
-} & React.HTMLAttributes<HTMLDivElement>
+} & Omit<React.HTMLAttributes<HTMLDivElement>, "onChange">
 
 export function RadioButton({ options, value, onChange, className, name = "radio", ...props }: RadioButtonProps) {
     const selectedIndex = options.findIndex(
