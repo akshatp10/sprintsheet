@@ -10,14 +10,14 @@ interface AppLayoutProps {
 const AppLayout = ({ dynamicSidebar, dynamicTopBar, usersPanel }: AppLayoutProps) => {
     return (
         <div className="grid h-screen w-screen grid-cols-[224px_1fr] bg-surface">
-            <aside className="grid h-full grid-rows-[1fr_auto] border-r border-lines-hairline bg-surface-desk">
-                <nav className="overflow-y-auto p-3">{dynamicSidebar}</nav>
-                <div className="border-t border-lines-hairline p-3">
+            <aside className="grid h-full grid-rows-[1fr_auto] border-r border-lines-hairline bg-surface-sunken p-3">
+                <nav className="overflow-y-auto">{dynamicSidebar}</nav>
+                <div className="">
                     {usersPanel}
                 </div>
             </aside>
 
-            <div className="grid h-full min-w-0 grid-rows-[56px_1fr]">
+            <div className="grid h-full min-w-0 grid-rows-[56px_1fr] bg-surface-page">
                 {/* Separation between topbar and main content */}
                 <div
                     className="flex min-w-0 items-center border-b border-lines-hairline px-4"

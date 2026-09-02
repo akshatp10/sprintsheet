@@ -19,7 +19,7 @@ const UserPanelSidebar = ({ userName }: UserPanelSidebarProps) => {
             </div>
 
             <Button handleClick={() => { }} variant='tertiary' className='border-0'>
-                <Ellipsis size={17} className="text-ink-fades-ghost-rows" />
+                <Ellipsis size={17} strokeWidth={1.5} className="text-ink-fades-ghost-rows" />
             </Button>
         </div>
     )
