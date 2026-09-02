@@ -4,10 +4,17 @@ import {
     Route,
 } from "react-router-dom";
 import AppLayout from "./layout/AppLayout";
-import { TestPage } from "@/pages/testPage";
+
+// Importing Sidebars and Topbars Components
 import WorkspaceSidebar from "@/components/sidebar/WorkspaceSidebar";
 import WorkspaceTopbar from "@/components/topbar/WorkspaceTopbar";
-import UserPanelSidebar from "@/components/sidebar/UserPanelSidebar";
+import ProjectsTopbar from "@/components/topbar/ProjectsTopbar";
+import ProjectsSidebar from "@/components/sidebar/ProjectsSidebar";
+
+
+// Importing pages
+import { TestPage } from "@/pages/testPage";
+import SidebarBottom from "@/components/sidebar/SidebarBottom";
 
 
 export const router = createBrowserRouter(
@@ -18,11 +25,22 @@ export const router = createBrowserRouter(
                 element={<AppLayout
                     dynamicSidebar={<WorkspaceSidebar />}
                     dynamicTopBar={<WorkspaceTopbar />}
-                    usersPanel={<UserPanelSidebar />}
+                    usersPanel={<SidebarBottom />}
                 />}
             >
                 <Route path="/" element={"Home/Project Page"} />
                 <Route path="/test" element={<TestPage />} />
+            </Route>
+
+            {/* Project Routes */}
+            <Route
+                element={<AppLayout
+                    dynamicSidebar={<ProjectsSidebar />}
+                    dynamicTopBar={<ProjectsTopbar />}
+                    usersPanel={<SidebarBottom />}
+                />}
+            >
+                <Route path="/project" element={<TestPage />} />
             </Route>
         </>
     )

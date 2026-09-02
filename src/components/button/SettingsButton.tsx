@@ -1,5 +1,5 @@
 import Button from './Button'
-import GlobalChip from '../chips/GlobalChip'
+import Chip from '../chips/Chip'
 import Text from '../common/Text'
 import { Settings } from 'lucide-react'
 
@@ -11,10 +11,10 @@ const SettingsButton = ({ isAdmin }: SettingsButtonProps) => {
     return (
         <Button handleClick={() => { }} variant='tertiary' className='border-0 flex justify-between'>
             <Text className='flex text-ink gap-3 items-center'>
-                <Settings size={17} className='text-ink-3' />
+                <Settings size={17} strokeWidth={1.5} className='text-ink-3' />
                 Settings
             </Text>
-            {isAdmin && <GlobalChip text='Admin' variant='secondary' textType='text-type-caption' borderColor='border-accent' />}
+            {isAdmin && <Chip text='Admin' variant='secondary' textType='text-type-caption' borderColor='border-accent' />}
         </Button>
     )
 }

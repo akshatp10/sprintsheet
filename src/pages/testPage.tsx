@@ -1,10 +1,9 @@
-import OutlineButton from "@/components/button/Button"
-import GlobalChip from "@/components/chips/GlobalChip"
-import ProgressBar from "@/components/common/ProgressBar"
-import AvatarGroup from "@/components/identity/AvatarGroups"
-import ChipAvatar from "@/components/identity/ChipAvatar"
-import UserAvatar from "@/components/identity/UserAvatar"
-import { RadioButton } from "@/components/inputs/RadioButton"
+import Avatar from "@/components/avatar/Avatar"
+import AvatarGroup from "@/components/avatar/AvatarGroups"
+import Button from "@/components/button/Button"
+import Chip from "@/components/chips/Chip"
+import { Tabs } from "@/components/inputs/Tabs"
+import ProgressBar from "@/components/progressBar/ProgressBar"
 import { useState } from "react"
 
 export const TestPage = () => {
@@ -14,34 +13,35 @@ export const TestPage = () => {
     const testClick = () => { console.log("handleClick") }
     return (
         <div className="text-type-body">
-            <OutlineButton variant="primary" handleClick={testClick} className="bg-accent-deep text-accent-tint text-type-micro">
+            <Button variant="primary" handleClick={testClick} className="bg-accent-deep text-accent-tint text-type-micro">
                 + Button
-            </OutlineButton>
-            <OutlineButton variant="secondary" handleClick={testClick}>
+            </Button>
+            <Button variant="secondary" handleClick={testClick}>
                 % Backlog
-            </OutlineButton>
-            <OutlineButton variant="tertiary" handleClick={testClick}>
+            </Button>
+            <Button variant="tertiary" handleClick={testClick}>
                 Default
-            </OutlineButton>
-            <UserAvatar userName="Rohit" variant="amber" isSideBar />
+            </Button>
+            <Avatar userName="Rohit" variant="amber" isSideBar />
             <AvatarGroup>
-                <UserAvatar userName="Manya" variant="rose" />
-                <UserAvatar userName="Saransh" variant="blue" />
-                <UserAvatar userName="Akshat" variant="purple" />
-                <ChipAvatar extraUsers={5} />
+                <Avatar userName="Manya" />
+                <Avatar userName="Saransh" />
+                <Avatar userName="Akshat" />
+                <Avatar extraUsers={5} />
             </AvatarGroup>
+            <Avatar userName={null} />
 
-            <RadioButton
-                options={[
+            <Tabs
+                tabs={[
                     { label: "Table", value: "table" },
                     { label: "Grid", value: "grid" },
                 ]}
-                value={radioButtonOption}
+                activeTab={radioButtonOption}
                 onChange={setradioButtonOption}
             />
 
-            <GlobalChip text="this is a chip" variant="secondary" textType="text-type-micro" />
-            <ProgressBar progress={9} color="bg-stage-blocked-dot" />
+            <Chip text="this is a chip" variant="secondary" textType="text-type-micro" />
+            <ProgressBar progress={90} color="bg-stage-blocked-dot" />
 
         </div>
     )

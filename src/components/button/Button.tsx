@@ -23,7 +23,7 @@ const Button = ({ handleClick, children, disabled, variant, className, ...props 
     return (
         <button
             type="button"
-            className={`cursor-pointer text-center px-2 text-type-body rounded-md + ${cn(variantClasses[variant], className)}`}
+            className={cn("cursor-pointer text-center py-1 px-2 text-type-body rounded-md", variantClasses[variant], className)}
             onClick={handleClick}
             disabled={disabled}
             {...props}
