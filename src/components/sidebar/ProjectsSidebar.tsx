@@ -10,6 +10,7 @@ import SidebarNavigations from "./SidebarNavigations";
 import Text from "../common/Text";
 import Button from "../button/Button";
 import { useNavigate, useParams } from "react-router-dom";
+import CurProjectSidebarCard from "@/features/projects/components/CurProjectSidebarCard";
 
 const ProjectsSidebar = () => {
 
@@ -40,9 +41,9 @@ const ProjectsSidebar = () => {
     ];
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-3">
             {/* Back to all projects */}
-            <Button className="flex items-center gap-2 mb-6 border-none" handleClick={() => { navigate("/") }} variant="tertiary">
+            <Button className="flex items-center gap-2 border-none" handleClick={() => { navigate("/") }} variant="tertiary">
                 <ArrowLeft
                     size={20}
                     strokeWidth={1.5}
@@ -55,7 +56,7 @@ const ProjectsSidebar = () => {
             </Button>
 
             {/* Current project */}
-
+            <CurProjectSidebarCard />
 
             {/* Navigation */}
             <div className="flex flex-col gap-1">
