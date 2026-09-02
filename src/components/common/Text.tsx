@@ -12,11 +12,6 @@ type TextVariant =
     | "micro"
     | "mono";
 
-interface TextProps extends HTMLAttributes<HTMLSpanElement> {
-    variant?: TextVariant;
-    truncate?: boolean;
-}
-
 const variantClasses: Record<TextVariant, string> = {
     display: "text-type-display hyphens-none",
     h1: "text-type-h1 hyphens-none",
@@ -29,15 +24,24 @@ const variantClasses: Record<TextVariant, string> = {
     mono: "text-type-mono font-mono tabular-nums",
 };
 
+interface TextProps extends HTMLAttributes<HTMLParagraphElement> {
+    variant?: TextVariant;
+    as?: "p" | "span";
+    truncate?: boolean;
+}
+
 const Text = ({
     variant = "body",
+    as = "p",
     truncate = false,
     className,
     children,
     ...props
 }: TextProps) => {
+    const Component = as;
+
     return (
-        <span
+        <Component
             className={cn(
                 variantClasses[variant],
                 truncate && "truncate",
@@ -46,7 +50,7 @@ const Text = ({
             {...props}
         >
             {children}
-        </span>
+        </Component>
     );
 };
 
