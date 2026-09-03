@@ -33,11 +33,11 @@ const ProjectsTopbar = () => {
                 </Text>
             </div>
 
-            <Button variant="secondary" handleClick={() => { }} className='min-w-0 shrink-0'>
-                <Text>
+            <div className='min-w-0 shrink-0 border-l border-lines-hairline pl-3'>
+                <Button variant="secondary" className="h-full font-medium py-0.5" handleClick={() => { }}>
                     + New Task
-                </Text>
-            </Button>
+                </Button>
+            </div>
         </div>
     )
 }

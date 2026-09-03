@@ -1,6 +1,5 @@
-import { Ellipsis } from 'lucide-react';
-import Button from '../button/Button';
 import Text from '../common/Text';
+import ExtraOptionButton from '../button/ExtraOptionButton';
 import Avatar from '../avatar/Avatar';
 
 interface UserPanelSidebarProps {
@@ -18,9 +17,7 @@ const UserPanelSidebar = ({ userName }: UserPanelSidebarProps) => {
                 <Text variant='h2' className='text-ink-2' truncate>{displayUserName}</Text>
             </div>
 
-            <Button handleClick={() => { }} variant='tertiary' className='border-0'>
-                <Ellipsis size={17} strokeWidth={1.5} className="text-ink-fades-ghost-rows" />
-            </Button>
+            <ExtraOptionButton handleClick={() => { }} />
         </div>
     )
 }
