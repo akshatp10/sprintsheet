@@ -12,7 +12,7 @@ const UserAvatar = ({ userName, variant, isSideBar = false, ...props }: UserAvat
     if (userName === null)
         return (
             <CircleLayout {...props}>
-                <UserRound size={15} />
+                <UserRound size={15} strokeWidth={1.5} />
             </CircleLayout>
         )
 
