@@ -6,7 +6,7 @@ import UserAvatar from "@/components/identity/UserAvatar";
 import ChipAvatar from "@/components/identity/ChipAvatar";
 import GlobalChip from "@/components/chips/GlobalChip";
 import { useNavigate } from "react-router-dom";
-import ExtraOptionButton from "@/components/button/ExtraOptionButton";
+import { Ellipsis } from "lucide-react";
 
 type ProjectUser = {
     userName: string;
@@ -61,7 +61,7 @@ const ProjectCardGrid = ({
                     </Text>
                 </div>
 
-                <ExtraOptionButton handleClick={() => { }} />
+                <Ellipsis size={17} strokeWidth={1.5} className="text-ink-fades-ghost-rows" />
             </div>
 
             <Text className="w-full text-left text-ink-2">
