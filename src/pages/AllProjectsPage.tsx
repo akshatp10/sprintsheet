@@ -1,6 +1,7 @@
 import Text from "@/components/common/Text";
 import { RadioButton } from "@/components/inputs/RadioButton";
 import EmptyTaskCard from "@/features/projects/components/EmptyTaskCard";
+import NewProjectForm from "@/features/projects/components/forms/NewProjectForm";
 import ProjectCardGrid from "@/features/projects/components/ProjectCardGrid";
 import { useState } from "react";
 
@@ -80,37 +81,42 @@ const AllProjectsPage = () => {
         },
     ];
 
+    const [showForm, setShowForm] = useState(false)
     const [projectsView, setProjectsView] = useState("grid")
 
     return (
-        <div className="w-full flex flex-col px-8 py-6 gap-8">
-            <div className="flex w-full items-center justify-between">
-                <div>
-                    <Text variant="display" className="text-3xl font-medium">Projects</Text>
-                    <Text variant="body-sm" className="text-ink-2">3 active · 1 archived</Text>
+        <>
+            {showForm && <NewProjectForm onClose={() => setShowForm(false)} />}
+
+            <div className="w-full flex flex-col px-8 py-6 gap-8">
+                <div className="flex w-full items-center justify-between">
+                    <div>
+                        <Text variant="display" className="text-3xl font-medium">Projects</Text>
+                        <Text variant="body-sm" className="text-ink-2">3 active · 1 archived</Text>
+                    </div>
+
+                    <RadioButton
+                        onChange={setProjectsView}
+                        value={projectsView}
+                        options={[{ label: "Grid", value: "grid" }, { label: "List", value: "list" }]}
+                    />
                 </div>
 
-                <RadioButton
-                    onChange={setProjectsView}
-                    value={projectsView}
-                    options={[{ label: "Grid", value: "grid" }, { label: "List", value: "list" }]}
-                />
-            </div>
+                <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {projects.map((project) => (
+                        <ProjectCardGrid
+                            key={project.title}
+                            {...project}
+                        />
+                    ))}
+                    <EmptyTaskCard handleClick={() => setShowForm(true)} />
+                </div>
 
-            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {projects.map((project) => (
-                    <ProjectCardGrid
-                        key={project.title}
-                        {...project}
-                    />
-                ))}
-                <EmptyTaskCard />
+                <div>
+                    <Text className="text-ink-2" variant="h2">RECENT ACTIVITY</Text>
+                </div>
             </div>
-
-            <div>
-                <Text className="text-ink-2" variant="h2">RECENT ACTIVITY</Text>
-            </div>
-        </div>
+        </>
     );
 };
 
