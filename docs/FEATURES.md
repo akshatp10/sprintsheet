@@ -104,44 +104,8 @@ The design specifies that selecting a project should take the user into the proj
 
 At the current implementation stage, the navigation is frontend-only.
 
----
+### Screenshots
 
-# 4. Project Screen Architecture
+<img alt="image" src="https://github.com/user-attachments/assets/2ca48485-13c3-4b49-90a6-42d1996e97ac" />
 
-The project-related UI follows the existing Sprintsheet frontend structure.
-
-Current high-level structure:
-
-```text
-src/
-├── app/
-│   ├── layout/
-│   ├── App.tsx
-│   └── router.tsx
-│
-├── components/
-│   ├── button/
-│   ├── chips/
-│   ├── common/
-│   ├── identity/
-│   ├── inputs/
-│   ├── sidebar/
-│   └── topbar/
-│
-├── features/
-│   └── projects/
-│       └── components/
-│           ├── CurProjectSidebarCard.tsx
-│           ├── EmptyTaskCard.tsx
-│           └── ProjectCardGrid.tsx
-│
-├── pages/
-│   ├── AllProjectsPage.tsx
-│   └── testPage.tsx
-│
-├── styles/
-│   ├── tokens/
-│   └── index.css
-│
-└── main.tsx
-```
+<img alt="image" src="https://github.com/user-attachments/assets/93297a1a-7d4d-4dd4-b420-74b3e029797c" />
