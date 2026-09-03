@@ -102,12 +102,10 @@ const BasicsStep = ({ watch, setValue }: BasicsStepProps) => {
 
             {/* Toggle for Auto Creation of Cycle */}
             <ToggleButtonBox checked={autoCycle} onChange={(value) => setValue("autoCycle", value)}>
-                <div className="flex flex-col gap-1">
-                    <Text variant="body-sm" className="text-ink-2 font-medium">Open the next cycle automatically</Text>
-                    <Text variant="caption" className="text-ink-3">
-                        When Aug 21 ends, <Text variant="caption" className="font-medium text-ink-2" as="span">Aug 24-28</Text> opens by itself at the default length — empty, active, tabs already in place. Unfinished work stays in the cycle it was in until someone moves it.
-                    </Text>
-                </div>
+                <Text variant="body-sm" className="text-ink-2 font-medium">Open the next cycle automatically</Text>
+                <Text variant="caption" className="text-ink-3">
+                    When Aug 21 ends, <Text variant="caption" className="font-medium text-ink-2" as="span">Aug 24-28</Text> opens by itself at the default length — empty, active, tabs already in place. Unfinished work stays in the cycle it was in until someone moves it.
+                </Text>
             </ToggleButtonBox>
 
             {/* Default view */}
