@@ -1,6 +1,7 @@
-import { cn } from '@/lib/cn'
+import type { HTMLAttributes } from "react"
+import { cn } from "@/lib/cn"
 
-interface GlobalChipProps extends React.HTMLAttributes<HTMLDivElement> {
+interface GlobalChipProps extends HTMLAttributes<HTMLDivElement> {
     text: string
     variant: "primary" | "secondary"
     bgColor?: string
@@ -9,21 +10,30 @@ interface GlobalChipProps extends React.HTMLAttributes<HTMLDivElement> {
     textType?: string
 }
 
-const GlobalChip = ({ text, variant, bgColor = "", borderColor = "", textColor = "", textType = "", ...props }: GlobalChipProps) => {
-
-    const commonClass = "w-fit h-fit text-center px-2 py-0.5 text-type-body rounded-sm text-ink-2";
+const GlobalChip = ({ text, variant, bgColor = "", borderColor = "", textColor = "", textType = "", className, ...props }: GlobalChipProps) => {
+    const commonClass =
+        "w-fit h-fit text-center px-2 py-0.5 text-type-body rounded-md text-ink-2"
 
     const variantClasses = {
-        primary: commonClass + " bg-lines-control",
-        secondary: commonClass + " bg-transparent border border-lines-border"
+        primary: `${commonClass} bg-lines-control`,
+        secondary: `${commonClass} bg-transparent border border-lines-border`,
     }
 
     return (
-        <div className={cn(variantClasses[variant], bgColor, borderColor, textColor, textType)} {...props}>
+        <div
+            {...props}
+            className={cn(
+                variantClasses[variant],
+                bgColor,
+                borderColor,
+                textColor,
+                textType,
+                className
+            )}
+        >
             {text}
         </div>
     )
 }
-
 
 export default GlobalChip

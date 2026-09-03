@@ -5,6 +5,8 @@ import AvatarGroup from "@/components/identity/AvatarGroups";
 import UserAvatar from "@/components/identity/UserAvatar";
 import ChipAvatar from "@/components/identity/ChipAvatar";
 import GlobalChip from "@/components/chips/GlobalChip";
+import { useNavigate } from "react-router-dom";
+import ExtraOptionButton from "@/components/button/ExtraOptionButton";
 
 type ProjectUser = {
     userName: string;
@@ -34,24 +36,32 @@ const ProjectCardGrid = ({
     users,
     extraUsers = 0,
 }: ProjectCardProps) => {
+
+    const navigate = useNavigate();
+
+    //Temporary navigating to sample project route
+    const clickingProjectCard = () => {
+        navigate("/project/1")
+    }
+
     return (
         <Button
-            handleClick={() => { }}
+            handleClick={clickingProjectCard}
             variant="tertiary"
-            className="flex h-60 w-full flex-col items-stretch justify-between rounded-xl border border-lines-hairline bg-surface p-7 text-left"
+            className="flex h-55 w-full flex-col items-stretch justify-between rounded-xl border border-lines-hairline bg-surface px-6 py-4 text-left"
         >
             <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                     <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-tint text-accent text-type-h2">
                         {initials}
                     </span>
 
-                    <Text variant="h1" className="text-xl text-ink">
+                    <Text variant="h1" className="text-xl text-ink font-medium">
                         {title}
                     </Text>
                 </div>
 
-                <span className="text-ink-3">•••</span>
+                <ExtraOptionButton handleClick={() => { }} />
             </div>
 
             <Text className="w-full text-left text-ink-2">

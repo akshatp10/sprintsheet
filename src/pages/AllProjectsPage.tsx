@@ -86,7 +86,7 @@ const AllProjectsPage = () => {
         <div className="w-full flex flex-col px-8 py-6 gap-8">
             <div className="flex w-full items-center justify-between">
                 <div>
-                    <Text variant="display">Projects</Text>
+                    <Text variant="display" className="text-3xl font-medium">Projects</Text>
                     <Text variant="body-sm" className="text-ink-2">3 active · 1 archived</Text>
                 </div>
 

@@ -14,7 +14,7 @@ const SettingsButton = ({ isAdmin }: SettingsButtonProps) => {
                 <Settings size={17} strokeWidth={1.5} className='text-ink-3' />
                 Settings
             </Text>
-            {isAdmin && <GlobalChip text='Admin' variant='secondary' textType='text-type-caption' borderColor='border-accent' />}
+            {isAdmin && <GlobalChip text='Admin' variant='secondary' textType='text-type-caption' borderColor='border-accent' className='shadow-xs shadow-accent' />}
         </Button>
     )
 }
