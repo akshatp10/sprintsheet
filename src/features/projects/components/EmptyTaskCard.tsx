@@ -2,9 +2,14 @@ import Text from "@/components/common/Text";
 import EmptyTask from "@/assets/animations/Task_empty.svg"
 import Button from "@/components/button/Button";
 
-const EmptyTaskCard = () => {
+interface EmptyTaskCardProps {
+    handleClick: () => void
+}
+
+const EmptyTaskCard = ({ handleClick }: EmptyTaskCardProps) => {
+
     return (
-        <Button handleClick={() => { }} variant="tertiary" className="flex min-h-40 h-full w-full flex-col items-center justify-center rounded-lg border border-dashed border-accent-deep">
+        <Button handleClick={handleClick} variant="tertiary" className="flex min-h-40 h-full w-full flex-col items-center justify-center rounded-lg border border-dashed border-accent-deep">
             <img
                 src={EmptyTask}
                 alt="Empty project"
