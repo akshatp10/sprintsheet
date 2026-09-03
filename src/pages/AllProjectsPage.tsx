@@ -1,6 +1,7 @@
 import Text from "@/components/common/Text";
 import Tabs, { type TabsOption } from "@/components/inputs/Tabs";
 import EmptyTaskCard from "@/features/projects/components/EmptyTaskCard";
+import NewProjectForm from "@/features/projects/components/forms/NewProjectForm";
 import ProjectCardGrid from "@/features/projects/components/ProjectCardGrid";
 import { useState } from "react";
 
