@@ -13,7 +13,7 @@ const variantClasses = {
     //Filled Button
     primary: "bg-accent text-accent-deep",
     //Outline Button
-    secondary: "bg-transparent text-accent-deep border border-accent",
+    secondary: "bg-transparent text-accent-deep border border-accent text-type-body-sm shadow-xs shadow-accent",
     //Default Gray Button
     tertiary: "bg-transparent text-ink-2 border border-lines-control",
 }
@@ -23,7 +23,7 @@ const Button = ({ handleClick, children, disabled, variant, className, ...props 
     return (
         <button
             type="button"
-            className={cn("cursor-pointer text-center py-1 px-2 text-type-body rounded-md", variantClasses[variant], className)}
+            className={cn("cursor-pointer text-center py-1 px-2 rounded-md font-medium", variantClasses[variant], className)}
             onClick={handleClick}
             disabled={disabled}
             {...props}

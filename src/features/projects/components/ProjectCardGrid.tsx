@@ -1,10 +1,11 @@
 import Text from "@/components/common/Text";
 import Button from "@/components/button/Button";
-import ProgressBar from "@/components/common/ProgressBar";
-import AvatarGroup from "@/components/identity/AvatarGroups";
-import UserAvatar from "@/components/identity/UserAvatar";
-import ChipAvatar from "@/components/identity/ChipAvatar";
-import GlobalChip from "@/components/chips/GlobalChip";
+import { useNavigate } from "react-router-dom";
+import ExtraOptionButton from "@/components/button/ExtraOptionButton";
+import AvatarGroup from "@/components/avatar/AvatarGroups";
+import Avatar from "@/components/avatar/Avatar";
+import Chip from "@/components/chips/Chip";
+import ProgressBar from "@/components/progressBar/ProgressBar";
 
 type ProjectUser = {
     userName: string;
@@ -34,24 +35,32 @@ const ProjectCardGrid = ({
     users,
     extraUsers = 0,
 }: ProjectCardProps) => {
+
+    const navigate = useNavigate();
+
+    //Temporary navigating to sample project route
+    const clickingProjectCard = () => {
+        navigate("/project/1")
+    }
+
     return (
         <Button
-            handleClick={() => { }}
+            handleClick={clickingProjectCard}
             variant="tertiary"
-            className="flex h-60 w-full flex-col items-stretch justify-between rounded-xl border border-lines-hairline bg-surface p-7 text-left"
+            className="flex h-55 w-full flex-col items-stretch justify-between rounded-xl border border-lines-hairline bg-surface px-6 py-4 text-left"
         >
             <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                     <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-tint text-accent text-type-h2">
                         {initials}
                     </span>
 
-                    <Text variant="h1" className="text-xl text-ink">
+                    <Text variant="h1" className="text-xl text-ink font-medium">
                         {title}
                     </Text>
                 </div>
 
-                <span className="text-ink-3">•••</span>
+                <ExtraOptionButton handleClick={() => { }} />
             </div>
 
             <Text className="w-full text-left text-ink-2">
@@ -59,14 +68,14 @@ const ProjectCardGrid = ({
             </Text>
 
             <div className="flex gap-2">
-                <GlobalChip
+                <Chip
                     text={date}
                     variant="primary"
                     bgColor="bg-accent-tint"
                     textColor="text-accent"
                 />
 
-                <GlobalChip
+                <Chip
                     text={`${openCount} open`}
                     variant="secondary"
                     borderColor="border-lines-control"
@@ -82,15 +91,14 @@ const ProjectCardGrid = ({
             <div className="flex items-center gap-3">
                 <AvatarGroup>
                     {users.map((user) => (
-                        <UserAvatar
+                        <Avatar
                             key={user.userName}
                             userName={user.userName}
-                            variant={user.variant}
                         />
                     ))}
 
                     {extraUsers > 0 && (
-                        <ChipAvatar extraUsers={extraUsers} />
+                        <Avatar extraUsers={extraUsers} />
                     )}
                 </AvatarGroup>
 

@@ -20,10 +20,10 @@ const SidebarNavigations = ({
             end
             className={({ isActive }) =>
                 cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-md border border-transparent",
+                    "flex items-center gap-3 px-3 py-2 rounded-md border-l-3 border-transparent",
                     isActive
-                        ? "bg-accent-tint text-accent-deep border border-accent"
-                        : "text-ink-2 hover:bg-surface-raised hover:border hover:border-lines-control"
+                        ? "bg-accent-tint text-accent-deep border-l-3 border-accent"
+                        : "text-ink-2 hover:bg-surface-raised hover:border-l-3 hover:border-lines-control"
                 )
             }
         >

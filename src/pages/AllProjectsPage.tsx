@@ -1,5 +1,5 @@
 import Text from "@/components/common/Text";
-import { RadioButton } from "@/components/inputs/RadioButton";
+import { Tabs } from "@/components/inputs/Tabs";
 import EmptyTaskCard from "@/features/projects/components/EmptyTaskCard";
 import ProjectCardGrid from "@/features/projects/components/ProjectCardGrid";
 import { useState } from "react";
@@ -86,14 +86,14 @@ const AllProjectsPage = () => {
         <div className="w-full flex flex-col px-8 py-6 gap-8">
             <div className="flex w-full items-center justify-between">
                 <div>
-                    <Text variant="display">Projects</Text>
+                    <Text variant="display" className="text-3xl font-medium">Projects</Text>
                     <Text variant="body-sm" className="text-ink-2">3 active · 1 archived</Text>
                 </div>
 
-                <RadioButton
+                <Tabs
                     onChange={setProjectsView}
-                    value={projectsView}
-                    options={[{ label: "Grid", value: "grid" }, { label: "List", value: "list" }]}
+                    activeTab={projectsView}
+                    tabs={[{ label: "Grid", value: "grid" }, { label: "List", value: "list" }]}
                 />
             </div>
 
