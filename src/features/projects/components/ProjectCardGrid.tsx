@@ -1,7 +1,7 @@
 import Text from "@/components/common/Text";
 import Button from "@/components/button/Button";
 import { useNavigate } from "react-router-dom";
-import ExtraOptionButton from "@/components/button/ExtraOptionButton";
+import { Ellipsis } from "lucide-react";
 import AvatarGroup from "@/components/avatar/AvatarGroups";
 import Avatar from "@/components/avatar/Avatar";
 import Chip from "@/components/chips/Chip";
@@ -60,7 +60,7 @@ const ProjectCardGrid = ({
                     </Text>
                 </div>
 
-                <ExtraOptionButton handleClick={() => { }} />
+                <Ellipsis size={17} strokeWidth={1.5} className="text-ink-fades-ghost-rows" />
             </div>
 
             <Text className="w-full text-left text-ink-2">
