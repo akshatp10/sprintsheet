@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+/* Importing Colour Systems */
+@import "./tokens/stage.css";
+@import "./tokens/surface.css";
+@import "./tokens/linesAndInk.css";
+@import "./tokens/accent.css";
+@import "./tokens/taskType.css";
+@import "./tokens/identity.css";
+@import "./tokens/semantics.css";
+
+/* Importing Typography */
+@import "./tokens/typography.css";

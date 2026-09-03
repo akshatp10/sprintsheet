@@ -1,0 +1,13 @@
+@theme {
+	/* Identity — projects & people */
+
+	--color-identity-avatar-purple: #5a4fb0;
+	--color-identity-avatar-blue: #2f7f9e;
+	--color-identity-avatar-amber: #8a5a10;
+	--color-identity-avatar-rose: #96435c;
+
+	--color-identity-avatar-text: #ffffff;
+
+	--color-identity-overflow-chip: #e7e3f7;
+	--color-identity-overflow-text: #3c327f;
+}

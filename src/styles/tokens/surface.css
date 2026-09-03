@@ -1,0 +1,9 @@
+@theme {
+	/* Surfaces */
+	--color-surface-desk: #e8e5dd;
+	--color-surface-page: #f6f5f2;
+	--color-surface-sunken: #f0ede6;
+	--color-surface-raised: #eae7df;
+	--color-surface: #ffffff;
+	--color-surface-track: #e6e3db;
+}
