@@ -100,7 +100,7 @@ A project card can be used as a navigation entry into the project UI.
 
 The project screen is currently intended to demonstrate the navigation and visual flow rather than a complete project-management workflow.
 
-The design specifies that selecting a project should take the user into the project's last-visited view, with the default being the Sheet/Table view. :contentReference[oaicite:1]{index=1}
+The design specifies that selecting a project should take the user into the project's last-visited view, with the default being the Sheet/Table view.
 
 At the current implementation stage, the navigation is frontend-only.
 
