@@ -23,31 +23,33 @@ export function Tabs({ tabs, activeTab, onChange, className, ...props }: TabsPro
             <div
                 className="absolute top-0.5 bottom-0.5 left-0.5 rounded-md border border-lines-control shadow-sm transition-transform duration-200 ease-out"
                 style={{
-                    width: `calc((100% - 0.5rem) / ${tabs.length})`,
-                    transform: `translateX(${Math.max(selectedIndex, 0) * 100}%)`,
+                    width: `calc((100% - 0.25rem) / ${tabs.length})`,
+                    transform: `translateX(${selectedIndex * 100}%)`,
                 }}
             />
 
-            {tabs.map((tab) => {
-                const selected = tab.value === activeTab
+            {
+                tabs.map((tab) => {
+                    const selected = tab.value === activeTab
 
-                return (
-                    <label
-                        key={String(tab.value)}
-                        className={`relative z-10 shrink-0 cursor-pointer rounded-md px-3 py-1.5 text-sm transition-colors duration-200 ${selected ? "text-ink" : "text-ink-fades-ghost-rows"}`}
-                    >
-                        <input
-                            type="radio"
-                            value={String(tab.value)}
-                            checked={selected}
-                            onChange={() => onChange(tab.value)}
-                            className="sr-only"
-                        />
+                    return (
+                        <label
+                            key={String(tab.value)}
+                            className={`relative z-10 shrink-0 cursor-pointer rounded-md px-3 py-1.5 text-sm transition-colors duration-200 ${selected ? "text-ink" : "text-ink-fades-ghost-rows"}`}
+                        >
+                            <input
+                                type="radio"
+                                value={String(tab.value)}
+                                checked={selected}
+                                onChange={() => onChange(tab.value)}
+                                className="sr-only"
+                            />
 
-                        {tab.label}
-                    </label>
-                )
-            })}
-        </div>
+                            {tab.label}
+                        </label>
+                    )
+                })
+            }
+        </div >
     )
 }
