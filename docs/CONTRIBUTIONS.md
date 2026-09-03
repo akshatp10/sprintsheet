@@ -42,8 +42,6 @@ The current frontend uses:
 
 Do not introduce a new library when the existing stack already provides the required functionality.
 
-Before adding a dependency, discuss it with the project owner.
-
 ---
 
 # 3. Local Setup
@@ -89,33 +87,66 @@ npm run lint
 
 The project separates application structure, reusable UI, and feature-specific code.
 
-src/
-├── app/
-│ ├── layout/
-│ ├── App.tsx
-│ └── router.tsx
-│
-├── components/
-│ ├── button/
-│ ├── chips/
-│ ├── common/
-│ ├── identity/
-│ ├── inputs/
-│ ├── sidebar/
-│ └── topbar/
-│
-├── features/
-│ └── projects/
-│ └── components/
-│
-├── pages/
-│
-├── lib/
-│
-├── styles/
-│ └── tokens/
-│
-└── main.tsx
+```
+└── 📁sprintsheet
+    └── 📁.github
+    └── 📁.husky
+        └── 📁_
+        ├── pre-commit
+    └── 📁docs
+        ├── CONTRIBUTIONS.md
+        ├── FEATURES.md
+    └── 📁public
+        ├── favicon.svg
+        ├── icons.svg
+    └── 📁src
+        └── 📁assets
+        └── 📁app
+            └── 📁layout
+            ├── App.tsx
+            ├── router.tsx
+        └── 📁components
+            └── 📁avatar
+        └── 📁features
+            └── 📁projects
+                └── 📁components
+                    └── 📁forms
+                └── 📁hook
+                └── 📁types
+            └── 📁tasks
+                └── 📁components
+                    └── 📁forms
+                └── 📁types
+        └── 📁hooks
+        └── 📁lib
+        └── 📁pages
+        └── 📁services
+            └── 📁store
+            └── 📁types
+            └── 📁db
+        └── 📁styles
+            └── 📁tokens
+                ├── accent.css
+                ├── identity.css
+                ├── linesAndInk.css
+                ├── semantics.css
+                ├── stage.css
+                ├── surface.css
+                ├── taskType.css
+                ├── typography.css
+            ├── index.css
+        ├── main.tsx
+    ├── .gitignore
+    ├── eslint.config.js
+    ├── index.html
+    ├── package-lock.json
+    ├── package.json
+    ├── README.md
+    ├── tsconfig.app.json
+    ├── tsconfig.json
+    ├── tsconfig.node.json
+    └── vite.config.ts
+```
 
 ## Where code belongs
 
@@ -196,11 +227,13 @@ Use TypeScript types/interfaces for component props.
 
 Example:
 
+```
 interface SidebarNavigationsProps {
 label: string;
 to: string;
 icon: LucideIcon;
 }
+```
 
 Avoid `any` unless there is a specific reason.
 
@@ -218,16 +251,20 @@ icon: Grid2X2
 
 Then:
 
+```
 <Icon
     size={20}
     strokeWidth={1.5}
 />
+```
 
 Avoid passing a rendered icon when the component needs to control state-dependent properties.
 
 Avoid:
 
+```
 icon: <Grid2X2 />
+```
 
 unless there is a specific reason.
 
@@ -252,10 +289,12 @@ Use `cn()` for conditional classes.
 
 Example:
 
+```
 className={cn(
 "base classes",
 isActive && "active classes"
 )}
+```
 
 ---
 
@@ -266,17 +305,13 @@ The design system is part of the product architecture, not just visual styling.
 ### Theme
 
 Sprintsheet uses a light theme.
-
 Do not introduce dark-mode-specific styling unless the product specification changes.
 
 ### Color
 
 Color communicates categories and meaning.
-
 Stage colors use the defined stage palette.
-
 Do not invent a new stage color for an individual component.
-
 Color should not be the only way information is communicated.
 
 ### Typography
@@ -349,12 +384,6 @@ Moving a task between cycles is NOT a drag operation.
 
 Cycle changes should be explicit actions through the appropriate menu/action.
 
-## Keyboard accessibility
-
-Anything achievable through drag-and-drop must have a keyboard alternative.
-
-Drag must never be the only way to perform an action.
-
 ---
 
 # 11. State and Interaction Standards
@@ -410,23 +439,7 @@ Whenever possible, provide the next action directly from the empty state.
 
 ---
 
-# 13. Accessibility
-
-All interactive functionality should be usable with a keyboard.
-
-Requirements include:
-
-- Keyboard-accessible buttons
-- Keyboard-accessible navigation
-- Visible focus states
-- Accessible labels for icon-only controls
-- Keyboard alternatives for drag interactions
-- Appropriate semantic HTML
-- No information communicated exclusively through color
-
----
-
-# 14. Responsive Design
+# 13. Responsive Design
 
 Sprintsheet supports desktop and mobile layouts.
 
@@ -448,7 +461,7 @@ When implementing a feature, check its corresponding screen/build notes before d
 
 ---
 
-# 15. Feature Development
+# 14. Feature Development
 
 Before starting a feature:
 
@@ -463,7 +476,7 @@ Do not immediately start writing UI without understanding the existing structure
 
 ---
 
-# 16. Git Branching
+# 15. Git Branching
 
 Do not develop directly on `dev`.
 
@@ -487,7 +500,7 @@ docs/update-contributing-guide
 
 ---
 
-# 17. Stacked PRs
+# 16. Stacked PRs
 
 Sprintsheet may use stacked pull requests for larger features.
 
@@ -507,7 +520,7 @@ Do not merge unrelated work into a lower-level PR simply because it is needed by
 
 ---
 
-# 18. Updating a Stacked Branch
+# 17. Updating a Stacked Branch
 
 When the parent PR is merged, update the next branch against the updated `dev`.
 
@@ -532,11 +545,13 @@ unless explicitly required and understood.
 
 ---
 
-# 19. Commit Convention
+# 18. Commit Convention
 
 Use:
 
+```
 <type>: <description>
+```
 
 Examples:
 
@@ -555,6 +570,8 @@ Supported types:
 - docs
 - chore
 - test
+- style
+- other
 
 ## Commit rules
 
@@ -578,7 +595,7 @@ Do not combine unrelated work into a single commit.
 
 ---
 
-# 20. Pre-commit Checks
+# 19. Pre-commit Checks
 
 The repository uses Husky and lint-staged.
 
@@ -594,7 +611,7 @@ Do not use `--no-verify` unless there is a specific reason and the owner is awar
 
 ---
 
-# 21. Pull Request Rules
+# 20. Pull Request Rules
 
 Every feature or fix should be submitted through a PR.
 
@@ -630,7 +647,7 @@ Mention:
 
 ---
 
-# 22. UI PR Requirements
+# 21. UI PR Requirements
 
 UI-related PRs should include screenshots.
 
@@ -649,7 +666,7 @@ Screenshots should make it possible for reviewers to compare the implementation 
 
 ---
 
-# 23. Before Opening a PR
+# 22. Before Opening a PR
 
 Run:
 
@@ -674,7 +691,7 @@ Checklist:
 
 ---
 
-# 24. Code Review
+# 23. Code Review
 
 Reviewers should consider:
 
@@ -706,7 +723,7 @@ Review comments should be specific and constructive.
 
 ---
 
-# 25. Adding Dependencies
+# 24. Adding Dependencies
 
 Before adding a dependency, ask:
 
@@ -720,7 +737,7 @@ Discuss significant dependency additions with the project owner before merging.
 
 ---
 
-# 26. Security
+# 25. Security
 
 Never commit:
 
@@ -737,24 +754,7 @@ If a secret is accidentally committed, notify the project owner immediately and 
 
 ---
 
-# 27. Project Owner Rules
-
-The project owner is responsible for:
-
-- Maintaining the product direction
-- Defining/approving architectural changes
-- Reviewing PRs
-- Managing the `dev` branch
-- Maintaining project conventions
-- Approving new dependencies
-- Resolving design/implementation conflicts
-- Keeping the contribution documentation up to date
-
-Major architectural changes should not be introduced silently through a feature PR.
-
----
-
-# 28. Contributor Rules
+# 26. Contributor Rules
 
 Contributors are expected to:
 
@@ -772,53 +772,48 @@ Contributors are expected to:
 
 ---
 
-# 29. Source of Truth
+# 27. Quick Start
 
-When implementing Sprintsheet, use the following priority:
-
-1. Product/design specification
-2. Existing established project architecture
-3. Existing component/design-system conventions
-4. Implementation preference
-
-If an implementation conflicts with the product specification, the specification wins.
-
-If a new requirement conflicts with an existing architectural convention, discuss it before introducing a new pattern.
-
----
-
-# 30. Quick Start
-
+```
 git clone <repository-url>
 cd sprintsheet
 npm install
 npm run dev
+```
 
 Before pushing:
 
+```
 npm run lint
 npm run build
+```
 
 Create a branch:
 
+```
 git checkout dev
 git pull origin dev
 git checkout -b feat/my-feature
+```
 
 Commit:
 
+```
 git add .
 git commit -m "feat: add my feature"
+```
 
 Push:
 
+```
 git push -u origin feat/my-feature
+```
 
 Then open a Pull Request.
 
 ---
 
-# 31. Final Principle
+# 28. Final Principle
 
 Sprintsheet should remain easy to understand for the next developer.
 
