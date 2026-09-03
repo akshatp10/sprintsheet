@@ -4,7 +4,7 @@ import type { ProjectFormData } from "../../types/projectFormData";
 import Text from "@/components/common/Text";
 import { InputText } from "@/components/inputs/InputText";
 import { RadioButton } from "@/components/inputs/RadioButton";
-import ToggleButton from "@/components/inputs/ToggleButton";
+import ToggleButtonBox from "@/components/common/ToggleButtonBox";
 
 interface BasicsStepProps {
     register: UseFormRegister<ProjectFormData>;
@@ -101,17 +101,14 @@ const BasicsStep = ({ watch, setValue }: BasicsStepProps) => {
             </div>
 
             {/* Toggle for Auto Creation of Cycle */}
-            <div className="w-full bg-accent-wash-selected border border-dashed border-accent rounded-md p-4">
-                <div className="flex items-start gap-3">
-                    <ToggleButton checked={autoCycle} onChange={(value) => setValue("autoCycle", value)} />
-                    <div className="flex flex-col gap-1">
-                        <Text variant="body-sm" className="text-ink-2 font-medium">Open the next cycle automatically</Text>
-                        <Text variant="caption" className="text-ink-3">
-                            When Aug 21 ends, <Text variant="caption" className="font-medium text-ink-2" as="span">Aug 24-28</Text> opens by itself at the default length — empty, active, tabs already in place. Unfinished work stays in the cycle it was in until someone moves it.
-                        </Text>
-                    </div>
+            <ToggleButtonBox checked={autoCycle} onChange={(value) => setValue("autoCycle", value)}>
+                <div className="flex flex-col gap-1">
+                    <Text variant="body-sm" className="text-ink-2 font-medium">Open the next cycle automatically</Text>
+                    <Text variant="caption" className="text-ink-3">
+                        When Aug 21 ends, <Text variant="caption" className="font-medium text-ink-2" as="span">Aug 24-28</Text> opens by itself at the default length — empty, active, tabs already in place. Unfinished work stays in the cycle it was in until someone moves it.
+                    </Text>
                 </div>
-            </div>
+            </ToggleButtonBox>
 
             {/* Default view */}
             <div className="flex flex-col gap-1.5">
