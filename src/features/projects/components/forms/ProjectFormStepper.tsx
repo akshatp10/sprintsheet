@@ -28,8 +28,8 @@ const ProjectFormStepper = ({
                             variant="body"
                             className={
                                 currentStep >= step.step
-                                    ? "text-accent"
-                                    : "text-ink-2"
+                                    ? "text-accent font-medium"
+                                    : "text-ink-2 font-normal"
                             }
                         >
                             {step.label}
@@ -41,7 +41,7 @@ const ProjectFormStepper = ({
                             key={`line-${step.step}`}
                             className={`h-px flex-1 mx-3 ${currentStep > step.step
                                 ? "bg-accent"
-                                : "bg-ink-2"
+                                : "bg-lines-hairline"
                                 }`}
                         />
                     )}

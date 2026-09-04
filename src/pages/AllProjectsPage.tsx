@@ -86,8 +86,6 @@ const AllProjectsPage = () => {
 
     return (
         <>
-            {showForm && <NewProjectForm onClose={() => setShowForm(false)} />}
-
             <div className="w-full flex flex-col px-8 py-6 gap-8">
                 <div className="flex w-full items-center justify-between">
                     <div>
@@ -116,6 +114,8 @@ const AllProjectsPage = () => {
                     <Text className="text-ink-2" variant="h2">RECENT ACTIVITY</Text>
                 </div>
             </div>
+
+            {showForm && <NewProjectForm onClose={() => setShowForm(false)} />}
         </>
     );
 };
