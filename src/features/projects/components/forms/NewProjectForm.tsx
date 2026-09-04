@@ -43,7 +43,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
         control,
         watch,
         setValue,
-        formState: { errors },
+        formState: { errors, isDirty },
     } = useForm<ProjectFormData>({ defaultValues });
 
     const onSubmit = (data: ProjectFormData) => {
@@ -63,7 +63,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
     };
 
     return (
-        <PopupModal ref={popupRef} className="max-h-[90dvh]" label="New Project" onClose={onClose} alert>
+        <PopupModal ref={popupRef} className="max-h-[90dvh]" label="New Project" onClose={onClose} alert={isDirty}>
 
             <ProjectFormStepper currentStep={currentStep} />
 

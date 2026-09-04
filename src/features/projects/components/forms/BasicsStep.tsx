@@ -4,6 +4,7 @@ import Text from "@/components/common/Text";
 import { InputText } from "@/components/inputs/InputText";
 import { RadioButton } from "@/components/inputs/RadioButton";
 import ToggleButtonBox from "@/components/common/ToggleButtonBox";
+import FormInputBox from "@/components/inputs/FormInputBox";
 
 interface BasicsStepProps {
     register: UseFormRegister<ProjectFormData>;
@@ -22,50 +23,46 @@ const BasicsStep = ({ register, watch, setValue }: BasicsStepProps) => {
     const defaultView = watch("defaultView");
 
     return (
-        <section className="flex flex-col gap-5">
+        <section className="flex flex-col gap-3">
 
             {/* Top section inputs */}
             <div className="flex gap-4">
-                <div className="flex flex-1 flex-col gap-1.5">
-                    <Text variant="body-sm" className="text-ink-2">Project name</Text>
+                <FormInputBox label="Project name" className="flex-1">
                     <InputText
                         value={name}
-                        onChange={(value) => setValue("name", value)}
+                        onChange={(value) => setValue("name", value, { shouldDirty: true })}
                         placeholder=""
                         className="w-full"
                         autoFocus
                     />
-                </div>
-                <div className="flex shrink-0 flex-col gap-1.5">
-                    <Text variant="body-sm" className="text-ink-2">Key</Text>
+                </FormInputBox>
+
+                <FormInputBox label="Key" className="shrink-0">
                     <InputText
                         value={key}
-                        onChange={(value) => setValue("key", value)}
+                        onChange={(value) => setValue("key", value, { shouldDirty: true })}
                         placeholder=""
                         className="w-28"
                     />
-                </div>
+                </FormInputBox>
             </div>
 
-            {/* Description — native textarea, so registered directly */}
-            <div className="flex flex-col gap-1.5">
-                <Text variant="body-sm" className="text-ink-2">Description</Text>
+            {/* Description */}
+            <FormInputBox label="Description">
                 <textarea
                     {...register("description")}
                     rows={2}
                     placeholder=""
                     className="bg-surface rounded-md border border-lines-hairline focus:outline-0 px-2 py-1.5 text-ink placeholder:text-ink-fades-placeholders text-type-body-sm w-full resize-none"
                 />
-            </div>
+            </FormInputBox>
 
             {/* Cycle Selection and Configuration */}
-            <div className="flex flex-col gap-1.5">
-                <Text variant="body-sm" className="text-ink-2">Cycle length</Text>
-
+            <FormInputBox label="Cycle length">
                 <div className="flex items-center gap-3">
                     <RadioButton
                         value={cycleLength}
-                        onChange={(value) => setValue("cycleLength", value)}
+                        onChange={(value) => setValue("cycleLength", value, { shouldDirty: true })}
                         options={[
                             { label: "7 Days", value: "default" },
                             { label: "Custom", value: "custom" },
@@ -77,28 +74,29 @@ const BasicsStep = ({ register, watch, setValue }: BasicsStepProps) => {
                         <>
                             <InputText
                                 value={customCycleDays}
-                                onChange={(value) => setValue("customCycleDays", value)}
+                                onChange={(value) => setValue("customCycleDays", value, { shouldDirty: true })}
                                 placeholder="5"
                                 className="w-14 text-center"
                             />
                             <Text variant="body-sm" className="text-ink-2 whitespace-nowrap">days, starting</Text>
                             <InputText
                                 value={startingDay}
-                                onChange={(value) => setValue("startingDay", value)}
+                                onChange={(value) => setValue("startingDay", value, { shouldDirty: true })}
                                 placeholder="Monday"
                                 className="w-32"
                             />
                         </>
                     )}
-                </div>
 
-                <Text variant="caption" className="text-ink-3">
-                    This is the project's default length. Any single cycle's dates stay editable afterwards, so a short week or a holiday needs no new setting.
-                </Text>
-            </div>
+                </div>
+            </FormInputBox>
+
+            <Text variant="caption" className="text-ink-3">
+                This is the project's default length. Any single cycle's dates stay editable afterwards, so a short week or a holiday needs no new setting.
+            </Text>
 
             {/* Toggle for Auto Creation of Cycle */}
-            <ToggleButtonBox checked={autoCycle} onChange={(value) => setValue("autoCycle", value)}>
+            <ToggleButtonBox checked={autoCycle} onChange={(value) => setValue("autoCycle", value, { shouldDirty: true })}>
                 <Text variant="body-sm" className="text-ink-2 font-medium">Open the next cycle automatically</Text>
                 <Text variant="caption" className="text-ink-3">
                     When Aug 21 ends, <Text variant="caption" className="font-medium text-ink-2" as="span">Aug 24-28</Text> opens by itself at the default length — empty, active, tabs already in place. Unfinished work stays in the cycle it was in until someone moves it.
@@ -106,17 +104,16 @@ const BasicsStep = ({ register, watch, setValue }: BasicsStepProps) => {
             </ToggleButtonBox>
 
             {/* Default view */}
-            <div className="flex flex-col gap-1.5">
-                <Text variant="body-sm" className="text-ink-2">Default view for the team</Text>
+            <FormInputBox label="Default view for the team">
                 <RadioButton
                     value={defaultView}
-                    onChange={(value) => setValue("defaultView", value)}
+                    onChange={(value) => setValue("defaultView", value, { shouldDirty: true })}
                     options={[
                         { label: "Table", value: "table" },
                         { label: "Cards", value: "cards" },
                     ]}
                 />
-            </div>
+            </FormInputBox>
 
         </section>
     );

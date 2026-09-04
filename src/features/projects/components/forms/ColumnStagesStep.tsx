@@ -38,7 +38,7 @@ const ColumnStagesStep = ({ control }: ColumnStagesStepProps) => {
     const handleAddStage = () => { };
 
     return (
-        <section className="flex flex-col gap-6">
+        <section className="flex flex-col gap-3">
 
             {/* Columns */}
             {/* This is blocked for now */}

@@ -8,6 +8,7 @@ import { InputText } from "@/components/inputs/InputText";
 import ToggleButtonBox from "@/components/common/ToggleButtonBox";
 import UserPanel from "@/components/sidebar/UserPanel";
 import GlobalChip from "@/components/chips/GlobalChip";
+import FormInputBox from "@/components/inputs/FormInputBox";
 
 interface PeopleStepProps {
     register: UseFormRegister<ProjectFormData>;
@@ -41,11 +42,10 @@ const PeopleStep = ({ register, control, watch, setValue }: PeopleStepProps) => 
     };
 
     return (
-        <section className="flex flex-col gap-4">
+        <section className="flex flex-col gap-3">
 
             {/* Invite */}
-            <div className="flex flex-col gap-1.5">
-                <Text variant="body-sm" className="text-ink-2">Invite by email</Text>
+            <FormInputBox label="Invite by email">
                 <div className="flex gap-2">
                     <InputText
                         value={inviteInput}
@@ -65,7 +65,7 @@ const PeopleStep = ({ register, control, watch, setValue }: PeopleStepProps) => 
                         <Text variant="body-sm" className="font-medium">Add</Text>
                     </Button>
                 </div>
-            </div>
+            </FormInputBox>
 
             {/* People list */}
             <div className="flex flex-col gap-2">
