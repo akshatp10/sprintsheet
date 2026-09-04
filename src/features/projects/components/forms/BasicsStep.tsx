@@ -13,7 +13,7 @@ interface BasicsStepProps {
     errors: FieldErrors<ProjectFormData>;
 }
 
-const BasicsStep = ({ register, watch, setValue }: BasicsStepProps) => {
+const BasicsStep = ({ register, watch, setValue, errors }: BasicsStepProps) => {
     const name = watch("name");
     const key = watch("key");
     const cycleLength = watch("cycleLength");
@@ -27,7 +27,7 @@ const BasicsStep = ({ register, watch, setValue }: BasicsStepProps) => {
 
             {/* Top section inputs */}
             <div className="flex gap-4">
-                <FormInputBox label="Project name" className="flex-1">
+                <FormInputBox label="Project name" error={errors.name?.message} className="flex-1">
                     <InputText
                         value={name}
                         onChange={(value) => setValue("name", value, { shouldDirty: true })}
@@ -37,7 +37,7 @@ const BasicsStep = ({ register, watch, setValue }: BasicsStepProps) => {
                     />
                 </FormInputBox>
 
-                <FormInputBox label="Key" className="shrink-0">
+                <FormInputBox label="Key" error={errors.key?.message} className="shrink-0">
                     <InputText
                         value={key}
                         onChange={(value) => setValue("key", value, { shouldDirty: true })}
@@ -73,14 +73,14 @@ const BasicsStep = ({ register, watch, setValue }: BasicsStepProps) => {
                     {cycleLength === "custom" && (
                         <>
                             <InputText
-                                value={customCycleDays}
+                                value={customCycleDays ?? ""}
                                 onChange={(value) => setValue("customCycleDays", value, { shouldDirty: true })}
                                 placeholder="5"
                                 className="w-14 text-center"
                             />
                             <Text variant="body-sm" className="text-ink-2 whitespace-nowrap">days, starting</Text>
                             <InputText
-                                value={startingDay}
+                                value={startingDay ?? ""}
                                 onChange={(value) => setValue("startingDay", value, { shouldDirty: true })}
                                 placeholder="Monday"
                                 className="w-32"

@@ -1,19 +1,19 @@
 import { cn } from "@/lib/cn"
 
-type RadioOption = {
+type RadioOption<T extends string> = {
     label: string
-    value: string
+    value: T
 }
 
-type RadioButtonProps = {
-    options: RadioOption[]
-    value: string
-    onChange: (value: string) => void
+type RadioButtonProps<T extends string> = {
+    options: RadioOption<T>[]
+    value: T
+    onChange: (value: T) => void
     name?: string
     classname?: string
 } & Omit<React.HTMLAttributes<HTMLDivElement>, "onChange">
 
-export function RadioButton({ options, value, onChange, className, name = "radio", ...props }: RadioButtonProps) {
+export function RadioButton<T extends string>({ options, value, onChange, className, name = "radio", ...props }: RadioButtonProps<T>) {
     const selectedIndex = options.findIndex(
         (option) => option.value === value
     )

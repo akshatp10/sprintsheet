@@ -28,8 +28,8 @@ const FormInputBox = ({
 
             {error && (
                 <Text
-                    variant="body-sm"
-                    className="text-error"
+                    variant="caption"
+                    className="text-stage-blocked-text"
                 >
                     {error}
                 </Text>

@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import type { ProjectFormData } from "../../types/projectFormData";
+import { defaultValues, projectFormSchema, type ProjectFormData } from "../../types/projectFormData";
 import BasicsStep from "./BasicsStep";
 import ColumnStagesStep from "./ColumnStagesStep";
 import PeopleStep from "./PeopleStep";
@@ -7,55 +7,43 @@ import ProjectFormStepper from "./ProjectFormStepper";
 import { useRef, useState } from "react";
 import ProjectFormFooter from "./ProjectFormFooter";
 import PopupModal, { type PopupModalHandle } from "@/components/popupModals/PopupModal";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface NewProjectFormProps {
     onClose: () => void
-}
-
-const defaultValues = {
-    name: "",
-    key: "",
-    description: "",
-    cycleLength: "default",
-    customCycleDays: "5",
-    startingDay: "",
-    autoCycle: false,
-    defaultView: "table",
-    stages: [
-        { name: "Backlog" },
-        { name: "Todo" },
-        { name: "In progress" },
-        { name: "In QA" },
-        { name: "Done" },
-    ],
-    people: [],
-    startFirstCycle: true,
 }
 
 const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
     const [currentStep, setCurrentStep] = useState(1);
 
     const popupRef = useRef<PopupModalHandle>(null);
-
     const {
         register,
         handleSubmit,
         control,
         watch,
         setValue,
+        trigger,
         formState: { errors, isDirty },
-    } = useForm<ProjectFormData>({ defaultValues });
+    } = useForm<ProjectFormData>({ defaultValues, resolver: zodResolver(projectFormSchema) });
+
+    // These fields should have some data in order to move to next step
+    const stepFields: Record<number, (keyof ProjectFormData)[]> = {
+        1: ["name", "key", "cycleLength", "customCycleDays", "startingDay"],
+        2: ["stages"],
+        3: ["people"],
+    };
 
     const onSubmit = (data: ProjectFormData) => {
         console.log(data);
     };
 
-    const handleNext = () => {
-        if (currentStep < 3) {
+    const handleNext = async () => {
+        const valid = await trigger(stepFields[currentStep]);
+        if (valid && currentStep < 3) {
             setCurrentStep((prev) => prev + 1);
         }
     };
-
     const handleBack = () => {
         if (currentStep > 1) {
             setCurrentStep((prev) => prev - 1);
