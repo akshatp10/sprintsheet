@@ -52,7 +52,7 @@ const ProjectCardGrid = ({
         >
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-tint text-accent text-type-h2">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-md bg-accent-tint text-accent text-type-h2">
                         {initials}
                     </span>
 
