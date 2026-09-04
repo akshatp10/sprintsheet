@@ -19,7 +19,7 @@ const WorkspaceTopbar = () => {
             <div className="flex items-center gap-2">
                 <SearchInput value={searchProject} onChange={setSearchProject} placeholder="Search projects, tasks..." />
 
-                <Button variant="secondary" className="h-full font-medium py-0.5" handleClick={() => { }}>
+                <Button variant="secondary" className="h-full font-medium" handleClick={() => { }}>
                     + New Project
                 </Button>
             </div>

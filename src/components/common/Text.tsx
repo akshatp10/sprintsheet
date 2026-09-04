@@ -1,7 +1,7 @@
 import { cn } from "@/lib/cn";
 import type { HTMLAttributes } from "react";
 
-type TextVariant =
+export type TextVariant =
     | "display"
     | "h1"
     | "h2"

@@ -52,36 +52,22 @@ const ProjectFormFooter = ({
                 )}
 
                 {currentStep < 3 ? (
-                    <>
-                        {currentStep === 2 && (
-                            <Button
-                                type="button"
-                                handleClick={() => { }}
-                                variant="tertiary"
-                            >
-                                <Text variant="body" className="font-medium">
-                                    Use defaults
-                                </Text>
-                            </Button>
-                        )}
+                    <Button
+                        type="button"
+                        handleClick={onNext}
+                        variant="secondary"
+                        className="flex items-center gap-1"
+                    >
+                        <Text variant="body-sm" className="font-medium">
+                            Continue
+                        </Text>
 
-                        <Button
-                            type="button"
-                            handleClick={onNext}
-                            variant="secondary"
-                            className="flex items-center gap-1"
-                        >
-                            <Text variant="body" className="font-medium">
-                                Continue
-                            </Text>
-
-                            <MoveRight
-                                className="text-accent-deep"
-                                strokeWidth={1.5}
-                                size={15}
-                            />
-                        </Button>
-                    </>
+                        <MoveRight
+                            className="text-accent-deep"
+                            strokeWidth={1.5}
+                            size={15}
+                        />
+                    </Button>
                 ) : (
                     <Button
                         type="submit"

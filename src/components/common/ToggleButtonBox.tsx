@@ -14,7 +14,7 @@ const ToggleButtonBox = ({ children, checked, onChange, classname }: ToggleButto
         <div className={cn("w-full bg-accent-wash-selected border border-dashed border-accent rounded-md p-4", classname)}>
             <div className="flex items-start gap-3">
                 <ToggleButton checked={checked} onChange={onChange} />
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1 w-full">
                     {children}
                 </div>
             </div>
