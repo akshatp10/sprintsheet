@@ -1,5 +1,6 @@
 import { UserRound } from 'lucide-react';
 import CircleLayout from './CircleLayout'
+import Text from '../common/Text';
 
 interface UserAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
     userName: string | null;
@@ -20,7 +21,9 @@ const UserAvatar = ({ userName, variant, isSideBar = false, ...props }: UserAvat
 
     return (
         <CircleLayout variant={variant} isSideBar={isSideBar} {...props}>
-            {uiName}
+            <Text variant={isSideBar ? "body-sm" : "caption"}>
+                {uiName}
+            </Text>
         </CircleLayout>
     )
 }
