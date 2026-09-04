@@ -116,6 +116,8 @@ const AllProjectsPage = () => {
                     <Text className="text-ink-2" variant="h2">RECENT ACTIVITY</Text>
                 </div>
             </div>
+
+            {showForm && <NewProjectForm onClose={() => setShowForm(false)} />}
         </>
     );
 };
