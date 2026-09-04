@@ -24,6 +24,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
         watch,
         setValue,
         trigger,
+        reset,
         formState: { errors, isDirty },
     } = useForm<ProjectFormData>({ defaultValues, resolver: zodResolver(projectFormSchema) });
 
@@ -34,8 +35,10 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
         3: ["people"],
     };
 
-    const onSubmit = (data: ProjectFormData) => {
-        console.log(data);
+    const onSubmit = () => {
+        // console.log(data);
+        reset();
+        onClose();
     };
 
     const handleNext = async () => {
