@@ -35,8 +35,8 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
         3: ["people"],
     };
 
-    const onSubmit = () => {
-        // console.log(data);
+    const onSubmit = (data: ProjectFormData) => {
+        console.log(data);
         reset();
         onClose();
     };
