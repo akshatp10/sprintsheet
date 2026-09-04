@@ -62,15 +62,15 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 px-4">
-            <div className="w-full max-w-2xl rounded-xl bg-white shadow-xl px-6">
+            <div className="flex w-full max-w-2xl max-h-[90dvh] flex-col rounded-xl bg-white px-6 shadow-xl overflow-hidden">
 
                 <ProjectFormHeader onClose={onClose} />
 
                 <ProjectFormStepper currentStep={currentStep} />
 
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col">
 
-                    <div className="py-5">
+                    <div className="py-5 min-h-0 overflow-auto">
                         {currentStep === 1 && (
                             <BasicsStep
                                 register={register}
