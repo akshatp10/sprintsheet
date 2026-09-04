@@ -1,10 +1,9 @@
-import { useState } from "react";
 import { type FieldErrors, type UseFormRegister, type UseFormSetValue, type UseFormWatch } from "react-hook-form";
 import type { ProjectFormData } from "../../types/projectFormData";
 import Text from "@/components/common/Text";
 import { InputText } from "@/components/inputs/InputText";
-import { RadioButton } from "@/components/inputs/RadioButton";
 import ToggleButtonBox from "@/components/common/ToggleButtonBox";
+import { Tabs } from "@/components/inputs/Tabs";
 
 interface BasicsStepProps {
     register: UseFormRegister<ProjectFormData>;
@@ -13,16 +12,14 @@ interface BasicsStepProps {
     errors: FieldErrors<ProjectFormData>;
 }
 
-const BasicsStep = ({ watch, setValue }: BasicsStepProps) => {
+const BasicsStep = ({ register, watch, setValue }: BasicsStepProps) => {
     const name = watch("name");
-    const description = watch("description");
+    const key = watch("key");
     const cycleLength = watch("cycleLength");
+    const customCycleDays = watch("customCycleDays");
     const startingDay = watch("startingDay");
     const autoCycle = watch("autoCycle");
-
-    const [key, setKey] = useState("");
-    const [customDays, setCustomDays] = useState("5");
-    const [defaultView, setDefaultView] = useState("table");
+    const defaultView = watch("defaultView");
 
     return (
         <section className="flex flex-col gap-5">
@@ -36,25 +33,25 @@ const BasicsStep = ({ watch, setValue }: BasicsStepProps) => {
                         onChange={(value) => setValue("name", value)}
                         placeholder=""
                         className="w-full"
+                        autoFocus
                     />
                 </div>
                 <div className="flex shrink-0 flex-col gap-1.5">
                     <Text variant="body-sm" className="text-ink-2">Key</Text>
                     <InputText
                         value={key}
-                        onChange={setKey}
+                        onChange={(value) => setValue("key", value)}
                         placeholder=""
                         className="w-28"
                     />
                 </div>
             </div>
 
-            {/* Description */}
+            {/* Description — native textarea, so registered directly */}
             <div className="flex flex-col gap-1.5">
                 <Text variant="body-sm" className="text-ink-2">Description</Text>
                 <textarea
-                    value={description}
-                    onChange={(e) => setValue("description", e.target.value)}
+                    {...register("description")}
                     rows={2}
                     placeholder=""
                     className="bg-surface rounded-md border border-lines-hairline focus:outline-0 px-2 py-1.5 text-ink placeholder:text-ink-fades-placeholders text-type-body-sm w-full resize-none"
@@ -66,10 +63,10 @@ const BasicsStep = ({ watch, setValue }: BasicsStepProps) => {
                 <Text variant="body-sm" className="text-ink-2">Cycle length</Text>
 
                 <div className="flex items-center gap-3">
-                    <RadioButton
-                        value={cycleLength}
+                    <Tabs
+                        activeTab={cycleLength}
                         onChange={(value) => setValue("cycleLength", value)}
-                        options={[
+                        tabs={[
                             { label: "7 Days", value: "default" },
                             { label: "Custom", value: "custom" },
                             { label: "No Cycle", value: "nocycle" },
@@ -79,8 +76,8 @@ const BasicsStep = ({ watch, setValue }: BasicsStepProps) => {
                     {cycleLength === "custom" && (
                         <>
                             <InputText
-                                value={customDays}
-                                onChange={setCustomDays}
+                                value={customCycleDays}
+                                onChange={(value) => setValue("customCycleDays", value)}
                                 placeholder="5"
                                 className="w-14 text-center"
                             />
@@ -111,10 +108,10 @@ const BasicsStep = ({ watch, setValue }: BasicsStepProps) => {
             {/* Default view */}
             <div className="flex flex-col gap-1.5">
                 <Text variant="body-sm" className="text-ink-2">Default view for the team</Text>
-                <RadioButton
-                    value={defaultView}
-                    onChange={setDefaultView}
-                    options={[
+                <Tabs
+                    activeTab={defaultView}
+                    onChange={(value) => setValue("defaultView", value)}
+                    tabs={[
                         { label: "Table", value: "table" },
                         { label: "Cards", value: "cards" },
                     ]}

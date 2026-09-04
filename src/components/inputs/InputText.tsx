@@ -21,7 +21,7 @@ export function InputText({
             value={value}
             onChange={(event) => onChange(event.target.value)}
             className={cn(
-                "bg-surface rounded-md border border-lines-hairline focus:outline-0 px-2 py-1 text-ink placeholder:text-ink-fades-placeholders h-full text-type-body-sm",
+                "bg-surface rounded-md border border-lines-hairline focus:outline-0 px-2 py-1.5 text-ink placeholder:text-ink-fades-placeholders h-full text-type-body-sm",
                 className
             )}
             {...props}

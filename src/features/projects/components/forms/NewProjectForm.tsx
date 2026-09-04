@@ -9,6 +9,26 @@ interface NewProjectFormProps {
     onClose: () => void
 }
 
+const defaultValues = {
+    name: "",
+    key: "",
+    description: "",
+    cycleLength: "default",
+    customCycleDays: "5",
+    startingDay: "",
+    autoCycle: false,
+    defaultView: "table",
+    stages: [
+        { name: "Backlog" },
+        { name: "Todo" },
+        { name: "In progress" },
+        { name: "In QA" },
+        { name: "Done" },
+    ],
+    people: [],
+    startFirstCycle: true,
+}
+
 const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
     const [currentStep, setCurrentStep] = useState(1);
 
@@ -19,16 +39,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
         watch,
         setValue,
         formState: { errors },
-    } = useForm<ProjectFormData>({
-        defaultValues: {
-            name: "",
-            description: "",
-            cycleLength: "",
-            startingDay: "",
-            autoCycle: false,
-            stages: [],
-        },
-    });
+    } = useForm<ProjectFormData>({ defaultValues });
 
     const onSubmit = (data: ProjectFormData) => {
         console.log(data);
