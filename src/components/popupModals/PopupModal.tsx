@@ -1,5 +1,5 @@
 import { cn } from "@/lib/cn";
-import React, { useState } from "react";
+import React, { useState, useImperativeHandle } from "react";
 
 import PopupHeader from "./PopupHeader";
 import ExitAlert from "./ExitAlert";
@@ -12,6 +12,11 @@ interface PopupModalProps {
     alert?: boolean;
     alertLabel?: string;
     alertContent?: string;
+    ref?: React.Ref<PopupModalHandle>;
+}
+
+export interface PopupModalHandle {
+    requestClose: () => void;
 }
 
 const PopupModal = ({
@@ -21,7 +26,8 @@ const PopupModal = ({
     label = "",
     alert = false,
     alertContent = "All your progress will be lost. Are you sure you want to discard your changes?",
-    alertLabel = "Discard Changes?"
+    alertLabel = "Discard Changes?",
+    ref,
 }: PopupModalProps) => {
     const [exitConfirm, setExitConfirm] = useState(false);
 
@@ -33,6 +39,9 @@ const PopupModal = ({
         }
     };
 
+    useImperativeHandle(ref, () => ({ requestClose: handleClose }));
+
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 px-4">
             <div
@@ -41,11 +50,7 @@ const PopupModal = ({
                     className
                 )}
             >
-                <PopupHeader
-                    label={label}
-                    onClose={handleClose}
-                />
-
+                <PopupHeader label={label} onClose={handleClose} />
                 {children}
             </div>
 
