@@ -1,6 +1,6 @@
 import Dexie, { type EntityTable } from "dexie";
 
-export interface Project {
+interface ProjectRow {
 	id: string;
 	name: string;
 	description: string;
@@ -12,13 +12,13 @@ export interface Project {
 	updatedAt: number;
 }
 
-export interface User {
+interface UserRow {
 	id: string;
 	name: string;
 	email: string;
 }
 
-export interface ProjectMember {
+interface ProjectMemberRow {
 	id: string;
 	projectId: string;
 	userId: string;
@@ -26,15 +26,16 @@ export interface ProjectMember {
 }
 
 const db = new Dexie("SprintsheetDB") as Dexie & {
-	projects: EntityTable<Project, "id">;
-	users: EntityTable<User, "id">;
-	projectMembers: EntityTable<ProjectMember, "id">;
+	projects: EntityTable<ProjectRow, "id">;
+	users: EntityTable<UserRow, "id">;
+	projectMembers: EntityTable<ProjectMemberRow, "id">;
 };
 
 db.version(1).stores({
-	projects: "id, name,updatedAt",
+	projects: "id, name, createdAt",
 	users: "id, email",
 	projectMembers: "id, projectId, userId, [projectId+userId]",
 });
 
 export default db;
+export type { ProjectRow, UserRow, ProjectMemberRow };
