@@ -28,7 +28,7 @@ const SearchInput = ({
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
-                className="pl-8 w-64 py-1.5"
+                className="pl-8 w-64 py-1"
             />
         </div>
     );
