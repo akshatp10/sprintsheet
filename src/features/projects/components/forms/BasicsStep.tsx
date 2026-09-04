@@ -166,6 +166,7 @@ const BasicsStep = ({
                             </select>
                         </>
                     )}
+
                 </div>
             </FormInputBox>
             <Text variant="caption" className="text-ink-3">
