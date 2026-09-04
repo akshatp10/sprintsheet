@@ -1,7 +1,5 @@
 import Button from "../button/Button";
-
 import Text from "../common/Text";
-
 import PopupModal from "./PopupModal";
 
 interface ExitAlertProps {
