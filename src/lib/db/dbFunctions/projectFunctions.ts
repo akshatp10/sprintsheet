@@ -1,33 +1,29 @@
-import db, { type Project } from "../db";
+import db from "../db";
+import type { ProjectRow } from "../db";
 import { findOrCreateUser } from "./userFunctions";
 
-type NewProjectInput = {
+const CURRENT_USER_EMAIL = "akshat@company.com"; // swap for real auth later
+
+interface CreateProjectRow {
 	name: string;
 	description?: string;
-	cycleLength: Project["cycleLength"];
+	cycleLength: ProjectRow["cycleLength"];
 	startingDay?: string;
 	autoCycle: boolean;
-};
-
-type InvitedPerson = {
-	email: string;
-	role: "member" | "admin";
-};
+	invitedPeople?: { email: string; role: "member" | "admin" }[];
+}
 
 export const createProject = async (
-	data: NewProjectInput,
-	ownerEmail: string,
-	invitedPeople: InvitedPerson[] = [],
-): Promise<Project> => {
+	input: CreateProjectRow,
+): Promise<ProjectRow> => {
 	const now = Date.now();
-
-	const project: Project = {
+	const project: ProjectRow = {
 		id: crypto.randomUUID(),
-		name: data.name,
-		description: data.description ?? "",
-		cycleLength: data.cycleLength,
-		startingDay: data.startingDay ?? "",
-		autoCycle: data.autoCycle,
+		name: input.name,
+		description: input.description ?? "",
+		cycleLength: input.cycleLength,
+		startingDay: input.startingDay ?? "",
+		autoCycle: input.autoCycle,
 		isArchived: false,
 		createdAt: now,
 		updatedAt: now,
@@ -41,7 +37,7 @@ export const createProject = async (
 		async () => {
 			await db.projects.add(project);
 
-			const owner = await findOrCreateUser(ownerEmail);
+			const owner = await findOrCreateUser(CURRENT_USER_EMAIL);
 			await db.projectMembers.add({
 				id: crypto.randomUUID(),
 				projectId: project.id,
@@ -49,7 +45,7 @@ export const createProject = async (
 				role: "admin",
 			});
 
-			for (const person of invitedPeople) {
+			for (const person of input.invitedPeople ?? []) {
 				const user = await findOrCreateUser(person.email);
 				await db.projectMembers.add({
 					id: crypto.randomUUID(),
@@ -64,11 +60,11 @@ export const createProject = async (
 	return project;
 };
 
-export const getProject = (id: string) => db.projects.get(id);
+export const getProjectById = (id: string) => db.projects.get(id);
 
-export const getAllProjects = async (
+export const getAllProjectsByUser = async (
 	includeArchived = false,
-): Promise<Project[]> => {
+): Promise<ProjectRow[]> => {
 	const all = await db.projects.orderBy("createdAt").reverse().toArray();
 	return includeArchived ? all : all.filter((p) => !p.isArchived);
 };
