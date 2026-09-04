@@ -1,87 +1,86 @@
 import Text from "@/components/common/Text";
 import { RadioButton } from "@/components/inputs/RadioButton";
 import EmptyTaskCard from "@/features/projects/components/EmptyTaskCard";
-import NewProjectForm from "@/features/projects/components/forms/NewProjectForm";
 import ProjectCardGrid from "@/features/projects/components/ProjectCardGrid";
 import { useState } from "react";
 
-const AllProjectsPage = () => {
-    interface projectType {
-        initials: string;
-        title: string;
-        description: string;
-        date: string;
-        openCount: number;
-        progress: number;
-        progressText: string;
-        users: {
-            userName: string;
-            variant: "blue" | "amber" | "purple" | "rose";
-        }[];
-        extraUsers?: number;
-    }
-    const projects: projectType[] = [
-        {
-            initials: "CR",
-            title: "CRM Frontend",
-            description:
-                "Web + mobile CRM rebuild. Weekly cycles, QA gate before release.",
-            date: "Aug 17-21",
-            openCount: 9,
-            progress: 64,
-            progressText: "64% this cycle",
-            users: [
-                {
-                    userName: "Akshat",
-                    variant: "blue",
-                },
-                {
-                    userName: "Rohit",
-                    variant: "amber",
-                },
-            ],
-            extraUsers: 3,
-        },
-        {
-            initials: "AP",
-            title: "Analytics Platform",
-            description:
-                "New analytics dashboard with reporting and data visualization.",
-            date: "Aug 22-28",
-            openCount: 6,
-            progress: 48,
-            progressText: "48% this cycle",
-            users: [
-                {
-                    userName: "Akshat",
-                    variant: "blue",
-                },
-            ],
-        },
-        {
-            initials: "MB",
-            title: "Mobile App",
-            description:
-                "Mobile experience improvements, onboarding and navigation updates.",
-            date: "Aug 25-29",
-            openCount: 4,
-            progress: 78,
-            progressText: "78% this cycle",
-            users: [
-                {
-                    userName: "Rohit",
-                    variant: "amber",
-                },
-                {
-                    userName: "Sam",
-                    variant: "rose",
-                },
-            ],
-            extraUsers: 1,
-        },
-    ];
+interface projectType {
+    initials: string;
+    title: string;
+    description: string;
+    date: string;
+    openCount: number;
+    progress: number;
+    progressText: string;
+    users: {
+        userName: string;
+        variant: "blue" | "amber" | "purple" | "rose";
+    }[];
+    extraUsers?: number;
+}
 
-    const [showForm, setShowForm] = useState(false)
+const projects: projectType[] = [
+    {
+        initials: "CR",
+        title: "CRM Frontend",
+        description:
+            "Web + mobile CRM rebuild. Weekly cycles, QA gate before release.",
+        date: "Aug 17-21",
+        openCount: 9,
+        progress: 64,
+        progressText: "64% this cycle",
+        users: [
+            {
+                userName: "Akshat",
+                variant: "blue",
+            },
+            {
+                userName: "Rohit",
+                variant: "amber",
+            },
+        ],
+        extraUsers: 3,
+    },
+    {
+        initials: "AP",
+        title: "Analytics Platform",
+        description:
+            "New analytics dashboard with reporting and data visualization.",
+        date: "Aug 22-28",
+        openCount: 6,
+        progress: 48,
+        progressText: "48% this cycle",
+        users: [
+            {
+                userName: "Akshat",
+                variant: "blue",
+            },
+        ],
+    },
+    {
+        initials: "MB",
+        title: "Mobile App",
+        description:
+            "Mobile experience improvements, onboarding and navigation updates.",
+        date: "Aug 25-29",
+        openCount: 4,
+        progress: 78,
+        progressText: "78% this cycle",
+        users: [
+            {
+                userName: "Rohit",
+                variant: "amber",
+            },
+            {
+                userName: "Sam",
+                variant: "rose",
+            },
+        ],
+        extraUsers: 1,
+    },
+];
+
+const AllProjectsPage = () => {
     const [projectsView, setProjectsView] = useState("grid")
 
     return (
@@ -107,15 +106,13 @@ const AllProjectsPage = () => {
                             {...project}
                         />
                     ))}
-                    <EmptyTaskCard handleClick={() => setShowForm(true)} />
+                    <EmptyTaskCard />
                 </div>
 
                 <div>
                     <Text className="text-ink-2" variant="h2">RECENT ACTIVITY</Text>
                 </div>
             </div>
-
-            {showForm && <NewProjectForm onClose={() => setShowForm(false)} />}
         </>
     );
 };
