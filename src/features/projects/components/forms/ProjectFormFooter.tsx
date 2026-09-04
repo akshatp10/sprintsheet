@@ -58,7 +58,7 @@ const ProjectFormFooter = ({
                         variant="secondary"
                         className="flex items-center gap-1"
                     >
-                        <Text variant="body-sm" className="font-medium">
+                        <Text variant="body" className="font-medium">
                             Continue
                         </Text>
 
