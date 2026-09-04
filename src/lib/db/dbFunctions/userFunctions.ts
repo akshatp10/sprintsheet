@@ -1,13 +1,14 @@
-import db, { type User } from "../db";
+import db from "../db";
+import type { UserRow } from "../db";
 
 export const findOrCreateUser = async (
 	email: string,
 	name?: string,
-): Promise<User> => {
+): Promise<UserRow> => {
 	const existing = await db.users.where("email").equals(email).first();
 	if (existing) return existing;
 
-	const user: User = {
+	const user: UserRow = {
 		id: crypto.randomUUID(),
 		email,
 		name: name ?? email.split("@")[0],
@@ -16,4 +17,9 @@ export const findOrCreateUser = async (
 	return user;
 };
 
-export const getAllUsers = () => db.users.toArray();
+export const getUserById = (id: string) => db.users.get(id);
+
+export const getUsersByIds = (ids: string[]) => db.users.bulkGet(ids);
+
+export const getProjectMemberRows = (projectId: string) =>
+	db.projectMembers.where("projectId").equals(projectId).toArray();
