@@ -70,10 +70,10 @@ const ProjectFormFooter = ({
                     </Button>
                 ) : (
                     <Button
+                        key={currentStep.toString()}
                         type="submit"
                         variant="secondary"
                         className="flex items-center gap-1"
-                        handleClick={() => { }}
                     >
                         <Check
                             className="text-accent-deep"

@@ -4,9 +4,9 @@ import BasicsStep from "./BasicsStep";
 import ColumnStagesStep from "./ColumnStagesStep";
 import PeopleStep from "./PeopleStep";
 import ProjectFormStepper from "./ProjectFormStepper";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ProjectFormFooter from "./ProjectFormFooter";
-import PopupModal from "@/components/popupModals/PopupModal";
+import PopupModal, { type PopupModalHandle } from "@/components/popupModals/PopupModal";
 
 interface NewProjectFormProps {
     onClose: () => void
@@ -35,6 +35,8 @@ const defaultValues = {
 const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
     const [currentStep, setCurrentStep] = useState(1);
 
+    const popupRef = useRef<PopupModalHandle>(null);
+
     const {
         register,
         handleSubmit,
@@ -61,7 +63,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
     };
 
     return (
-        <PopupModal className="max-h-[90dvh]" label="New Project" onClose={onClose} alert>
+        <PopupModal ref={popupRef} className="max-h-[90dvh]" label="New Project" onClose={onClose} alert>
 
             <ProjectFormStepper currentStep={currentStep} />
 
@@ -100,7 +102,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
 
                 <ProjectFormFooter
                     currentStep={currentStep}
-                    onClose={onClose}
+                    onClose={() => popupRef.current?.requestClose()}
                     onBack={handleBack}
                     onNext={handleNext}
                 />
