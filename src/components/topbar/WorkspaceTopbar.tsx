@@ -1,6 +1,6 @@
-import { ChevronDown } from "lucide-react"
+// import { ChevronDown } from "lucide-react"
+// import Text from "../common/Text"
 import Button from "../button/Button"
-import Text from "../common/Text"
 import { useState } from "react"
 import SearchInput from "../inputs/SearchInput"
 import NewProjectForm from "@/features/projects/components/forms/NewProjectForm"
@@ -12,12 +12,12 @@ const WorkspaceTopbar = () => {
     const handleClick = () => { setShowForm(true) }
     return (
         <>
-            <div className="flex justify-between items-center w-full">
+            <div className="flex justify-end items-center w-full">
                 {/* Workspace Dropdown */}
-                <Button handleClick={() => { }} variant='tertiary' className='border-0 flex justify-center items-center gap-2'>
+                {/* <Button handleClick={() => { }} variant='tertiary' className='border-0 flex justify-center items-center gap-2'>
                     <Text variant="h2">Alter Office</Text>
                     <ChevronDown size={15} strokeWidth={1.5} className="text-ink-fades-ghost-rows" />
-                </Button>
+                </Button> */}
 
 
                 {/* Right side containing search project and new project buttons */}

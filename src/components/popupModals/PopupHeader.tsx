@@ -2,17 +2,19 @@ import Button from "@/components/button/Button";
 import Text from "@/components/common/Text";
 import { X } from "lucide-react";
 
-interface ProjectFormHeaderProps {
+interface PopupHeaderProps {
     onClose: () => void;
+    label?: string
 }
 
-const ProjectFormHeader = ({
+const PopupHeader = ({
     onClose,
-}: ProjectFormHeaderProps) => {
+    label = ""
+}: PopupHeaderProps) => {
     return (
         <div className="flex items-center justify-between py-4">
             <Text variant="h1">
-                New Project
+                {label}
             </Text>
 
             <Button
@@ -27,4 +29,4 @@ const ProjectFormHeader = ({
     );
 };
 
-export default ProjectFormHeader;
+export default PopupHeader;
