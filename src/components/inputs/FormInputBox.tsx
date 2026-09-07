@@ -26,14 +26,12 @@ const FormInputBox = ({
 
             {children}
 
-            {error && (
-                <Text
-                    variant="caption"
-                    className="text-stage-blocked-text"
-                >
-                    {error}
-                </Text>
-            )}
+            <Text
+                variant="caption"
+                className="text-stage-blocked-text min-h-4"
+            >
+                {error ?? ""}
+            </Text>
         </div>
     );
 };
