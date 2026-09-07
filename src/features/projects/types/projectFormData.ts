@@ -40,7 +40,7 @@ export const projectFormSchema = z
 		},
 		{
 			path: ["customCycleDays"],
-			message: "Between 1 and 7",
+			message: "Cycle Length should be Between 1 and 7",
 		},
 	);
 const defaultValues: ProjectFormData = {
