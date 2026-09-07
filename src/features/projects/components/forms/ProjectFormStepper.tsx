@@ -1,5 +1,6 @@
 import Text from "@/components/common/Text";
 import FormStepCompontent from "../FormStepCompontent";
+import { Fragment } from "react/jsx-runtime";
 
 interface ProjectFormStepperProps {
     currentStep: number;
@@ -17,8 +18,8 @@ const ProjectFormStepper = ({
     return (
         <div className="flex items-center w-full">
             {steps.map((step, index) => (
-                <>
-                    <div key={step.step} className="flex items-center gap-1">
+                <Fragment key={step.step}>
+                    <div className="flex items-center gap-1">
                         <FormStepCompontent
                             currentStep={currentStep}
                             step={step.step}
@@ -45,7 +46,7 @@ const ProjectFormStepper = ({
                                 }`}
                         />
                     )}
-                </>
+                </Fragment>
             ))}
         </div>
     );

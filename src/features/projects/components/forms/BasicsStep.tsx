@@ -120,7 +120,6 @@ const BasicsStep = ({
                         }
                         tabs={cycleTabsOptions}
                     />
-
                     {formValues.cycleLength === "custom" && (
                         <>
                             <InputText
@@ -167,10 +166,8 @@ const BasicsStep = ({
                             </select>
                         </>
                     )}
-
                 </div>
             </FormInputBox>
-
             <Text variant="caption" className="text-ink-3">
                 This is the project's default length. Any single cycle's dates
                 stay editable afterwards, so a short week or a holiday needs
@@ -204,7 +201,6 @@ const BasicsStep = ({
                     it was in until someone moves it.
                 </Text>
             </ToggleButtonBox>
-
             {/* Default view */}
             <FormInputBox label="Default view for the team">
                 <Tabs
@@ -221,5 +217,4 @@ const BasicsStep = ({
         </section>
     );
 };
-
 export default BasicsStep;
