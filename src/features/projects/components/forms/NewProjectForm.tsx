@@ -27,7 +27,11 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
         trigger,
         reset,
         formState: { errors, isDirty },
-    } = useForm<ProjectFormData>({ defaultValues, resolver: zodResolver(projectFormSchema) });
+    } = useForm<ProjectFormData>({
+        defaultValues,
+        resolver: zodResolver(projectFormSchema),
+        mode: "onChange",
+    });
 
     // These fields should have some data in order to move to next step
     const stepFields: Record<number, (keyof ProjectFormData)[]> = {
