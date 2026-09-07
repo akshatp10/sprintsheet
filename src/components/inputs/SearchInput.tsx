@@ -31,7 +31,7 @@ const SearchInput = ({
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
-                className="pl-8 w-64 py-1"
+                className="pl-8 w-64 py-1 placeholder:font-medium"
                 autoFocus={autofocus}
                 id="search"
             />
