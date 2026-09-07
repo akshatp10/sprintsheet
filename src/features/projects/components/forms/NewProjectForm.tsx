@@ -26,7 +26,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
         setValue,
         trigger,
         reset,
-        formState: { errors, isDirty },
+        formState: { errors, isDirty, isValid },
     } = useForm<ProjectFormData>({
         defaultValues,
         resolver: zodResolver(projectFormSchema),
@@ -112,6 +112,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
                     onClose={() => popupRef.current?.requestClose()}
                     onBack={handleBack}
                     onNext={handleNext}
+                    isNextDisabled={!isValid}
                 />
 
             </form>
