@@ -11,7 +11,7 @@ const EmptyTaskCard = () => {
 
     return (
         <>
-            <Button handleClick={handleClick} variant="tertiary" className="flex min-h-40 h-full w-full flex-col items-center justify-center rounded-lg border border-dashed border-accent-deep">
+            <Button handleClick={handleClick} variant="tertiary" className="flex min-h-40 h-full w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-accent-deep bg-accent-wash-selected">
                 <img
                     src={EmptyTask}
                     alt="Empty project"

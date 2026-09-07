@@ -33,8 +33,10 @@ const ProjectCardGrid = ({
     progress,
     progressText,
     users,
-    extraUsers = 0,
 }: ProjectCardProps) => {
+
+    const visibleUsers = users.slice(0, 3);
+    const extraUsers = Math.max(users.length - 3, 0);
 
     const navigate = useNavigate();
 
@@ -90,7 +92,7 @@ const ProjectCardGrid = ({
 
             <div className="flex items-center gap-3">
                 <AvatarGroup>
-                    {users.map((user) => (
+                    {visibleUsers.map((user) => (
                         <Avatar
                             key={user.userName}
                             userName={user.userName}
