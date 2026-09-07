@@ -31,7 +31,7 @@ const WorkspaceTopbar = () => {
 
                 {/* Right side containing search project and new project buttons */}
                 <div className="flex items-center gap-2">
-                    <SearchInput value={searchProject} onChange={setSearchProject} placeholder="Search projects, tasks..." />
+                    <SearchInput value={searchProject} onChange={setSearchProject} placeholder="Search projects, tasks...  &#8984;+K" />
 
                     <Button variant="secondary" className="h-full font-medium" handleClick={handleClick}>
                         + New Project
