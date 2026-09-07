@@ -8,6 +8,7 @@ import ColumnStagesStep from "./ColumnStagesStep";
 import BasicsStep from "./BasicsStep";
 import PeopleStep from "./PeopleStep";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { createNewProject } from "@/lib/services/api/projectServices";
 
 interface NewProjectFormProps {
     onClose: () => void
@@ -35,8 +36,20 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
         3: ["people"],
     };
 
-    const onSubmit = (data: ProjectFormData) => {
-        console.log(data);
+    const onSubmit = async (data: ProjectFormData) => {
+        const result = await createNewProject({
+            name: data.name,
+            description: data.description,
+            cycleLength: data.cycleLength,
+            startingDay: data.startingDay,
+            autoCycle: data.autoCycle,
+            invitedPeople: data.people,
+        });
+
+        if (!result.success) {
+            return;
+        }
+
         reset();
         onClose();
     };
