@@ -75,6 +75,7 @@ const ColumnStagesStep = ({ control }: ColumnStagesStepProps) => {
                             tag={
                                 index === 0 ? "start" : index === fields.length - 1 ? "terminal" : null
                             }
+                            key={field.id}
                         />
                     ))}
                 </div>

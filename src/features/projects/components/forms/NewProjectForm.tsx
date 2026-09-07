@@ -35,7 +35,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
 
     // These fields should have some data in order to move to next step
     const stepFields: Record<number, (keyof ProjectFormData)[]> = {
-        1: ["name", "key", "cycleLength", "customCycleDays", "startingDay"],
+        1: ["name", "key", "description", "cycleLength", "customCycleDays", "startingDay"],
         2: ["stages"],
         3: ["people"],
     };

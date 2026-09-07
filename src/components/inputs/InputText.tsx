@@ -4,6 +4,7 @@ type InputTextProps = {
     value: string
     onChange: (value: string) => void
     className?: string
+    type?: string
 } & Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
     "value" | "onChange" | "className"
@@ -13,11 +14,12 @@ export function InputText({
     value,
     onChange,
     className,
+    type = "text",
     ...props
 }: InputTextProps) {
     return (
         <input
-            type="text"
+            type={type}
             value={value}
             onChange={(event) => onChange(event.target.value)}
             className={cn(
