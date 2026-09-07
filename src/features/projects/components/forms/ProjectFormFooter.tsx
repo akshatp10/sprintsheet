@@ -7,6 +7,7 @@ interface ProjectFormFooterProps {
     onClose: () => void;
     onBack: () => void;
     onNext: () => void;
+    isNextDisabled: boolean
 }
 
 const ProjectFormFooter = ({
@@ -14,6 +15,7 @@ const ProjectFormFooter = ({
     onClose,
     onBack,
     onNext,
+    isNextDisabled,
 }: ProjectFormFooterProps) => {
     return (
         <div className="flex items-center justify-end gap-2 py-4">
@@ -56,14 +58,15 @@ const ProjectFormFooter = ({
                         type="button"
                         handleClick={onNext}
                         variant="secondary"
-                        className="flex items-center gap-1"
+                        className="group flex items-center gap-1 disabled:cursor-not-allowed disabled:bg-ink-fades-disabled disabled:border-ink-fades-disabled disabled:text-ink-fades-disabled disabled:shadow-ink-fades-disabled"
+                        disabled={isNextDisabled}
                     >
                         <Text variant="body" className="font-medium">
                             Continue
                         </Text>
 
                         <MoveRight
-                            className="text-accent-deep"
+                            className="text-accent-deep group-disabled:text-ink-fades-disabled"
                             strokeWidth={1.5}
                             size={15}
                         />
