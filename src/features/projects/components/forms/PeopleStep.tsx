@@ -52,11 +52,12 @@ const PeopleStep = ({ register, control, watch, setValue }: PeopleStepProps) => 
                         onChange={setInviteInput}
                         placeholder="name@company.com, comma separated"
                         className="flex-1"
+                        autoFocus
                     />
                     <select
                         value={inviteRole}
                         onChange={(e) => setInviteRole(e.target.value as ProjectPerson["role"])}
-                        className="bg-surface rounded-md border border-lines-hairline focus:outline-0 px-2 text-ink text-type-body-sm cursor-pointer"
+                        className="bg-surface rounded-md border border-lines-hairline px-2 text-ink text-type-body-sm cursor-pointer focus:outline"
                     >
                         <option value="member">Member</option>
                         <option value="admin">Admin</option>
