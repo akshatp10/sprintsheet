@@ -8,6 +8,7 @@ type SearchInputProps = {
     onChange: (value: string) => void;
     className?: string;
     placeholder?: string;
+    autofocus?: boolean
 };
 
 const SearchInput = ({
@@ -15,7 +16,9 @@ const SearchInput = ({
     onChange,
     className,
     placeholder = "Search",
+    autofocus = false,
 }: SearchInputProps) => {
+
     return (
         <div className={cn("relative", className)}>
             <Search
@@ -29,6 +32,8 @@ const SearchInput = ({
                 onChange={onChange}
                 placeholder={placeholder}
                 className="pl-8 w-64 py-1"
+                autoFocus={autofocus}
+                id="search"
             />
         </div>
     );

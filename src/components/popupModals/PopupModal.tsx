@@ -1,5 +1,5 @@
 import { cn } from "@/lib/cn";
-import React, { useState, useImperativeHandle } from "react";
+import React, { useState, useImperativeHandle, useEffect } from "react";
 
 import PopupHeader from "./PopupHeader";
 import ExitAlert from "./ExitAlert";
@@ -41,6 +41,19 @@ const PopupModal = ({
 
     useImperativeHandle(ref, () => ({ requestClose: handleClose }));
 
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                handleClose();
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [alert]);
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 px-4">
