@@ -3,36 +3,39 @@ import Tabs, { type TabsOption } from "@/components/inputs/Tabs";
 import EmptyTaskCard from "@/features/projects/components/EmptyTaskCard";
 import ProjectCardGrid from "@/features/projects/components/ProjectCardGrid";
 import { mapProjectToCard } from "@/lib/mapProjectToCard";
-import { getAllUserProjects, getProjectMembers } from "@/lib/services/api/projectServices";
-import type { Project, ProjectMember } from "@/lib/services/types";
-import { useEffect, useState } from "react";
+import {
+    projectMembersQuery,
+    useProjects,
+} from "@/lib/services/projects/hooks";
+import { useQueries } from "@tanstack/react-query";
+import { useState } from "react";
 
 const AllProjectsPage = () => {
-    const [projects, setProjects] = useState<Project[]>([]);
-    const [membersByProject, setMembersByProject] = useState<Record<string, ProjectMember[]>>({});
     const [projectsView, setProjectsView] = useState("grid");
 
-    useEffect(() => {
-        const fetchProjects = async () => {
-            const result = await getAllUserProjects();
-            if (!result.success || !result.data) return;
+    const {
+        data: projects = [],
+        isLoading,
+        isError,
+        error
+    } = useProjects();
 
-            setProjects(result.data);
-
-            const memberEntries = await Promise.all(
-                result.data.map(async (p) => {
-                    const membersResult = await getProjectMembers(p.id);
-                    return [p.id, membersResult.data ?? []] as const;
-                })
-            );
-            setMembersByProject(Object.fromEntries(memberEntries));
-        };
-
-        fetchProjects();
-    }, []);
+    const memberQueries = useQueries({
+        queries: projects.map((project) =>
+            projectMembersQuery(project.id)
+        ),
+    });
 
     const activeCount = projects.filter((p) => !p.isArchived).length;
     const archivedCount = projects.length - activeCount;
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (isError) {
+        return <div>Failed to load projects. {error?.message}</div>;
+    }
 
     const tabs: TabsOption<"grid" | "list">[] = [{ label: "Grid", value: "grid" }, { label: "List", value: "list" }]
 
@@ -57,10 +60,13 @@ const AllProjectsPage = () => {
             </div>
 
             <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {projects.map((project) => (
+                {projects.map((project, index) => (
                     <ProjectCardGrid
                         key={project.id}
-                        {...mapProjectToCard(project, membersByProject[project.id])}
+                        {...mapProjectToCard(
+                            project,
+                            memberQueries[index]?.data ?? []
+                        )}
                     />
                 ))}
 
