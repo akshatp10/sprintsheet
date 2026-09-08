@@ -3,16 +3,12 @@ import {
 	getAllProjectsByUser,
 	getProjectById,
 } from "@/lib/db/dbFunctions/projectFunctions";
-import type {
-	ApiResponse,
-	CreateProjectInput,
-	Project,
-	ProjectMember,
-} from "../types";
+import type { ApiResponse } from "../types";
 import {
 	getProjectMemberRows,
 	getUsersByIds,
 } from "@/lib/db/dbFunctions/userFunctions";
+import type { CreateProjectInput, Project, ProjectMember } from "./types";
 
 export const createNewProject = async (
 	input: CreateProjectInput,
