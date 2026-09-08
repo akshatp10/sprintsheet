@@ -25,7 +25,14 @@ export interface CreateProjectInput {
 	cycleLength: Project["cycleLength"];
 	startingDay?: string;
 	autoCycle: boolean;
-	invitedPeople?: { email: string; role: "member" | "admin" }[];
+	invitedPeople?: {
+		email: string;
+		role: "member" | "admin";
+	}[];
+	stages: {
+		name: string;
+		order: number;
+	}[];
 }
 
 export interface UpdateProjectInput {

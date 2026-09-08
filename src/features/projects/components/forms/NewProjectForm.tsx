@@ -51,6 +51,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
             startingDay: data.startingDay,
             autoCycle: data.autoCycle,
             invitedPeople: data.people,
+            stages: data.stages,
         }
         createProject(
             newProject,
