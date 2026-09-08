@@ -1,5 +1,6 @@
 import { getUserById } from "@/lib/db/dbFunctions/userFunctions";
-import type { ApiResponse, User } from "../types";
+import type { ApiResponse } from "../types";
+import type { User } from "./types";
 
 export const getUser = async (id: string): Promise<ApiResponse<User>> => {
 	try {
