@@ -13,6 +13,7 @@ type ProjectUser = {
 };
 
 type ProjectCardProps = {
+    id: string
     initials: string;
     title: string;
     description: string;
@@ -25,6 +26,7 @@ type ProjectCardProps = {
 };
 
 const ProjectCardGrid = ({
+    id,
     initials,
     title,
     description,
@@ -40,9 +42,8 @@ const ProjectCardGrid = ({
 
     const navigate = useNavigate();
 
-    //Temporary navigating to sample project route
     const clickingProjectCard = () => {
-        navigate("/project/1")
+        navigate(`/project/${id}`)
     }
 
     return (
