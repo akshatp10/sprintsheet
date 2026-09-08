@@ -19,7 +19,10 @@ export const projectFormSchema = z
 		defaultView: z.enum(["table", "cards"]),
 		stages: z
 			.array(
-				z.object({ name: z.string().min(1, "Stage name is required") }),
+				z.object({
+					name: z.string().min(1, "Stage name is required"),
+					order: z.number(),
+				}),
 			)
 			.min(1, "At least one stage is required"),
 		people: z.array(projectPersonSchema),
@@ -53,11 +56,11 @@ const defaultValues: ProjectFormData = {
 	autoCycle: false,
 	defaultView: "table",
 	stages: [
-		{ name: "Backlog" },
-		{ name: "Todo" },
-		{ name: "In progress" },
-		{ name: "In QA" },
-		{ name: "Done" },
+		{ name: "Backlog", order: 0 },
+		{ name: "Todo", order: 1 },
+		{ name: "In progress", order: 2 },
+		{ name: "In QA", order: 3 },
+		{ name: "Done", order: 4 },
 	],
 	people: [],
 	startFirstCycle: true,

@@ -25,17 +25,40 @@ interface ProjectMemberRow {
 	role: "member" | "admin";
 }
 
+interface StageRow {
+	id: string;
+	name: string;
+}
+
+interface ProjectStageRow {
+	id: string;
+	projectId: string;
+	stageId: string;
+	order: number;
+}
+
 const db = new Dexie("SprintsheetDB") as Dexie & {
 	projects: EntityTable<ProjectRow, "id">;
 	users: EntityTable<UserRow, "id">;
 	projectMembers: EntityTable<ProjectMemberRow, "id">;
+	stages: EntityTable<StageRow, "id">;
+	projectStages: EntityTable<ProjectStageRow, "id">;
 };
 
 db.version(1).stores({
 	projects: "id, name, createdAt",
 	users: "id, email",
 	projectMembers: "id, projectId, userId, [projectId+userId]",
+	stages: "id, name",
+	projectStages:
+		"id, projectId, stageId, [projectId+stageId], [projectId+order]",
 });
 
 export default db;
-export type { ProjectRow, UserRow, ProjectMemberRow };
+export type {
+	ProjectRow,
+	UserRow,
+	ProjectMemberRow,
+	StageRow,
+	ProjectStageRow,
+};
