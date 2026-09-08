@@ -8,13 +8,16 @@ import ColumnStagesStep from "./ColumnStagesStep";
 import BasicsStep from "./BasicsStep";
 import PeopleStep from "./PeopleStep";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createNewProject } from "@/lib/services/api/projectServices";
+import { useCreateProject } from "@/lib/services/projects/hooks";
 
 interface NewProjectFormProps {
     onClose: () => void
 }
 
 const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
+
+    const { mutate: createProject } = useCreateProject()
+
     const [currentStep, setCurrentStep] = useState(1);
 
     const popupRef = useRef<PopupModalHandle>(null);
@@ -41,22 +44,23 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
     };
 
     const onSubmit = async (data: ProjectFormData) => {
-        const result = await createNewProject({
+        const newProject = {
             name: data.name,
             description: data.description,
             cycleLength: data.cycleLength,
             startingDay: data.startingDay,
             autoCycle: data.autoCycle,
             invitedPeople: data.people,
-        });
-
-        if (!result.success) {
-            return;
         }
-
-        reset();
-        onClose();
-    };
+        createProject(
+            newProject,
+            {
+                onSuccess: () => {
+                    reset();
+                    onClose();
+                },
+            })
+    }
 
     const handleNext = async () => {
         const valid = await trigger(stepFields[currentStep]);

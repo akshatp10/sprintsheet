@@ -43,7 +43,7 @@ export const mapProjectToCard = (
 		date: formatDate(project.createdAt),
 		openCount: 0,
 		progress: 0,
-		progressText: "",
+		progressText: "0% this cycle",
 		users,
 		extraUsers: members.length > 4 ? members.length - 4 : 0,
 	};

@@ -18,7 +18,7 @@ const AllProjectsPage = () => {
         isLoading,
         isError,
         error
-    } = useProjects();
+    } = useProjects(false);
 
     const memberQueries = useQueries({
         queries: projects.map((project) =>
