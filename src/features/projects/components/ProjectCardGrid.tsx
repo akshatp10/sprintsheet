@@ -50,7 +50,7 @@ const ProjectCardGrid = ({
         <Button
             handleClick={clickingProjectCard}
             variant="tertiary"
-            className="flex h-55 w-full flex-col items-stretch justify-between rounded-xl border border-lines-hairline bg-surface px-6 py-4 text-left"
+            className="flex h-50 w-full flex-col items-stretch justify-between rounded-xl border border-lines-hairline bg-surface px-6 py-4 text-left"
         >
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -91,7 +91,7 @@ const ProjectCardGrid = ({
                 color="bg-accent"
             />
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
                 <AvatarGroup>
                     {visibleUsers.map((user) => (
                         <Avatar
