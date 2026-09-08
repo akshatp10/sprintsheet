@@ -53,6 +53,9 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
             invitedPeople: data.people,
             stages: data.stages,
         }
+
+        console.log(newProject)
+
         createProject(
             newProject,
             {
