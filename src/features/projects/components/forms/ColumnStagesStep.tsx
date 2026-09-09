@@ -9,6 +9,7 @@ import ProjectStage from "./ProjectStage";
 import useStageDrag from "@/hooks/useStageDrag";
 import DraggableComponent from "@/components/draggable/DraggableComponent";
 import DraggableTarget from "@/components/draggable/DraggableTarget";
+import ProjectDropComponent from "../ProjectDropComponent";
 
 interface ColumnStagesStepProps {
     register: UseFormRegister<ProjectFormData>;
@@ -34,6 +35,7 @@ const stageColors: Record<string, string> = {
     "In progress": "bg-stage-progress-dot",
     "In QA": "bg-stage-qa-dot",
     Done: "bg-stage-done-dot",
+    Blocked: "bg-stage-blocked-dot"
 };
 
 const ColumnStagesStep = ({ control, setValue }: ColumnStagesStepProps) => {
@@ -151,6 +153,8 @@ const ColumnStagesStep = ({ control, setValue }: ColumnStagesStepProps) => {
                             />
                         </DraggableComponent>
                     )}
+
+                    customDropZone={<ProjectDropComponent color={stageColors[draggedStage?.name ?? "Backlog"]} label={draggedStage?.name ?? ""} />}
                 />
 
                 {/* Add stage - To be added in upcoming features */}
