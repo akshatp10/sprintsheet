@@ -16,6 +16,7 @@ interface DraggableTargetProps<T extends DraggableTargetItem> {
     renderGhost?: (item: T) => ReactNode;
     className?: string;
     ref?: Ref<HTMLDivElement>;
+    customDropZone?: ReactNode | ""
 }
 
 function DraggableTarget<T extends DraggableTargetItem>({
@@ -27,6 +28,7 @@ function DraggableTarget<T extends DraggableTargetItem>({
     renderItem,
     renderGhost,
     className,
+    customDropZone,
     ref,
 }: DraggableTargetProps<T>) {
     return (
@@ -42,15 +44,14 @@ function DraggableTarget<T extends DraggableTargetItem>({
                     <div key={item.id} data-item-id={item.id}>
                         <DropZone />
 
-                        {isDragged ? (
-                            <div className="flex items-center justify-between rounded-md border border-lines-hairline w-full px-3 py-2 min-h-9.5" />
+                        {isDragged ? (customDropZone ? customDropZone :
+                            < div className="flex items-center justify-between rounded-md border border-lines-hairline w-full px-3 py-2 min-h-9.5" />
                         ) : (
                             renderItem(item, index)
                         )}
                     </div>
                 );
             })}
-
 
             <DropZone />
 
