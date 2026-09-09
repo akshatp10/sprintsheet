@@ -21,7 +21,7 @@ export function Tabs({ tabs, activeTab, onChange, className, ...props }: TabsPro
         <div
             className={cn("relative inline-flex w-fit rounded-lg px-1 bg-surface-desk border border-lines-control", className)} {...props}>
             <div
-                className="absolute inset-y-1 left-1 rounded-md shadow-sm transition-transform duration-200 ease-out border border-lines-control"
+                className="absolute top-0.5 bottom-0.5 left-0.5 rounded-md border border-lines-control shadow-sm transition-transform duration-200 ease-out"
                 style={{
                     width: `calc((100% - 0.5rem) / ${tabs.length})`,
                     transform: `translateX(${Math.max(selectedIndex, 0) * 100}%)`,
