@@ -1,38 +1,47 @@
-import {
-    type FieldErrors,
-    type UseFormRegister,
-    type UseFormSetValue,
-    type UseFormWatch,
+import { useState } from "react";
+import type {
+    FieldErrors,
+    UseFormSetValue,
+    UseFormWatch,
 } from "react-hook-form";
-import type { ProjectFormData } from "../../types/projectFormData";
-import Text from "@/components/common/Text";
+
 import { InputText } from "@/components/inputs/InputText";
+import { Tabs } from "@/components/inputs/Tabs";
+import { TextArea } from "@/components/inputs/TextArea";
+import Text from "@/components/common/Text";
 import ToggleButtonBox from "@/components/common/ToggleButtonBox";
 import FormInputBox from "@/components/inputs/FormInputBox";
-import { useState } from "react";
-import { Tabs } from "@/components/inputs/Tabs";
+
+import type { ProjectFormData } from "../../types/projectFormData";
+
 interface BasicsStepProps {
-    register: UseFormRegister<ProjectFormData>;
     watch: UseFormWatch<ProjectFormData>;
     setValue: UseFormSetValue<ProjectFormData>;
     errors: FieldErrors<ProjectFormData>;
 }
-const BasicsStep = ({ register, watch, setValue, errors }: BasicsStepProps) => {
-    const formValues = watch();
 
+const BasicsStep = ({
+    watch,
+    setValue,
+    errors,
+}: BasicsStepProps) => {
+    const formValues = watch();
     const [isKeyManuallyEdited, setIsKeyManuallyEdited] = useState(false);
-    const generateKeyName = (data: string) => {
-        const initials = data
+
+    const generateKeyName = (value: string) => {
+        return value
             .trim()
             .split(/\s+/)
             .filter(Boolean)
             .map((word) => word[0]?.toUpperCase())
             .join("");
-        return initials ?? "";
     };
 
     const handleProjectNameChange = (value: string) => {
-        setValue("name", value, { shouldDirty: true, shouldValidate: true });
+        setValue("name", value, {
+            shouldDirty: true,
+            shouldValidate: true,
+        });
         if (!isKeyManuallyEdited) {
             setValue("key", generateKeyName(value), {
                 shouldDirty: true,
@@ -51,6 +60,7 @@ const BasicsStep = ({ register, watch, setValue, errors }: BasicsStepProps) => {
 
     return (
         <section className="flex flex-col gap-2">
+            {/* Project name & key */}
             <div className="flex gap-4">
                 <FormInputBox
                     label="Project name"
@@ -60,7 +70,6 @@ const BasicsStep = ({ register, watch, setValue, errors }: BasicsStepProps) => {
                     <InputText
                         value={formValues.name}
                         onChange={handleProjectNameChange}
-                        placeholder=""
                         className="w-full"
                         autoFocus
                     />
@@ -73,7 +82,6 @@ const BasicsStep = ({ register, watch, setValue, errors }: BasicsStepProps) => {
                     <InputText
                         value={formValues.key}
                         onChange={handleKeyChange}
-                        placeholder=""
                         className="w-28"
                     />
                 </FormInputBox>
@@ -84,15 +92,19 @@ const BasicsStep = ({ register, watch, setValue, errors }: BasicsStepProps) => {
                 label="Description"
                 error={errors.description?.message}
             >
-                <textarea
-                    {...register("description")}
+                <TextArea
+                    value={formValues.description ?? ""}
+                    onChange={(value) =>
+                        setValue("description", value, {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                        })
+                    }
                     rows={2}
-                    placeholder=""
-                    className="bg-surface rounded-md border border-lines-hairline focus:outline-0 px-2 py-1.5 text-ink placeholder:text-ink-fades-placeholders text-type-body-sm w-full resize-none"
                 />
             </FormInputBox>
 
-            {/* Cycle Selection and Configuration */}
+            {/* Cycle length */}
             <FormInputBox
                 label="Cycle length"
                 error={errors.customCycleDays?.message}
@@ -112,6 +124,7 @@ const BasicsStep = ({ register, watch, setValue, errors }: BasicsStepProps) => {
                             { label: "No Cycle", value: "nocycle" },
                         ]}
                     />
+
                     {formValues.cycleLength === "custom" && (
                         <>
                             <InputText
@@ -126,19 +139,25 @@ const BasicsStep = ({ register, watch, setValue, errors }: BasicsStepProps) => {
                                 placeholder="5"
                                 className="w-14 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             />
+
                             <Text
                                 variant="body-sm"
                                 className="text-ink-2 whitespace-nowrap"
                             >
                                 days, starting
                             </Text>
+
                             <select
                                 value={formValues.startingDay ?? ""}
-                                onChange={(e) =>
-                                    setValue("startingDay", e.target.value, {
-                                        shouldDirty: true,
-                                        shouldValidate: true,
-                                    })
+                                onChange={(event) =>
+                                    setValue(
+                                        "startingDay",
+                                        event.target.value,
+                                        {
+                                            shouldDirty: true,
+                                            shouldValidate: true,
+                                        },
+                                    )
                                 }
                                 className="bg-surface rounded-md border border-lines-hairline focus:outline-0 px-2 text-ink text-type-body-sm cursor-pointer"
                             >
@@ -154,35 +173,41 @@ const BasicsStep = ({ register, watch, setValue, errors }: BasicsStepProps) => {
                     )}
                 </div>
             </FormInputBox>
+
             <Text variant="caption" className="text-ink-3">
                 This is the project's default length. Any single cycle's dates
-                stay editable afterwards, so a short week or a holiday needs no
-                new setting.
+                stay editable afterwards, so a short week or a holiday needs
+                no new setting.
             </Text>
-            {/* Toggle for Auto Creation of Cycle */}
+
+            {/* Auto creation */}
             <ToggleButtonBox
                 checked={formValues.autoCycle}
                 onChange={(value) =>
-                    setValue("autoCycle", value, { shouldDirty: true })
+                    setValue("autoCycle", value, {
+                        shouldDirty: true,
+                    })
                 }
             >
                 <Text variant="body-sm" className="text-ink-2 font-medium">
                     Open the next cycle automatically
                 </Text>
+
                 <Text variant="caption" className="text-ink-3">
-                    When Aug 21 ends,
+                    When Aug 21 ends,{" "}
                     <Text
                         variant="caption"
                         className="font-medium text-ink-2"
                         as="span"
                     >
                         Aug 24-28
-                    </Text>
-                    opens by itself at the default length — empty, active, tabs
-                    already in place. Unfinished work stays in the cycle it was
-                    in until someone moves it.
+                    </Text>{" "}
+                    opens by itself at the default length — empty, active,
+                    tabs already in place. Unfinished work stays in the cycle
+                    it was in until someone moves it.
                 </Text>
             </ToggleButtonBox>
+
             {/* Default view */}
             <FormInputBox label="Default view for the team">
                 <Tabs
@@ -202,4 +227,5 @@ const BasicsStep = ({ register, watch, setValue, errors }: BasicsStepProps) => {
         </section>
     );
 };
+
 export default BasicsStep;
