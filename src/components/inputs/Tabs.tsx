@@ -1,6 +1,6 @@
 import { cn } from "@/lib/cn";
 
-type TabsOption<T extends string> = {
+export type TabsOption<T extends string> = {
     label: string;
     value: T;
 };
@@ -12,7 +12,7 @@ type TabsProps<T extends string> = {
     classname?: string;
 } & Omit<React.HTMLAttributes<HTMLDivElement>, "onChange">;
 
-export function Tabs<T extends string>({
+export default function Tabs<T extends string>({
     tabs,
     activeTab,
     onChange,
@@ -46,8 +46,8 @@ export function Tabs<T extends string>({
                     <label
                         key={String(tab.value)}
                         className={`relative z-10 shrink-0 cursor-pointer rounded-md px-3 py-1.5 text-sm transition-colors duration-200 ${selected
-                                ? "text-ink"
-                                : "text-ink-fades-ghost-rows"
+                            ? "text-ink"
+                            : "text-ink-fades-ghost-rows"
                             }`}
                     >
                         <input

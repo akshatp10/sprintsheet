@@ -1,5 +1,5 @@
 import Text from "@/components/common/Text";
-import { Tabs } from "@/components/inputs/Tabs";
+import Tabs, { type TabsOption } from "@/components/inputs/Tabs";
 import EmptyTaskCard from "@/features/projects/components/EmptyTaskCard";
 import ProjectCardGrid from "@/features/projects/components/ProjectCardGrid";
 import { useState } from "react";
@@ -83,6 +83,8 @@ const projects: projectType[] = [
 const AllProjectsPage = () => {
     const [projectsView, setProjectsView] = useState("grid")
 
+    const tabs: TabsOption<"grid" | "list">[] = [{ label: "Grid", value: "grid" }, { label: "List", value: "list" }]
+
     return (
         <>
             <div className="w-full flex flex-col px-8 py-6 gap-8">
@@ -95,7 +97,7 @@ const AllProjectsPage = () => {
                     <Tabs
                         onChange={setProjectsView}
                         activeTab={projectsView}
-                        tabs={[{ label: "Grid", value: "grid" }, { label: "List", value: "list" }]}
+                        tabs={tabs}
                     />
                 </div>
 

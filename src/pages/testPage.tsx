@@ -2,7 +2,7 @@ import Avatar from "@/components/avatar/Avatar"
 import AvatarGroup from "@/components/avatar/AvatarGroups"
 import Button from "@/components/button/Button"
 import Chip from "@/components/chips/Chip"
-import { Tabs } from "@/components/inputs/Tabs"
+import Tabs from "@/components/inputs/Tabs"
 import ProgressBar from "@/components/progressBar/ProgressBar"
 import { useState } from "react"
 

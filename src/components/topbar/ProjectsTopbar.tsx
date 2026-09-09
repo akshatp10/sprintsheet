@@ -1,12 +1,17 @@
 import { useState } from 'react'
 import Button from '../button/Button'
 import Text from '../common/Text'
-import { Tabs } from '../inputs/Tabs'
+import Tabs, { type TabsOption } from '../inputs/Tabs'
 import Chip from '../chips/Chip'
 
 const ProjectsTopbar = () => {
 
     const [radioButtonOption, setradioButtonOption] = useState("table")
+
+    const tabs: TabsOption<"table" | "cards">[] = [
+        { label: "Table", value: "table" },
+        { label: "Cards", value: "cards" },
+    ];
 
     return (
         <div className='flex w-full justify-between items-center gap-3'>
@@ -14,10 +19,7 @@ const ProjectsTopbar = () => {
                 <Tabs
                     onChange={setradioButtonOption}
                     activeTab={radioButtonOption}
-                    tabs={[
-                        { label: "Table", value: "table" },
-                        { label: "Cards", value: "cards" },
-                    ]}
+                    tabs={tabs}
                 />
 
                 <Chip
