@@ -1,6 +1,6 @@
 import { cn } from '@/lib/cn'
 
-interface GlobalChipProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ChipProps extends React.HTMLAttributes<HTMLDivElement> {
     text: string
     variant: "primary" | "secondary"
     bgColor?: string
@@ -9,7 +9,7 @@ interface GlobalChipProps extends React.HTMLAttributes<HTMLDivElement> {
     textType?: string
 }
 
-const GlobalChip = ({ text, variant, bgColor = "", borderColor = "", textColor = "", textType = "", ...props }: GlobalChipProps) => {
+const Chip = ({ text, variant, bgColor = "bg-transparent", borderColor = "border border-lines-control", textColor = "text-ink-2", textType = "text-type-body-sm", ...props }: ChipProps) => {
 
     const commonClass = "w-fit h-fit text-center px-2 py-0.5 text-type-body rounded-sm text-ink-2";
 
@@ -26,4 +26,4 @@ const GlobalChip = ({ text, variant, bgColor = "", borderColor = "", textColor =
 }
 
 
-export default GlobalChip
+export default Chip
