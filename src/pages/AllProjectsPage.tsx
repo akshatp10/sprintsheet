@@ -8,7 +8,31 @@ import type { Project, ProjectMember } from "@/lib/services/types";
 import { useEffect, useState } from "react";
 
 const AllProjectsPage = () => {
-    const [projectsView, setProjectsView] = useState("grid")
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [membersByProject, setMembersByProject] = useState<Record<string, ProjectMember[]>>({});
+    const [projectsView, setProjectsView] = useState("grid");
+
+    useEffect(() => {
+        const fetchProjects = async () => {
+            const result = await getAllUserProjects();
+            if (!result.success || !result.data) return;
+
+            setProjects(result.data);
+
+            const memberEntries = await Promise.all(
+                result.data.map(async (p) => {
+                    const membersResult = await getProjectMembers(p.id);
+                    return [p.id, membersResult.data ?? []] as const;
+                })
+            );
+            setMembersByProject(Object.fromEntries(memberEntries));
+        };
+
+        fetchProjects();
+    }, []);
+
+    const activeCount = projects.filter((p) => !p.isArchived).length;
+    const archivedCount = projects.length - activeCount;
 
     const tabs: TabsOption<"grid" | "list">[] = [{ label: "Grid", value: "grid" }, { label: "List", value: "list" }]
 
