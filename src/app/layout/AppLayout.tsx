@@ -26,7 +26,7 @@ const AppLayout = ({
             </aside>
 
             <div className="grid h-dvh min-h-0 min-w-fit grid-rows-[3.5rem_1fr] bg-surface-page">
-                <div className="flex min-h-0 min-w-0 overflow-y-auto items-center border-b border-lines-hairline px-4">
+                <div className="flex min-h-0 min-w-0 items-center border-b border-lines-hairline px-4">
                     {dynamicTopBar}
                 </div>
 
