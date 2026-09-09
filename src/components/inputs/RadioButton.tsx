@@ -1,21 +1,20 @@
 import { cn } from "@/lib/cn"
 
-type RadioOption = {
+type TabsOption = {
     label: string
-    value: string
+    activeTab: string
 }
 
-type RadioButtonProps = {
-    options: RadioOption[]
-    value: string
-    onChange: (value: string) => void
-    name?: string
+type TabsProps = {
+    tabs: TabsOption[]
+    activeTab: string
+    onChange: (activeTab: string) => void
     classname?: string
 } & Omit<React.HTMLAttributes<HTMLDivElement>, "onChange">
 
-export function RadioButton({ options, value, onChange, className, name = "radio", ...props }: RadioButtonProps) {
-    const selectedIndex = options.findIndex(
-        (option) => option.value === value
+export function Tabs({ tabs, activeTab, onChange, className, ...props }: TabsProps) {
+    const selectedIndex = tabs.findIndex(
+        (tab) => tab.activeTab === activeTab
     )
 
     return (
@@ -24,30 +23,29 @@ export function RadioButton({ options, value, onChange, className, name = "radio
             <div
                 className="absolute inset-y-1 left-1 rounded-md shadow-sm transition-transform duration-200 ease-out border border-lines-control"
                 style={{
-                    width: `calc((100% - 0.5rem) / ${options.length})`,
+                    width: `calc((100% - 0.5rem) / ${tabs.length})`,
                     transform: `translateX(${Math.max(selectedIndex, 0) * 100}%)`,
                 }}
                 aria-hidden="true"
             />
 
-            {options.map((option) => {
-                const selected = option.value === value
+            {tabs.map((tab) => {
+                const selected = tab.activeTab === activeTab
 
                 return (
                     <label
-                        key={String(option.value)}
+                        key={String(tab.activeTab)}
                         className={`relative z-10 shrink-0 cursor-pointer rounded-md px-3 py-1.5 text-sm transition-colors duration-200 ${selected ? "text-ink" : "text-ink-fades-ghost-rows"}`}
                     >
                         <input
                             type="radio"
-                            name={name}
-                            value={String(option.value)}
+                            value={String(tab.activeTab)}
                             checked={selected}
-                            onChange={() => onChange(option.value)}
+                            onChange={() => onChange(tab.activeTab)}
                             className="sr-only"
                         />
 
-                        {option.label}
+                        {tab.label}
                     </label>
                 )
             })}
