@@ -1,12 +1,14 @@
 import { type Control, type FieldErrors, type UseFormRegister, type UseFormSetValue, type UseFormWatch, useFieldArray } from "react-hook-form";
 import { Plus } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import type { ProjectFormData } from "../../types/projectFormData";
 import Text from "@/components/common/Text";
 // import Button from "@/components/button/Button";
 import ColumnChip from "./ColumnChip";
 import ProjectStage from "./ProjectStage";
 import useStageDrag from "@/hooks/useStageDrag";
+import DraggableComponent from "@/components/draggable/DraggableComponent";
+import DraggableTarget from "@/components/draggable/DraggableTarget";
 
 interface ColumnStagesStepProps {
     register: UseFormRegister<ProjectFormData>;
@@ -40,6 +42,8 @@ const ColumnStagesStep = ({ control, setValue }: ColumnStagesStepProps) => {
         name: "stages",
     });
 
+    const stageTargetRef = useRef<HTMLDivElement>(null);
+
     const {
         visualStages,
         draggedStage,
@@ -49,6 +53,7 @@ const ColumnStagesStep = ({ control, setValue }: ColumnStagesStepProps) => {
     } = useStageDrag({
         fields,
         move,
+        containerRef: stageTargetRef,
     });
 
     // Keeping the persisted `order` field in sync with array position
@@ -79,17 +84,11 @@ const ColumnStagesStep = ({ control, setValue }: ColumnStagesStepProps) => {
             {/* Columns */}
             {/* This is blocked for now */}
             <div className="flex flex-col gap-2 opacity-50">
-                <Text
-                    variant="body"
-                    className="text-ink font-medium"
-                >
+                <Text variant="body" className="text-ink font-medium">
                     Columns
                 </Text>
 
-                <Text
-                    variant="caption"
-                    className="text-ink-3"
-                >
+                <Text variant="caption" className="text-ink-3">
                     The standard set, pre-filled. Drag to reorder,
                     click to rename, ⊖ to drop one.
                 </Text>
@@ -106,10 +105,7 @@ const ColumnStagesStep = ({ control, setValue }: ColumnStagesStepProps) => {
                     <div className="flex items-center gap-1.5 rounded-md border border-dashed border-lines-hairline px-3 py-1.5 cursor-pointer">
                         <Plus className="w-3.5 h-3.5 text-ink-2" />
 
-                        <Text
-                            variant="body-sm"
-                            className="text-ink-2"
-                        >
+                        <Text variant="body-sm" className="text-ink-2">
                             Add column
                         </Text>
                     </div>
@@ -118,81 +114,52 @@ const ColumnStagesStep = ({ control, setValue }: ColumnStagesStepProps) => {
 
             {/* Stages */}
             <div className="flex flex-col gap-2">
-                <Text
-                    variant="body"
-                    className="text-ink font-medium"
-                >
+                <Text variant="body" className="text-ink font-medium">
                     Stages
                 </Text>
 
-                <Text
-                    variant="caption"
-                    className="text-ink-3"
-                >
+                <Text variant="caption" className="text-ink-3">
                     Board columns and Status options, in flow order.
                     Each carries its own hue.
                 </Text>
 
-                <div className="relative flex flex-col gap-2 mt-1">
-                    {visualStages.map((stage, index) => {
-                        const isDragged = stage.id === draggedId;
-
-                        return (
-                            <div
-                                key={stage.id}
-                                data-stage-id={stage.id}
-                            >
-                                <div className="drop-zone h-0" />
-
-                                {isDragged ? (
-                                    <div className="flex items-center justify-between rounded-md border border-lines-hairline w-full px-3 py-2 min-h-9.5" />
-                                ) : (
-                                    <ProjectStage
-                                        color={
-                                            stageColors[stage.name] ??
-                                            "bg-ink-3"
-                                        }
-                                        label={stage.name}
-                                        tag={
-                                            index === 0
-                                                ? "start"
-                                                : index ===
-                                                    visualStages.length - 1
-                                                    ? "terminal"
-                                                    : null
-                                        }
-                                        draggable
-                                        onMouseDown={(event) =>
-                                            handleDragStart(
-                                                event,
-                                                stage.id,
-                                            )
-                                        }
-                                    />
-                                )}
-                            </div>
-                        );
-                    })}
-
-                    <div className="drop-zone h-0" />
-
-                    {/* Floating dragged stage */}
-                    {draggedStage && (
-                        <ProjectStage
-                            color={
-                                stageColors[draggedStage.name] ??
-                                "bg-ink-3"
+                <DraggableTarget
+                    ref={stageTargetRef}
+                    containerId="stages"
+                    className="mt-1"
+                    items={visualStages}
+                    draggedId={draggedId}
+                    draggedItem={draggedStage}
+                    mouse={mouse}
+                    renderItem={(stage, index) => (
+                        <DraggableComponent
+                            className="rounded-md border border-lines-hairline"
+                            onDragStart={(event) =>
+                                handleDragStart(event, stage.id)
                             }
-                            label={draggedStage.name}
+                        >
+                            <ProjectStage
+                                color={stageColors[stage.name] ?? "bg-ink-3"}
+                                label={stage.name}
+                                tag={
+                                    index === 0
+                                        ? "start"
+                                        : index === visualStages.length - 1
+                                            ? "terminal"
+                                            : null
+                                }
+                            />
+                        </DraggableComponent>
+                    )}
+                    renderGhost={(stage) => (
+                        <ProjectStage
+                            color={stageColors[stage.name] ?? "bg-ink-3"}
+                            label={stage.name}
                             tag={null}
-                            className="fixed z-50 pointer-events-none w-fit shadow-lg"
-                            style={{
-                                left: mouse.x,
-                                top: mouse.y,
-                            }}
+                            className="shadow-lg rounded-md border border-lines-hairline px-3"
                         />
                     )}
-                </div>
+                />
 
                 {/* Add stage - To be added in upcoming features */}
                 {/* <Button handleClick={handleAddStage} variant="tertiary" type="button"
