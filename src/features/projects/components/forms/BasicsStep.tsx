@@ -6,13 +6,13 @@ import type {
 } from "react-hook-form";
 
 import { InputText } from "@/components/inputs/InputText";
-import { Tabs } from "@/components/inputs/Tabs";
+import Tabs from "@/components/inputs/Tabs";
 import { TextArea } from "@/components/inputs/TextArea";
 import Text from "@/components/common/Text";
 import ToggleButtonBox from "@/components/common/ToggleButtonBox";
 import FormInputBox from "@/components/inputs/FormInputBox";
 
-import type { ProjectFormData } from "../../types/projectFormData";
+import { cycleTabsOptions, layoutTabsOptions, type ProjectFormData } from "../../types/projectFormData";
 
 interface BasicsStepProps {
     watch: UseFormWatch<ProjectFormData>;
@@ -118,11 +118,7 @@ const BasicsStep = ({
                                 shouldValidate: true,
                             })
                         }
-                        tabs={[
-                            { label: "7 Days", value: "default" },
-                            { label: "Custom", value: "custom" },
-                            { label: "No Cycle", value: "nocycle" },
-                        ]}
+                        tabs={cycleTabsOptions}
                     />
 
                     {formValues.cycleLength === "custom" && (
@@ -218,10 +214,7 @@ const BasicsStep = ({
                             shouldValidate: true,
                         })
                     }
-                    tabs={[
-                        { label: "Table", value: "table" },
-                        { label: "Cards", value: "cards" },
-                    ]}
+                    tabs={layoutTabsOptions}
                 />
             </FormInputBox>
         </section>

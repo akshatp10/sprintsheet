@@ -1,3 +1,4 @@
+import type { TabsOption } from "@/components/inputs/Tabs";
 import { z } from "zod";
 
 const projectPersonSchema = z.object({
@@ -40,6 +41,18 @@ const defaultValues: ProjectFormData = {
 	people: [],
 	startFirstCycle: true,
 };
+
+export const cycleTabsOptions: TabsOption<"default" | "custom" | "nocycle">[] =
+	[
+		{ label: "7 Days", value: "default" },
+		{ label: "Custom", value: "custom" },
+		{ label: "No Cycle", value: "nocycle" },
+	];
+
+export const layoutTabsOptions: TabsOption<"table" | "cards">[] = [
+	{ label: "Table", value: "table" },
+	{ label: "Cards", value: "cards" },
+];
 
 export type ProjectFormData = z.infer<typeof projectFormSchema>;
 export type ProjectPerson = z.infer<typeof projectPersonSchema>;
