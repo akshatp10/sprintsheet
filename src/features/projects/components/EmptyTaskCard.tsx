@@ -1,5 +1,5 @@
 import Text from "@/components/common/Text";
-import EmptyTask from "@/assets/animations/Task_empty.svg"
+import EmptyTask from "@/assets/svg/Task_empty.svg"
 import Button from "@/components/button/Button";
 
 interface EmptyTaskCardProps {

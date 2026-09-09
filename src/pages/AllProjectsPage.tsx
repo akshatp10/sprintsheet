@@ -104,7 +104,7 @@ const AllProjectsPage = () => {
                         {...project}
                     />
                 ))}
-                <EmptyTaskCard />
+                <EmptyTaskCard handleClick={() => { }} />
             </div>
 
             <div>
