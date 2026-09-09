@@ -9,6 +9,8 @@ interface ExitAlertProps {
     exitPopup: () => void;
     alertLabel: string;
     alertContent: string;
+    acceptText?: string;
+    rejectText?: string;
 }
 
 const ExitAlert = ({
@@ -16,6 +18,8 @@ const ExitAlert = ({
     exitPopup,
     alertContent,
     alertLabel,
+    acceptText = "Yes",
+    rejectText = "No",
 }: ExitAlertProps) => {
 
     return (
@@ -26,10 +30,10 @@ const ExitAlert = ({
                 </Text>
                 <div className="flex justify-center gap-2">
                     <Button type="button" variant="tertiary" handleClick={onClose}>
-                        No
+                        {rejectText}
                     </Button>
                     <Button type="button" variant="secondary" handleClick={exitPopup}>
-                        Yes
+                        {acceptText}
                     </Button>
                 </div>
 
