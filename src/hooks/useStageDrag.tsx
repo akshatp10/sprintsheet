@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import type { RefObject } from "react";
 import type { FieldArrayWithId, UseFieldArrayMove } from "react-hook-form";
 import type { ProjectFormData } from "@/features/projects/types/projectFormData";
 
@@ -7,6 +8,7 @@ type StageField = FieldArrayWithId<ProjectFormData, "stages", "id">;
 interface UseStageDragOptions {
     fields: StageField[];
     move: UseFieldArrayMove;
+    containerRef: RefObject<HTMLElement | null>;
 }
 
 interface UseStageDragReturn {
@@ -28,6 +30,7 @@ interface UseStageDragReturn {
 const useStageDrag = ({
     fields,
     move,
+    containerRef,
 }: UseStageDragOptions): UseStageDragReturn => {
     const [draggedId, setDraggedId] = useState<string | null>(null);
     const [mouse, setMouse] = useState({ x: 0, y: 0 });
@@ -103,8 +106,9 @@ const useStageDrag = ({
                 y: event.clientY,
             });
 
+            const scope = containerRef.current ?? document;
             const elements = Array.from(
-                document.getElementsByClassName("drop-zone"),
+                scope.querySelectorAll<HTMLElement>('[data-drop-zone="true"]'),
             );
 
             const positions = elements.map(
@@ -144,7 +148,7 @@ const useStageDrag = ({
             document.removeEventListener("mousemove", handleMouseMove);
             document.removeEventListener("mouseup", handleMouseUp);
         };
-    }, [draggedId, draggedIndex, dropZone, move]);
+    }, [draggedId, draggedIndex, dropZone, move, containerRef]);
 
     return {
         visualStages,
