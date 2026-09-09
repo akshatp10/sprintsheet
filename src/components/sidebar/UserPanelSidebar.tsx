@@ -9,7 +9,7 @@ interface UserPanelSidebarProps {
 
 const UserPanelSidebar = ({ userName }: UserPanelSidebarProps) => {
 
-    const displayUserName = userName.split(" ")[0]
+    const displayUserName = userName?.split(" ")[0]
 
     return (
         <div className="flex items-center justify-between">
