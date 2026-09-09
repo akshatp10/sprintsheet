@@ -63,7 +63,6 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
                 <div className="py-5 min-h-0 overflow-auto">
                     {currentStep === 1 && (
                         <BasicsStep
-                            register={register}
                             watch={watch}
                             setValue={setValue}
                             errors={errors}
