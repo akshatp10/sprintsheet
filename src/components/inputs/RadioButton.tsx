@@ -26,7 +26,6 @@ export function Tabs({ tabs, activeTab, onChange, className, ...props }: TabsPro
                     width: `calc((100% - 0.5rem) / ${tabs.length})`,
                     transform: `translateX(${Math.max(selectedIndex, 0) * 100}%)`,
                 }}
-                aria-hidden="true"
             />
 
             {tabs.map((tab) => {
