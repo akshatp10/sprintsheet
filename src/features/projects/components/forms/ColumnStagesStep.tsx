@@ -151,14 +151,6 @@ const ColumnStagesStep = ({ control, setValue }: ColumnStagesStepProps) => {
                             />
                         </DraggableComponent>
                     )}
-                    renderGhost={(stage) => (
-                        <ProjectStage
-                            color={stageColors[stage.name] ?? "bg-ink-3"}
-                            label={stage.name}
-                            tag={null}
-                            className="shadow-lg rounded-md border border-lines-hairline px-3"
-                        />
-                    )}
                 />
 
                 {/* Add stage - To be added in upcoming features */}
