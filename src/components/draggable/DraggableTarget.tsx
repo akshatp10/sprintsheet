@@ -13,7 +13,7 @@ interface DraggableTargetProps<T extends DraggableTargetItem> {
     draggedItem: T | null;
     mouse: { x: number; y: number };
     renderItem: (item: T, index: number) => ReactNode;
-    renderGhost: (item: T) => ReactNode;
+    renderGhost?: (item: T) => ReactNode;
     className?: string;
     ref?: Ref<HTMLDivElement>;
 }
@@ -51,9 +51,10 @@ function DraggableTarget<T extends DraggableTargetItem>({
                 );
             })}
 
+
             <DropZone />
 
-            {draggedItem && (
+            {renderGhost && draggedItem && (
                 <div
                     className="fixed z-50 w-fit pointer-events-none"
                     style={{ left: mouse.x, top: mouse.y }}
