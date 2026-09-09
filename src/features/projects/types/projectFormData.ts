@@ -60,6 +60,7 @@ const defaultValues: ProjectFormData = {
 		{ name: "Todo", order: 1 },
 		{ name: "In progress", order: 2 },
 		{ name: "In QA", order: 3 },
+		{ name: "Blocked", order: 5 },
 		{ name: "Done", order: 4 },
 	],
 	people: [],
