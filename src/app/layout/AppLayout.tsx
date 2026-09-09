@@ -14,7 +14,7 @@ const AppLayout = ({
     usersPanel,
 }: AppLayoutProps) => {
     return (
-        <div className="grid h-dvh w-dvw grid-cols-[minmax(min-content,280px)_1fr] bg-surface">
+        <div className="grid h-dvh w-dvw grid-cols-[minmax(min-content,17.5rem)_1fr] bg-surface">
             <aside className="grid h-dvh min-h-0 min-w-fit grid-rows-[1fr_auto] border-r border-lines-hairline bg-surface-sunken p-3">
                 <nav className="min-h-0 overflow-y-auto">
                     {dynamicSidebar}
@@ -25,7 +25,7 @@ const AppLayout = ({
                 </div>
             </aside>
 
-            <div className="grid h-dvh min-h-0 min-w-fit grid-rows-[56px_1fr] bg-surface-page">
+            <div className="grid h-dvh min-h-0 min-w-fit grid-rows-[3.5rem_1fr] bg-surface-page">
                 <div className="flex min-h-0 min-w-0 overflow-y-auto items-center border-b border-lines-hairline px-4">
                     {dynamicTopBar}
                 </div>
