@@ -44,8 +44,12 @@ function DraggableTarget<T extends DraggableTargetItem>({
                     <div key={item.id} data-item-id={item.id}>
                         <DropZone />
 
-                        {isDragged ? (customDropZone ? customDropZone :
-                            < div className="flex items-center justify-between rounded-md border border-lines-hairline w-full px-3 py-2 min-h-9.5" />
+                        {isDragged ? (
+                            <div className="h-10 w-full">
+                                {customDropZone ?? (
+                                    <div className="h-full w-full rounded-md border border-lines-hairline" />
+                                )}
+                            </div>
                         ) : (
                             renderItem(item, index)
                         )}

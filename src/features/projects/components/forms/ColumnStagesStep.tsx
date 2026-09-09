@@ -116,14 +116,16 @@ const ColumnStagesStep = ({ control, setValue }: ColumnStagesStepProps) => {
 
             {/* Stages */}
             <div className="flex flex-col">
-                <Text variant="body" className="text-ink font-medium">
-                    Stages
-                </Text>
+                <div className="flex flex-col shrink-0">
+                    <Text variant="body" className="text-ink font-medium">
+                        Stages
+                    </Text>
 
-                <Text variant="caption" className="text-ink-3">
-                    Board columns and Status options, in flow order.
-                    Each carries its own hue.
-                </Text>
+                    <Text variant="caption" className="text-ink-3">
+                        Board columns and Status options, in flow order.
+                        Each carries its own hue.
+                    </Text>
+                </div>
 
                 <DraggableTarget
                     ref={stageTargetRef}
