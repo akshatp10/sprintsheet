@@ -115,7 +115,7 @@ const ColumnStagesStep = ({ control, setValue }: ColumnStagesStepProps) => {
             </div>
 
             {/* Stages */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col">
                 <Text variant="body" className="text-ink font-medium">
                     Stages
                 </Text>
