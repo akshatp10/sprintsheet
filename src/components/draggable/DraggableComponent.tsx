@@ -19,7 +19,7 @@ const DraggableComponent = ({
     return (
         <div
             className={cn(
-                "flex items-center gap-2",
+                "flex h-10 items-center gap-2",
                 canDragFully && "cursor-grab",
                 className,
             )}
