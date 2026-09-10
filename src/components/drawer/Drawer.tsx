@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 
-import SlideOverHeader from "./SlideOverHeader";
+import SlideOverHeader from "./DrawerHeader";
 import ExitAlert from "../popupModals/ExitAlert";
 
-export type SlideOverSide = "left" | "right";
+export type DrawerSide = "left" | "right";
 
-interface SlideOverModalProps {
+interface DrawerProps {
     children: React.ReactNode;
     onClose: () => void;
     label?: string;
-    side?: SlideOverSide;
+    side?: DrawerSide;
     width?: string;
     alert?: boolean;
     alertLabel?: string;
@@ -17,7 +17,7 @@ interface SlideOverModalProps {
     className?: string;
 }
 
-const SlideOverModal = ({
+const Drawer = ({
     children,
     onClose,
     label = "",
@@ -27,7 +27,7 @@ const SlideOverModal = ({
     alertLabel = "Discard Changes?",
     alertContent = "All your progress will be lost. Are you sure you want to discard your changes?",
     className = "",
-}: SlideOverModalProps) => {
+}: DrawerProps) => {
     const [showExitAlert, setShowExitAlert] = useState(false);
 
     const handleClose = () => {
@@ -67,4 +67,4 @@ const SlideOverModal = ({
     );
 };
 
-export default SlideOverModal;
+export default Drawer;
