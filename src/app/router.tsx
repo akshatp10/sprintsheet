@@ -11,7 +11,6 @@ import WorkspaceTopbar from "@/components/topbar/WorkspaceTopbar";
 import ProjectsTopbar from "@/components/topbar/ProjectsTopbar";
 import ProjectsSidebar from "@/components/sidebar/ProjectsSidebar";
 
-
 // Importing pages
 import { TestPage } from "@/pages/testPage";
 import SidebarBottom from "@/components/sidebar/SidebarBottom";
