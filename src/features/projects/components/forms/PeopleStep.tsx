@@ -4,7 +4,7 @@ import { Lock, X } from "lucide-react";
 import type { ProjectFormData, ProjectPerson } from "../../types/projectFormData";
 import Text from "@/components/common/Text";
 import Button from "@/components/button/Button";
-import { InputText } from "@/components/inputs/InputText";
+import Input from "@/components/inputs/Input";
 import ToggleButtonBox from "@/components/common/ToggleButtonBox";
 import UserPanel from "@/components/sidebar/UserPanel";
 import Chip from "@/components/chips/Chip";
@@ -47,7 +47,7 @@ const PeopleStep = ({ register, control, watch, setValue }: PeopleStepProps) => 
             {/* Invite */}
             <FormInputBox label="Invite by email">
                 <div className="flex gap-2">
-                    <InputText
+                    <Input
                         value={inviteInput}
                         onChange={setInviteInput}
                         placeholder="name@company.com, comma separated"
