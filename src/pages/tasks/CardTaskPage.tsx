@@ -1,9 +1,7 @@
-import React from 'react'
-
 const CardTaskPage = () => {
     return (
         <div>
-
+            Card View
         </div>
     )
 }
