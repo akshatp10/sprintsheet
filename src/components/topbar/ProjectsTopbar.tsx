@@ -3,7 +3,7 @@ import Button from '../button/Button'
 import Text from '../common/Text'
 import Tabs, { type TabsOption } from '../inputs/Tabs'
 import Chip from '../chips/Chip'
-import SlideOverModal from '../slideover/SlideOverModal'
+import TaskCreateForm from '@/features/tasks/components/forms/TaskCreateForm'
 
 const ProjectsTopbar = () => {
 
@@ -45,7 +45,7 @@ const ProjectsTopbar = () => {
                 </div>
             </div>
 
-            {openTaskForm && <SlideOverModal width='40dvw' label='Create Task' onClose={() => { setOpenTaskForm(false) }}>Hi</SlideOverModal>}
+            {openTaskForm && <TaskCreateForm onClose={() => { setOpenTaskForm(false) }} />}
         </>
     )
 }
