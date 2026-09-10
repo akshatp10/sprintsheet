@@ -17,6 +17,7 @@ import FormInputBox from "@/components/inputs/FormInputBox";
 import TextArea from "@/components/inputs/TextArea";
 import PopupModal from "@/components/popupModals/PopupModal";
 import { useProjectStages } from "@/lib/services/stages/hooks";
+import { useCreateTask } from "@/lib/services/tasks/hooks";
 
 interface TaskCreateFormProps {
     projectId: string;
@@ -38,10 +39,12 @@ const TaskCreateForm = ({ projectId, onClose }: TaskCreateFormProps) => {
 
     const assigneeIds = watch("assigneeIds") ?? [];
     const tags = watch("tags") ?? [];
+
     const { data: stages = [] } = useProjectStages(projectId);
+    const { mutate } = useCreateTask()
 
     const handleFormSubmit = (data: TaskFormData) => {
-        const payload: CreateTaskInput = {
+        const newTask: CreateTaskInput = {
             projectId,
             stageId: data.stageId,
             name: data.name,
@@ -51,8 +54,9 @@ const TaskCreateForm = ({ projectId, onClose }: TaskCreateFormProps) => {
             type: data.type,
             tags: data.tags,
         };
-        console.log(payload);
+        mutate(newTask)
         reset();
+        onClose();
     };
 
     return (
