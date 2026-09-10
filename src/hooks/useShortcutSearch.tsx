@@ -7,7 +7,7 @@ const useShortcutSearch = (
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (
-                event.ctrlKey &&
+                (event.ctrlKey || event.metaKey) &&
                 event.key.toLowerCase() === key.toLowerCase()
             ) {
                 event.preventDefault();
