@@ -7,9 +7,10 @@ interface ChipProps extends React.HTMLAttributes<HTMLDivElement> {
     borderColor?: string
     textColor?: string
     textType?: string
+    className?: string
 }
 
-const Chip = ({ text, variant = "default", bgColor = "", borderColor = "", textColor = "", textType = "", ...props }: ChipProps) => {
+const Chip = ({ text, variant = "default", bgColor = "", borderColor = "", textColor = "", textType = "", className, ...props }: ChipProps) => {
 
     const commonClass = "w-fit h-fit text-center px-2 py-0.5 text-type-body rounded-sm text-ink-2";
 
@@ -20,7 +21,7 @@ const Chip = ({ text, variant = "default", bgColor = "", borderColor = "", textC
     }
 
     return (
-        <div className={cn(variantClasses[variant], bgColor, borderColor, textColor, textType)} {...props}>
+        <div className={cn(variantClasses[variant], bgColor, borderColor, textColor, textType, className)} {...props}>
             {text}
         </div>
     )
