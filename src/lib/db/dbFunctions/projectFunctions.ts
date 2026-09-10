@@ -19,7 +19,6 @@ interface CreateProjectRow {
 
 	stages: {
 		name: string;
-		order: number;
 	}[];
 }
 
@@ -78,10 +77,9 @@ export const createProject = async (
 			}
 
 			// Create/reuse global stages
-			for (const stageInput of input.stages) {
+			for (const [index, stageInput] of input.stages.entries()) {
 				const stage = await findOrCreateStage(stageInput.name);
-
-				await createProjectStage(project.id, stage, stageInput.order);
+				await createProjectStage(project.id, stage, index);
 			}
 		},
 	);
