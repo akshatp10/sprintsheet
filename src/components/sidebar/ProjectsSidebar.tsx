@@ -11,11 +11,16 @@ import Text from "../common/Text";
 import Button from "../button/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import CurProjectSidebarCard from "@/features/projects/components/CurProjectSidebarCard";
+import { useSingleProject } from "@/lib/services/projects/hooks";
+import SidebarProjectCardSkeleton from "@/features/projects/components/skeletons/SidebarProjectCardSkeleton";
 
 const ProjectsSidebar = () => {
 
     const navigate = useNavigate();
     const { projectid } = useParams();
+
+    const { data: project } = useSingleProject(projectid ?? "");
+
 
     const options = [
         {
@@ -55,8 +60,11 @@ const ProjectsSidebar = () => {
                 </Text>
             </Button>
 
-            {/* Current project */}
-            <CurProjectSidebarCard />
+            {project ? (
+                <CurProjectSidebarCard project={project} />
+            ) : (
+                <SidebarProjectCardSkeleton />
+            )}
 
             {/* Navigation */}
             <div className="flex flex-col gap-1">
