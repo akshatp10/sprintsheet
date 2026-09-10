@@ -13,10 +13,6 @@ const TaskViewPage = () => {
     const { data: tasks, isLoading, isError, error } = useTasks(projectid ?? "");
     const { data: stages = [] } = useProjectStages(projectid ?? "");
 
-    console.log('====================================');
-    console.log(tasks);
-    console.log('====================================');
-
     if (isError) return (<div>Error : {error.message}</div>)
 
     return (
