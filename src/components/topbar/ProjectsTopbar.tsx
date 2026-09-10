@@ -4,11 +4,16 @@ import Text from '../common/Text'
 import Tabs, { type TabsOption } from '../inputs/Tabs'
 import Chip from '../chips/Chip'
 import TaskCreateForm from '@/features/tasks/components/forms/TaskCreateForm'
+import { useParams } from 'react-router-dom'
 
 const ProjectsTopbar = () => {
 
     const [radioButtonOption, setradioButtonOption] = useState("table")
     const [openTaskForm, setOpenTaskForm] = useState(false)
+
+    const { projectid } = useParams<{ projectid: string }>()
+
+    //Fetch stages and project members
 
     const tabs: TabsOption<"table" | "cards">[] = [
         { label: "Table", value: "table" },
@@ -45,7 +50,7 @@ const ProjectsTopbar = () => {
                 </div>
             </div>
 
-            {openTaskForm && <TaskCreateForm onClose={() => { setOpenTaskForm(false) }} />}
+            {openTaskForm && <TaskCreateForm projectId={projectid ?? ""} onClose={() => { setOpenTaskForm(false) }} />}
         </>
     )
 }

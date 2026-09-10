@@ -12,7 +12,7 @@ const SlideOverHeader = ({
     label = "",
 }: SlideOverHeaderProps) => {
     return (
-        <div className="flex items-center justify-between px-6 py-4 border-b border-lines-hairline">
+        <div className="flex items-center justify-between p-4 border-b border-lines-hairline">
             <Text variant="h1">
                 {label}
             </Text>
