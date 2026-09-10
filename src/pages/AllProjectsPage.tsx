@@ -2,6 +2,7 @@ import Text from "@/components/common/Text";
 import Tabs, { type TabsOption } from "@/components/inputs/Tabs";
 import EmptyTaskCard from "@/features/projects/components/EmptyTaskCard";
 import ProjectCardGrid from "@/features/projects/components/ProjectCardGrid";
+import ProjectCardGridSkeleton from "@/features/projects/components/ProjectCardGridSkeleton";
 import { mapProjectToCard } from "@/lib/mapProjectToCard";
 import {
     projectMembersQuery,
@@ -11,7 +12,11 @@ import { useQueries } from "@tanstack/react-query";
 import { useState } from "react";
 
 const AllProjectsPage = () => {
-    const [projectsView, setProjectsView] = useState("grid");
+
+    const tabs: TabsOption<"grid" | "list">[] = [{ label: "Grid", value: "grid" }, { label: "List", value: "list" }]
+    type ProjectsView = (typeof tabs)[number]["value"];
+
+    const [projectsView, setProjectsView] = useState<ProjectsView>("grid");
 
     const {
         data: projects = [],
@@ -30,14 +35,33 @@ const AllProjectsPage = () => {
     const archivedCount = projects.length - activeCount;
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return (
+            <div className="w-full flex flex-col px-8 py-6 gap-8">
+                <div className="flex w-full items-center justify-between">
+                    <div>
+                        <Text
+                            variant="display"
+                            className="text-3xl font-medium"
+                        >
+                            Projects
+                        </Text>
+                        <Text variant="body-sm" className="text-ink-2">
+                            Loading projects...
+                        </Text>
+                    </div>
+                </div>
+                <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {[...Array(6)].map((_, index) => (
+                        <ProjectCardGridSkeleton key={index} />
+                    ))}
+                </div>
+            </div>
+        );
     }
 
     if (isError) {
         return <div>Failed to load projects. {error?.message}</div>;
     }
-
-    const tabs: TabsOption<"grid" | "list">[] = [{ label: "Grid", value: "grid" }, { label: "List", value: "list" }]
 
     return (
         <div className="w-full flex flex-col px-8 py-6 gap-8">
@@ -59,19 +83,21 @@ const AllProjectsPage = () => {
                 />
             </div>
 
-            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {projects.map((project, index) => (
-                    <ProjectCardGrid
-                        key={project.id}
-                        {...mapProjectToCard(
-                            project,
-                            memberQueries[index]?.data ?? []
-                        )}
-                    />
-                ))}
+            {projectsView === "grid" ?
+                <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {projects.map((project, index) => (
+                        <ProjectCardGrid
+                            key={project.id}
+                            {...mapProjectToCard(
+                                project,
+                                memberQueries[index]?.data ?? []
+                            )}
+                        />
+                    ))}
 
-                <EmptyTaskCard />
-            </div>
+                    <EmptyTaskCard />
+                </div>
+                : ""}
 
             <div>
                 <Text className="text-ink-2" variant="h2">
