@@ -1,6 +1,6 @@
-import { type Control, type FieldErrors, type UseFormRegister, type UseFormSetValue, type UseFormWatch, useFieldArray } from "react-hook-form";
+import { type Control, useFieldArray } from "react-hook-form";
 import { Plus } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import type { ProjectFormData } from "../../types/projectFormData";
 import Text from "@/components/common/Text";
 // import Button from "@/components/button/Button";
@@ -12,11 +12,7 @@ import DraggableTarget from "@/components/draggable/DraggableTarget";
 import ProjectDropComponent from "../ProjectDropComponent";
 
 interface ColumnStagesStepProps {
-    register: UseFormRegister<ProjectFormData>;
     control: Control<ProjectFormData>;
-    watch: UseFormWatch<ProjectFormData>;
-    setValue: UseFormSetValue<ProjectFormData>;
-    errors: FieldErrors<ProjectFormData>;
 }
 
 const columns = [
@@ -38,7 +34,7 @@ const stageColors: Record<string, string> = {
     Blocked: "bg-stage-blocked-dot"
 };
 
-const ColumnStagesStep = ({ control, setValue }: ColumnStagesStepProps) => {
+const ColumnStagesStep = ({ control }: ColumnStagesStepProps) => {
     const { fields, move } = useFieldArray({
         control,
         name: "stages",
@@ -57,29 +53,6 @@ const ColumnStagesStep = ({ control, setValue }: ColumnStagesStepProps) => {
         move,
         containerRef: stageTargetRef,
     });
-
-    // Keeping the persisted `order` field in sync with array position
-    useEffect(() => {
-        if (draggedId !== null) {
-            return;
-        }
-
-        const hasIncorrectOrder = fields.some(
-            (stage, index) => stage.order !== index,
-        );
-
-        if (!hasIncorrectOrder) {
-            return;
-        }
-
-        setValue(
-            "stages",
-            fields.map((stage, index) => ({
-                ...stage,
-                order: index,
-            })),
-        );
-    }, [fields, draggedId, setValue]);
 
     return (
         <section className="flex flex-col gap-3">
