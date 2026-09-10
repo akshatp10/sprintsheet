@@ -1,6 +1,11 @@
 // lib/services/projects/hooks.ts
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createNewProject, getAllUserProjects, getProjectMembers } from "./api";
+import {
+	createNewProject,
+	getAllUserProjects,
+	getProject,
+	getProjectMembers,
+} from "./api";
 import type { CreateProjectInput } from "./types";
 
 export const useProjects = (includeArchived: boolean = false) => {
@@ -10,6 +15,17 @@ export const useProjects = (includeArchived: boolean = false) => {
 			const response = await getAllUserProjects(includeArchived);
 			if (!response.success) throw new Error(response.message);
 			return response.data ?? [];
+		},
+	});
+};
+
+export const useSingleProject = (projectId: string) => {
+	return useQuery({
+		queryKey: ["projects", projectId],
+		queryFn: async () => {
+			const response = await getProject(projectId);
+			if (!response.success) throw new Error(response.message);
+			return response.data;
 		},
 	});
 };
