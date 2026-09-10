@@ -2,39 +2,66 @@ import Text from "@/components/common/Text";
 import Tabs, { type TabsOption } from "@/components/inputs/Tabs";
 import EmptyTaskCard from "@/features/projects/components/EmptyTaskCard";
 import ProjectCardGrid from "@/features/projects/components/ProjectCardGrid";
+import ProjectCardGridSkeleton from "@/features/projects/components/ProjectCardGridSkeleton";
 import { mapProjectToCard } from "@/lib/mapProjectToCard";
-import { getAllUserProjects, getProjectMembers } from "@/lib/services/api/projectServices";
-import type { Project, ProjectMember } from "@/lib/services/types";
-import { useEffect, useState } from "react";
+import {
+    projectMembersQuery,
+    useProjects,
+} from "@/lib/services/projects/hooks";
+import { useQueries } from "@tanstack/react-query";
+import { useState } from "react";
 
 const AllProjectsPage = () => {
-    const [projects, setProjects] = useState<Project[]>([]);
-    const [membersByProject, setMembersByProject] = useState<Record<string, ProjectMember[]>>({});
-    const [projectsView, setProjectsView] = useState("grid");
 
-    useEffect(() => {
-        const fetchProjects = async () => {
-            const result = await getAllUserProjects();
-            if (!result.success || !result.data) return;
+    const tabs: TabsOption<"grid" | "list">[] = [{ label: "Grid", value: "grid" }, { label: "List", value: "list" }]
+    type ProjectsView = (typeof tabs)[number]["value"];
 
-            setProjects(result.data);
+    const [projectsView, setProjectsView] = useState<ProjectsView>("grid");
 
-            const memberEntries = await Promise.all(
-                result.data.map(async (p) => {
-                    const membersResult = await getProjectMembers(p.id);
-                    return [p.id, membersResult.data ?? []] as const;
-                })
-            );
-            setMembersByProject(Object.fromEntries(memberEntries));
-        };
+    const {
+        data: projects = [],
+        isLoading,
+        isError,
+        error
+    } = useProjects(false);
 
-        fetchProjects();
-    }, []);
+    const memberQueries = useQueries({
+        queries: projects.map((project) =>
+            projectMembersQuery(project.id)
+        ),
+    });
 
     const activeCount = projects.filter((p) => !p.isArchived).length;
     const archivedCount = projects.length - activeCount;
 
-    const tabs: TabsOption<"grid" | "list">[] = [{ label: "Grid", value: "grid" }, { label: "List", value: "list" }]
+    if (isLoading) {
+        return (
+            <div className="w-full flex flex-col px-8 py-6 gap-8">
+                <div className="flex w-full items-center justify-between">
+                    <div>
+                        <Text
+                            variant="display"
+                            className="text-3xl font-medium"
+                        >
+                            Projects
+                        </Text>
+                        <Text variant="body-sm" className="text-ink-2">
+                            Loading projects...
+                        </Text>
+                    </div>
+                </div>
+                <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {[...Array(6)].map((_, index) => (
+                        <ProjectCardGridSkeleton key={index} />
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    if (isError) {
+        return <div>Failed to load projects. {error?.message}</div>;
+    }
 
     return (
         <div className="w-full flex flex-col px-8 py-6 gap-8">
@@ -56,16 +83,21 @@ const AllProjectsPage = () => {
                 />
             </div>
 
-            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {projects.map((project) => (
-                    <ProjectCardGrid
-                        key={project.id}
-                        {...mapProjectToCard(project, membersByProject[project.id])}
-                    />
-                ))}
+            {projectsView === "grid" ?
+                <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {projects.map((project, index) => (
+                        <ProjectCardGrid
+                            key={project.id}
+                            {...mapProjectToCard(
+                                project,
+                                memberQueries[index]?.data ?? []
+                            )}
+                        />
+                    ))}
 
-                <EmptyTaskCard />
-            </div>
+                    <EmptyTaskCard />
+                </div>
+                : ""}
 
             <div>
                 <Text className="text-ink-2" variant="h2">

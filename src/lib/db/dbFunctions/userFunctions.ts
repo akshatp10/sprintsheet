@@ -6,14 +6,23 @@ export const findOrCreateUser = async (
 	name?: string,
 ): Promise<UserRow> => {
 	const existing = await db.users.where("email").equals(email).first();
-	if (existing) return existing;
+
+	if (existing) {
+		return existing;
+	}
+
+	const now = Date.now();
 
 	const user: UserRow = {
 		id: crypto.randomUUID(),
 		email,
 		name: name ?? email.split("@")[0],
+		createdAt: now,
+		updatedAt: now,
 	};
+
 	await db.users.add(user);
+
 	return user;
 };
 
