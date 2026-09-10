@@ -1,19 +1,24 @@
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import TableTaskPage from "./tasks/TableTaskPage";
 import CardTaskPage from "./tasks/CardTaskPage";
+import { useTasks } from "@/lib/services/tasks/hooks";
 
 const TaskViewPage = () => {
     const [searchParams] = useSearchParams();
 
-    const view =
-        searchParams.get("view") === "table" ? "table" : "cards";
+    const view = searchParams.get("view") === "table" ? "table" : "cards";
+    const { projectid } = useParams<{ projectid: string }>();
+
+    const { data: tasks, isLoading, isError, error } = useTasks(projectid ?? "");
+
+    if (isError) return (<div>Error : {error.message}</div>)
 
     return (
-        <div>
+        <>
             {view === "table" && (<TableTaskPage />)}
 
-            {view === "cards" && (<CardTaskPage />)}
-        </div>
+            {view === "cards" && (<CardTaskPage tasks={tasks} isLoading={isLoading} />)}
+        </>
     );
 };
 
