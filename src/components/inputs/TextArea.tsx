@@ -9,7 +9,7 @@ type TextAreaProps = {
     "value" | "onChange" | "className"
 >
 
-export function TextArea({
+export default function TextArea({
     value,
     onChange,
     className,

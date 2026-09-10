@@ -5,9 +5,9 @@ import type {
     UseFormWatch,
 } from "react-hook-form";
 
-import { InputText } from "@/components/inputs/InputText";
+import Input from "@/components/inputs/Input";
 import Tabs from "@/components/inputs/Tabs";
-import { TextArea } from "@/components/inputs/TextArea";
+import TextArea from "@/components/inputs/TextArea";
 import Text from "@/components/common/Text";
 import ToggleButtonBox from "@/components/common/ToggleButtonBox";
 import FormInputBox from "@/components/inputs/FormInputBox";
@@ -67,7 +67,7 @@ const BasicsStep = ({
                     error={errors.name?.message}
                     className="flex-1"
                 >
-                    <InputText
+                    <Input
                         value={formValues.name}
                         onChange={handleProjectNameChange}
                         className="w-full"
@@ -79,7 +79,7 @@ const BasicsStep = ({
                     error={errors.key?.message}
                     className="shrink-0"
                 >
-                    <InputText
+                    <Input
                         value={formValues.key}
                         onChange={handleKeyChange}
                         className="w-28"
@@ -122,7 +122,7 @@ const BasicsStep = ({
                     />
                     {formValues.cycleLength === "custom" && (
                         <>
-                            <InputText
+                            <Input
                                 type="number"
                                 value={formValues.customCycleDays ?? ""}
                                 onChange={(value) =>
