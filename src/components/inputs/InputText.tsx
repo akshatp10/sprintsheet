@@ -1,32 +1,59 @@
-import { cn } from "@/lib/cn"
+// components/inputs/InputText.tsx
+import type { UseFormRegisterReturn } from "react-hook-form";
+import { cn } from "@/lib/cn";
 
-type InputTextProps = {
-    value: string
-    onChange: (value: string) => void
-    className?: string
-    type?: string
+type BaseProps = {
+    className?: string;
+    type?: string;
 } & Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
-    "value" | "onChange" | "className"
->
+    "value" | "onChange" | "className" | "type" | "name">;
+
+type ControlledProps = BaseProps & {
+    value: string;
+    onChange: (value: string) => void;
+    register?: never;
+};
+
+type RHFProps = BaseProps & {
+    register: UseFormRegisterReturn;
+    value?: never;
+    onChange?: never;
+};
+
+type InputTextProps = ControlledProps | RHFProps;
 
 export function InputText({
-    value,
-    onChange,
     className,
     type = "text",
+    register,
+    value,
+    onChange,
     ...props
 }: InputTextProps) {
+    const sharedClassName = cn(
+        "bg-surface rounded-md border border-lines-hairline focus:outline-0 px-2 py-1.5 text-ink placeholder:text-ink-fades-placeholders h-full text-type-body-sm flex-0",
+        className
+    );
+
+    if (register) {
+        return (
+            <input
+                {...props}
+                {...register}
+                type={type}
+                className={sharedClassName}
+            />
+        );
+    }
+
     return (
         <input
+            {...props}
             type={type}
             value={value}
             onChange={(event) => onChange(event.target.value)}
-            className={cn(
-                "bg-surface rounded-md border border-lines-hairline focus:outline-0 px-2 py-1.5 text-ink placeholder:text-ink-fades-placeholders h-full text-type-body-sm flex-0",
-                className
-            )}
-            {...props}
+            className={sharedClassName}
         />
-    )
+    );
 }
