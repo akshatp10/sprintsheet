@@ -1,7 +1,7 @@
 import { Search } from "lucide-react";
 
-import { InputText } from "./InputText";
 import { cn } from "@/lib/cn";
+import Input from "./Input";
 
 type SearchInputProps = {
     value: string;
@@ -27,7 +27,7 @@ const SearchInput = ({
                 className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-fades-placeholders pointer-events-none"
             />
 
-            <InputText
+            <Input
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
