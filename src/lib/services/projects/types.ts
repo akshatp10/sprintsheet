@@ -31,7 +31,6 @@ export interface CreateProjectInput {
 	}[];
 	stages: {
 		name: string;
-		order: number;
 	}[];
 }
 

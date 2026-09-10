@@ -21,7 +21,6 @@ export const projectFormSchema = z
 			.array(
 				z.object({
 					name: z.string().min(1, "Stage name is required"),
-					order: z.number(),
 				}),
 			)
 			.min(1, "At least one stage is required"),
@@ -56,11 +55,12 @@ const defaultValues: ProjectFormData = {
 	autoCycle: false,
 	defaultView: "table",
 	stages: [
-		{ name: "Backlog", order: 0 },
-		{ name: "Todo", order: 1 },
-		{ name: "In progress", order: 2 },
-		{ name: "In QA", order: 3 },
-		{ name: "Done", order: 4 },
+		{ name: "Backlog" },
+		{ name: "Todo" },
+		{ name: "In progress" },
+		{ name: "In QA" },
+		{ name: "Blocked" },
+		{ name: "Done" },
 	],
 	people: [],
 	startFirstCycle: true,

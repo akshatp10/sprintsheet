@@ -53,6 +53,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
             invitedPeople: data.people,
             stages: data.stages,
         }
+
         createProject(
             newProject,
             {
@@ -93,11 +94,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
 
                     {currentStep === 2 && (
                         <ColumnStagesStep
-                            register={register}
                             control={control}
-                            watch={watch}
-                            setValue={setValue}
-                            errors={errors}
                         />
                     )}
 

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/cn";
-import React, { useState, useImperativeHandle, useEffect } from "react";
+import React, { useState, useImperativeHandle, useEffect, useCallback } from "react";
 
 import PopupHeader from "./PopupHeader";
 import ExitAlert from "./ExitAlert";
@@ -31,13 +31,13 @@ const PopupModal = ({
 }: PopupModalProps) => {
     const [exitConfirm, setExitConfirm] = useState(false);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         if (alert) {
             setExitConfirm(true);
         } else {
             onClose();
         }
-    };
+    }, [alert, onClose]);
 
     useImperativeHandle(ref, () => ({ requestClose: handleClose }));
 
@@ -53,7 +53,7 @@ const PopupModal = ({
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         };
-    }, [alert]);
+    }, [handleClose]);
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 px-4">
