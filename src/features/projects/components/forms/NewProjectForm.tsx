@@ -54,8 +54,6 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
             stages: data.stages,
         }
 
-        console.log(newProject)
-
         createProject(
             newProject,
             {
