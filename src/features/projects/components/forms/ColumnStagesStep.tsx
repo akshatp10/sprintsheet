@@ -2,7 +2,7 @@ import { type Control, type FieldErrors, type UseFormRegister, type UseFormSetVa
 import { Plus } from "lucide-react";
 import type { ProjectFormData } from "../../types/projectFormData";
 import Text from "@/components/common/Text";
-import Button from "@/components/button/Button";
+// import Button from "@/components/button/Button";
 import ColumnChip from "./ColumnChip";
 import ProjectStage from "./ProjectStage";
 
@@ -35,7 +35,7 @@ const stageColors: Record<string, string> = {
 const ColumnStagesStep = ({ control }: ColumnStagesStepProps) => {
     const { fields } = useFieldArray({ control, name: "stages" });
 
-    const handleAddStage = () => { };
+    // const handleAddStage = () => { };
 
     return (
         <section className="flex flex-col gap-3">
@@ -75,19 +75,20 @@ const ColumnStagesStep = ({ control }: ColumnStagesStepProps) => {
                             tag={
                                 index === 0 ? "start" : index === fields.length - 1 ? "terminal" : null
                             }
+                            key={field.id}
                         />
                     ))}
                 </div>
 
-                {/* Add stage */}
-                <Button handleClick={handleAddStage} variant="tertiary" type="button"
+                {/* Add stage - To be added in upcoming features */}
+                {/* <Button handleClick={handleAddStage} variant="tertiary" type="button"
                     className="flex items-center justify-between rounded-md border border-lines-hairline px-3 py-2"
                 >
                     <div className="flex items-center gap-2">
                         <Plus className="w-3.5 h-3.5 text-ink-2" />
                         <Text variant="body-sm" className="text-ink-2">Add stage</Text>
                     </div>
-                </Button>
+                </Button> */}
             </div>
 
         </section>

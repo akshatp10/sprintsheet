@@ -26,12 +26,16 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
         setValue,
         trigger,
         reset,
-        formState: { errors, isDirty },
-    } = useForm<ProjectFormData>({ defaultValues, resolver: zodResolver(projectFormSchema) });
+        formState: { errors, isDirty, isValid },
+    } = useForm<ProjectFormData>({
+        defaultValues,
+        resolver: zodResolver(projectFormSchema),
+        mode: "onChange",
+    });
 
     // These fields should have some data in order to move to next step
     const stepFields: Record<number, (keyof ProjectFormData)[]> = {
-        1: ["name", "key", "cycleLength", "customCycleDays", "startingDay"],
+        1: ["name", "key", "description", "cycleLength", "customCycleDays", "startingDay"],
         2: ["stages"],
         3: ["people"],
     };
@@ -108,6 +112,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
                     onClose={() => popupRef.current?.requestClose()}
                     onBack={handleBack}
                     onNext={handleNext}
+                    isNextDisabled={!isValid}
                 />
 
             </form>

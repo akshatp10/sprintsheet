@@ -1,15 +1,24 @@
 // import { ChevronDown } from "lucide-react"
 // import Text from "../common/Text"
 import Button from "../button/Button"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import SearchInput from "../inputs/SearchInput"
 import NewProjectForm from "@/features/projects/components/forms/NewProjectForm"
+import useShortcutSearch from "@/hooks/useShortcutSearch"
 
 const WorkspaceTopbar = () => {
     const [searchProject, setSearchProject] = useState("")
+    // const [focusSearch, setFocusSearch] = useState(false)
     const [showForm, setShowForm] = useState(false)
 
     const handleClick = () => { setShowForm(true) }
+
+    const focusSearch = useCallback(() => {
+        document.getElementById("search")?.focus();
+    }, []);
+
+    useShortcutSearch("k", focusSearch)
+
     return (
         <>
             <div className="flex justify-end items-center w-full">
@@ -22,7 +31,7 @@ const WorkspaceTopbar = () => {
 
                 {/* Right side containing search project and new project buttons */}
                 <div className="flex items-center gap-2">
-                    <SearchInput value={searchProject} onChange={setSearchProject} placeholder="Search projects, tasks..." />
+                    <SearchInput value={searchProject} onChange={setSearchProject} placeholder="Search projects, tasks...  &#8984;+K" />
 
                     <Button variant="secondary" className="h-full font-medium" handleClick={handleClick}>
                         + New Project
