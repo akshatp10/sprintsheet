@@ -4,6 +4,7 @@ import Chip from "@/components/chips/Chip";
 import Text from "@/components/common/Text";
 
 import type { Task } from "@/lib/services/tasks/types";
+import { useDraggable } from "@dnd-kit/react";
 
 interface TaskCardProps {
     task: Task;
@@ -11,10 +12,17 @@ interface TaskCardProps {
 }
 
 const TaskCard = ({ task, isDone }: TaskCardProps) => {
+
+    const { ref } = useDraggable({
+        id: task.id,
+    });
+
     return (
         <div
             className={`rounded-md border-2 border-lines-hairline w-full min-h-fit bg-surface px-4 py-2 flex flex-col gap-2 justify-center ${isDone ? "opacity-50" : ""
                 }`}
+
+            ref={ref}
         >
             <div className="w-full flex justify-between items-center">
                 <Text variant="micro">CRM-101</Text>
