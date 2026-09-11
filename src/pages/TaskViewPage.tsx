@@ -20,7 +20,7 @@ const TaskViewPage = () => {
         <div className="grid h-full min-h-0 min-w-fit grid-rows-[1fr_2rem]">
             {view === "table" && (<TableTaskPage />)}
 
-            {view === "cards" && (<CardTaskPage tasks={tasks} stages={stages} isLoading={isLoading} />)}
+            {view === "cards" && (<CardTaskPage tasks={tasks} stages={stages} isLoading={isLoading} projectId={projectid ?? ""} />)}
 
             <TaskViewFooter />
         </div>
