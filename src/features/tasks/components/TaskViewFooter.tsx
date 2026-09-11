@@ -4,9 +4,10 @@ import { Inbox, Menu, Plus } from "lucide-react"
 
 interface TaskViewFooterProps {
     isCardHeld?: boolean
+    taskLength?: number
 }
 
-const TaskViewFooter = ({ isCardHeld = true }: TaskViewFooterProps) => {
+const TaskViewFooter = ({ isCardHeld = true, taskLength = 0 }: TaskViewFooterProps) => {
     return (
         <div className='bg-surface-sunken border-t border-t-lines-hairline flex justify-between items-center px-4'>
             <div className="flex">
@@ -26,7 +27,7 @@ const TaskViewFooter = ({ isCardHeld = true }: TaskViewFooterProps) => {
                 <Button variant="tertiary" className="flex gap-1 items-center justify-center">
                     <Inbox strokeWidth={1.5} size={13} />
                     <Text className="text-ink-2">Backlog</Text>
-                    <Text variant="body-sm" className="font-normal text-ink-3">0</Text>
+                    <Text variant="body-sm" className="font-normal text-ink-3">{taskLength}</Text>
                 </Button>
             </div>
         </div>
