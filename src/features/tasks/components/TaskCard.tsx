@@ -13,7 +13,7 @@ interface TaskCardProps {
 const TaskCard = ({ task, isDone }: TaskCardProps) => {
     return (
         <div
-            className={`border rounded-md border-lines-hairline w-full min-h-fit bg-surface px-4 py-2 flex flex-col gap-2 justify-center ${isDone ? "opacity-50" : ""
+            className={`rounded-md border-2 border-lines-hairline w-full min-h-fit bg-surface px-4 py-2 flex flex-col gap-2 justify-center ${isDone ? "opacity-50" : ""
                 }`}
         >
             <div className="w-full flex justify-between items-center">

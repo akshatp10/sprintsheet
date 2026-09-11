@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import SlideOverHeader from "./DrawerHeader";
 import ExitAlert from "../popupModals/ExitAlert";
+import DrawerHeader from "./DrawerHeader";
 
 export type DrawerSide = "left" | "right";
 
@@ -50,7 +50,7 @@ const Drawer = ({
                 className={`absolute top-0 ${sideClass} h-dvh bg-surface-sunken ${className}`}
                 style={{ width }}
             >
-                <SlideOverHeader label={label} onClose={handleClose} />
+                <DrawerHeader label={label} onClose={handleClose} />
 
                 <div className="flex flex-1 flex-col">{children}</div>
 
