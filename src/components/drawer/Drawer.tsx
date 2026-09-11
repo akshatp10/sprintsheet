@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import ExitAlert from "../popupModals/ExitAlert";
 import DrawerHeader from "./DrawerHeader";
+import { cn } from "@/lib/cn";
 
 export type DrawerSide = "left" | "right";
 
@@ -42,12 +43,12 @@ const Drawer = ({
     const sideClass = side === "right" ? "right-0" : "left-0";
 
     return (
-        <div className="fixed inset-0 z-50">
-            <div className="absolute inset-0 bg-surface/60" />
+        <div className="fixed inset-0">
+            <div className="absolute inset-0 bg-surface-sunken/60" />
 
             {/* Slide-over */}
             <div
-                className={`absolute top-0 ${sideClass} h-dvh bg-surface-sunken ${className}`}
+                className={cn(`absolute top-0 ${sideClass} h-dvh bg-surface-sunken`, className)}
                 style={{ width }}
             >
                 <DrawerHeader label={label} onClose={handleClose} />

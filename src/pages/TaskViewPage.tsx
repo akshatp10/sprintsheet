@@ -4,11 +4,13 @@ import CardTaskPage from "./tasks/CardTaskPage";
 import { useTasks } from "@/lib/services/tasks/hooks";
 import { useProjectStages } from "@/lib/services/stages/hooks";
 import TaskViewFooter from "@/features/tasks/components/TaskViewFooter";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { Task } from "@/lib/services/tasks/types";
+import BacklogDrawer from "@/features/tasks/components/BacklogDrawer";
 
 const TaskViewPage = () => {
     const [searchParams] = useSearchParams();
+    const [openBacklog, setOpenBacklog] = useState(false)
 
     const view = searchParams.get("view") === "table" ? "table" : "cards";
     const { projectid } = useParams<{ projectid: string }>();
@@ -39,13 +41,17 @@ const TaskViewPage = () => {
     if (isError) return (<div>Error : {error.message}</div>)
 
     return (
-        <div className="grid h-full min-h-0 min-w-fit grid-rows-[1fr_2rem]">
-            {view === "table" && (<TableTaskPage />)}
+        <>
+            <div className="grid h-full min-h-0 min-w-fit grid-rows-[1fr_5dvh]">
+                {view === "table" && (<TableTaskPage />)}
 
-            {view === "cards" && (<CardTaskPage stages={sortedStages} tasksByStage={tasksByStage} isLoading={isLoading} projectId={projectid ?? ""} />)}
+                {view === "cards" && (<CardTaskPage stages={sortedStages} tasksByStage={tasksByStage} isLoading={isLoading} projectId={projectid ?? ""} />)}
 
-            <TaskViewFooter taskLength={backlogTasks.length} />
-        </div>
+                <TaskViewFooter taskLength={backlogTasks.length} onClick={() => { setOpenBacklog(prev => !prev) }} />
+            </div>
+
+            {openBacklog && <BacklogDrawer handleClose={() => { setOpenBacklog(false) }} />}
+        </>
     );
 };
 
