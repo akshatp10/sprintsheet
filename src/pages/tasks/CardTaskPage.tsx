@@ -7,36 +7,23 @@ import { cn } from "@/lib/cn";
 import type { Stage } from "@/lib/services/stages/type";
 import type { Task } from "@/lib/services/tasks/types";
 import { Plus } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 interface CardTaskPageProps {
-    tasks: Task[] | undefined;
     stages: Stage[];
+    tasksByStage: Record<string, Task[]>;
     isLoading: boolean;
-    projectId: string
+    projectId: string;
 }
 
-const CardTaskPage = ({ tasks, stages, isLoading, projectId }: CardTaskPageProps) => {
+const CardTaskPage = ({ stages, isLoading, projectId, tasksByStage }: CardTaskPageProps) => {
     // if (isLoading) return <div>Loading Tasks</div>;
-    const taskList = tasks ?? [];
-
-    const sortedStages = [...stages].sort((a, b) => a.order - b.order);
-
-    const tasksByStage = useMemo(() =>
-        taskList.reduce<Record<string, Task[]>>((acc, task) => {
-            if (!acc[task.stageId])
-                acc[task.stageId] = [];
-
-            acc[task.stageId].push(task);
-            return acc;
-        }, {})
-        , [taskList]);
 
     const [newTask, setNewTask] = useState(false)
     const [clickedStageId, setClickedStageId] = useState<string>("")
 
     const stageColors: Record<string, string> = {
-        Backlog: "bg-stage-backlog-bg border border-stage-blocked-border text-stage-backlog-text",
+        Backlog: "bg-stage-backlog-bg border border-stage-backlog-border text-stage-backlog-text",
         Todo: "bg-stage-todo-bg border border-stage-todo-border text-stage-todo-text",
         "In progress": "bg-stage-progress-bg border border-stage-progress-border text-stage-progress-text",
         "In QA": "bg-stage-qa-bg border border-stage-qa-border text-stage-qa-text",
@@ -52,15 +39,17 @@ const CardTaskPage = ({ tasks, stages, isLoading, projectId }: CardTaskPageProps
         Blocked: "bg-stage-blocked-dot",
     };
 
+    const visibleStages = stages.filter((stage) => stage.name !== "Backlog");
+
     return (
         <>
             <div
                 className="grid gap-4 overflow-x-auto p-4 h-full"
                 style={{
-                    gridTemplateColumns: `repeat(${sortedStages.length}, minmax(15rem, 1fr))`,
+                    gridTemplateColumns: `repeat(${stages.length}, minmax(15rem, 1fr))`,
                 }}
             >
-                {sortedStages.map((stage) => {
+                {visibleStages.map((stage) => {
                     const stageTasks = tasksByStage[stage.stageId] ?? [];
 
                     return (
