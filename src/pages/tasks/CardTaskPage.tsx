@@ -1,3 +1,4 @@
+import Text from "@/components/common/Text";
 import TaskCard from "@/features/tasks/components/TaskCard";
 import { cn } from "@/lib/cn";
 import type { Stage } from "@/lib/services/stages/type";
@@ -24,6 +25,14 @@ const CardTaskPage = ({ tasks, stages, isLoading }: CardTaskPageProps) => {
         Done: "bg-stage-done-bg border border-stage-done-border",
         Blocked: "bg-stage-blocked-bg border border-stage-blocked-border"
     };
+    const stageDotColors: Record<string, string> = {
+        Backlog: "bg-stage-backlog-dot",
+        Todo: "bg-stage-todo-dot",
+        "In progress": "bg-stage-progress-dot",
+        "In QA": "bg-stage-qa-dot",
+        Done: "bg-stage-done-dot",
+        Blocked: "bg-stage-blocked-dot",
+    };
 
     return (
         <div
@@ -42,10 +51,11 @@ const CardTaskPage = ({ tasks, stages, isLoading }: CardTaskPageProps) => {
                         className={cn("flex h-full flex-col rounded-md", stageColors[stage.name])}
                     >
                         <div className="flex shrink-0 items-center justify-between px-4 pt-2">
-                            <h2 className="font-semibold">{stage.name}</h2>
-                            <span className="text-sm text-muted-foreground">
-                                {stageTasks.length}
-                            </span>
+                            <div className="flex items-center gap-2">
+                                <span className={cn("w-2 h-2 rounded-full shrink-0", stageDotColors[stage.name])} />
+                                <Text variant="h2">{stage.name}</Text>
+                                <Text variant="h2" className="font-normal text-ink-fades-ghost-rows">{stageTasks.length}</Text>
+                            </div>
                         </div>
 
                         <div className="flex-1 space-y-3 overflow-y-auto p-3">
