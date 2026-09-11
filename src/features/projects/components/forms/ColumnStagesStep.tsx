@@ -1,15 +1,12 @@
 import { type Control, useFieldArray } from "react-hook-form";
 import { Plus } from "lucide-react";
-import { useRef } from "react";
 import type { ProjectFormData } from "../../types/projectFormData";
 import Text from "@/components/common/Text";
 // import Button from "@/components/button/Button";
 import ColumnChip from "./ColumnChip";
-import ProjectStage from "./ProjectStage";
-import useStageDrag from "@/hooks/useStageDrag";
-import DraggableComponent from "@/components/draggable/DraggableComponent";
-import DraggableTarget from "@/components/draggable/DraggableTarget";
-import ProjectDropComponent from "../ProjectDropComponent";
+import { DragDropProvider } from "@dnd-kit/react";
+import { isSortable } from "@dnd-kit/react/sortable";
+import SortableStage from "./SortableStage";
 
 interface ColumnStagesStepProps {
     control: Control<ProjectFormData>;
@@ -25,33 +22,10 @@ const columns = [
     { label: "Tags", required: false },
 ];
 
-const stageColors: Record<string, string> = {
-    Backlog: "bg-stage-backlog-dot",
-    Todo: "bg-stage-todo-dot",
-    "In progress": "bg-stage-progress-dot",
-    "In QA": "bg-stage-qa-dot",
-    Done: "bg-stage-done-dot",
-    Blocked: "bg-stage-blocked-dot"
-};
-
 const ColumnStagesStep = ({ control }: ColumnStagesStepProps) => {
     const { fields, move } = useFieldArray({
         control,
         name: "stages",
-    });
-
-    const stageTargetRef = useRef<HTMLDivElement>(null);
-
-    const {
-        visualStages,
-        draggedStage,
-        draggedId,
-        mouse,
-        handleDragStart,
-    } = useStageDrag({
-        fields,
-        move,
-        containerRef: stageTargetRef,
     });
 
     return (
@@ -64,8 +38,7 @@ const ColumnStagesStep = ({ control }: ColumnStagesStepProps) => {
                 </Text>
 
                 <Text variant="caption" className="text-ink-3">
-                    The standard set, pre-filled. Drag to reorder,
-                    click to rename, ⊖ to drop one.
+                    The standard set, pre-filled. Drag to reorder, click to rename, ⊖ to drop one.
                 </Text>
 
                 <div className="flex flex-wrap gap-2 mt-1">
@@ -100,37 +73,33 @@ const ColumnStagesStep = ({ control }: ColumnStagesStepProps) => {
                     </Text>
                 </div>
 
-                <DraggableTarget
-                    ref={stageTargetRef}
-                    containerId="stages"
-                    className="mt-1"
-                    items={visualStages}
-                    draggedId={draggedId}
-                    draggedItem={draggedStage}
-                    mouse={mouse}
-                    renderItem={(stage, index) => (
-                        <DraggableComponent
-                            className="rounded-md border border-lines-hairline"
-                            onDragStart={(event) =>
-                                handleDragStart(event, stage.id)
-                            }
-                        >
-                            <ProjectStage
-                                color={stageColors[stage.name] ?? "bg-ink-3"}
-                                label={stage.name}
-                                tag={
-                                    index === 0
-                                        ? "start"
-                                        : index === visualStages.length - 1
-                                            ? "terminal"
-                                            : null
-                                }
+                <DragDropProvider
+                    onDragEnd={(event) => {
+                        if (event.canceled) {
+                            return;
+                        }
+                        const { source } = event.operation;
+                        if (!isSortable(source)) {
+                            return;
+                        }
+                        const { initialIndex, index } = source;
+                        if (initialIndex === index) {
+                            return;
+                        }
+                        move(initialIndex, index);
+                    }}
+                >
+                    <div className="mt-1 flex flex-col gap-2">
+                        {fields.map((stage, index) => (
+                            <SortableStage
+                                key={stage.id}
+                                stage={stage}
+                                index={index}
+                                total={fields.length}
                             />
-                        </DraggableComponent>
-                    )}
-
-                    customDropZone={<ProjectDropComponent color={stageColors[draggedStage?.name ?? "Backlog"]} label={draggedStage?.name ?? ""} />}
-                />
+                        ))}
+                    </div>
+                </DragDropProvider>
 
                 {/* Add stage - To be added in upcoming features */}
                 {/* <Button handleClick={handleAddStage} variant="tertiary" type="button"
