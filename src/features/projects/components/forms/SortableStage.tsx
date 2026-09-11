@@ -51,7 +51,7 @@ const SortableStage = ({
     return (
         <div
             ref={setElement}
-            className="flex h-10 items-center rounded-md border border-lines-hairline"
+            className="flex h-10 items-center rounded-md bg-surface border border-lines-hairline"
         >
             <div
                 ref={(node) => sortable.handleRef(node)}
