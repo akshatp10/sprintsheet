@@ -22,3 +22,13 @@ export interface CreateTaskInput {
 	type: string;
 	tags?: string[];
 }
+
+export type UpdateTaskInput = Partial<
+	Omit<Task, "id" | "createdAt" | "updatedAt">
+>;
+
+export interface UpdateTaskVariables {
+	id: string;
+	projectId: string;
+	updates: UpdateTaskInput;
+}

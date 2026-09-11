@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createNewTask, getAllProjectTasks } from "./api";
-import type { CreateTaskInput } from "./types";
+
+import { createNewTask, getAllProjectTasks, updateExistingTask } from "./api";
+
+import type { CreateTaskInput, UpdateTaskVariables } from "./types";
 
 export const useTasks = (projectId: string) => {
 	return useQuery({
@@ -30,9 +32,31 @@ export const useCreateTask = () => {
 			}
 			return response.data;
 		},
-		onSuccess: (_, variable) => {
+		onSuccess: (_, variables) => {
 			queryClient.invalidateQueries({
-				queryKey: ["tasks", variable.projectId],
+				queryKey: ["tasks", variables.projectId],
+			});
+		},
+	});
+};
+
+export const useUpdateTask = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async ({ id, updates }: UpdateTaskVariables) => {
+			const response = await updateExistingTask(id, updates);
+
+			if (!response.success) {
+				throw new Error(response.message);
+			}
+
+			return response.data;
+		},
+
+		onSuccess: (_, variables) => {
+			queryClient.invalidateQueries({
+				queryKey: ["tasks", variables.projectId],
 			});
 		},
 	});

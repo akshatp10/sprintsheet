@@ -1,6 +1,7 @@
 import db from "../db";
 
 import type { TaskRow } from "../db";
+type UpdateTaskInput = Partial<Omit<TaskRow, "id" | "createdAt" | "updatedAt">>;
 
 interface CreateTaskRow {
 	projectId: string;
@@ -39,4 +40,18 @@ export const getAllTasksByProject = async (
 	projectId: string,
 ): Promise<TaskRow[]> => {
 	return db.tasks.where("projectId").equals(projectId).sortBy("createdAt");
+};
+
+export const updateTask = async (
+	id: string,
+	updates: UpdateTaskInput,
+): Promise<TaskRow | undefined> => {
+	const updatedAt = Date.now();
+
+	await db.tasks.update(id, {
+		...updates,
+		updatedAt,
+	});
+
+	return db.tasks.get(id);
 };
