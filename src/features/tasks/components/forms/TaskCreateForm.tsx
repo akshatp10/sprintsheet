@@ -22,9 +22,10 @@ import { useCreateTask } from "@/lib/services/tasks/hooks";
 interface TaskCreateFormProps {
     projectId: string;
     onClose: () => void;
+    defaultStageId?: string;
 }
 
-const TaskCreateForm = ({ projectId, onClose }: TaskCreateFormProps) => {
+const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormProps) => {
     const {
         register,
         handleSubmit,
@@ -34,7 +35,7 @@ const TaskCreateForm = ({ projectId, onClose }: TaskCreateFormProps) => {
         formState: { errors, isDirty },
     } = useForm<TaskFormData>({
         resolver: zodResolver(taskFormSchema),
-        defaultValues,
+        defaultValues: { ...defaultValues, stageId: defaultStageId ?? defaultValues.stageId },
     });
 
     const assigneeIds = watch("assigneeIds") ?? [];
@@ -78,8 +79,20 @@ const TaskCreateForm = ({ projectId, onClose }: TaskCreateFormProps) => {
                     />
                 </FormInputBox>
 
+                {/* Description */}
+                <FormInputBox label="" error={errors.description?.message}>
+                    <TextArea
+                        register={register("description")}
+                        placeholder="Add a description…"
+                        rows={2}
+                        className="resize-none rounded-md border-none bg-transparent p-0 text-type-body-sm text-ink placeholder:text-ink-fades-placeholders focus:outline-none"
+                    />
+                </FormInputBox>
+
+                <div className="border-b border-lines-hairline" />
+
                 {/* Pill row: stage, assignee, due date, type, tags */}
-                <div className="flex flex-wrap items-start gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                     <select
                         {...register("stageId")}
                         className="rounded-md border border-lines-hairline bg-surface px-2.5 py-1 text-type-caption text-ink-2"
@@ -130,18 +143,6 @@ const TaskCreateForm = ({ projectId, onClose }: TaskCreateFormProps) => {
                     />
 
                 </div>
-
-                <div className="border-b border-lines-hairline" />
-
-                {/* Description */}
-                <FormInputBox label="" error={errors.description?.message}>
-                    <TextArea
-                        register={register("description")}
-                        placeholder="Add a description…"
-                        rows={4}
-                        className="resize-none rounded-md border-none bg-transparent p-0 text-type-body-sm text-ink placeholder:text-ink-fades-placeholders focus:outline-none"
-                    />
-                </FormInputBox>
 
                 <div className="mt-auto flex justify-end">
                     <Button type="submit" variant="tertiary">
