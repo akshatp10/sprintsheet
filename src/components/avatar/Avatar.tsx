@@ -67,7 +67,7 @@ const Avatar = ({
             ) : userName ? (
                 userName.slice(0, 2).toUpperCase()
             ) : (
-                <UserRound size={15} strokeWidth={1.5} />
+                <UserRound size={15} strokeWidth={1.5} className='text-ink-2' />
             )}
         </div>
     );
