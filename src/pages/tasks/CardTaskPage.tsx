@@ -7,7 +7,7 @@ import { cn } from "@/lib/cn";
 import type { Stage } from "@/lib/services/stages/type";
 import type { Task } from "@/lib/services/tasks/types";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 interface CardTaskPageProps {
     tasks: Task[] | undefined;
@@ -21,6 +21,16 @@ const CardTaskPage = ({ tasks, stages, isLoading, projectId }: CardTaskPageProps
     const taskList = tasks ?? [];
 
     const sortedStages = [...stages].sort((a, b) => a.order - b.order);
+
+    const tasksByStage = useMemo(() =>
+        taskList.reduce<Record<string, Task[]>>((acc, task) => {
+            if (!acc[task.stageId])
+                acc[task.stageId] = [];
+
+            acc[task.stageId].push(task);
+            return acc;
+        }, {})
+        , [taskList]);
 
     const [newTask, setNewTask] = useState(false)
     const [clickedStageId, setClickedStageId] = useState<string>("")
@@ -51,8 +61,7 @@ const CardTaskPage = ({ tasks, stages, isLoading, projectId }: CardTaskPageProps
                 }}
             >
                 {sortedStages.map((stage) => {
-                    //TODO - Optimize the task filtering
-                    const stageTasks = taskList.filter((t) => t.stageId === stage.stageId);
+                    const stageTasks = tasksByStage[stage.stageId] ?? [];
 
                     return (
                         <div
