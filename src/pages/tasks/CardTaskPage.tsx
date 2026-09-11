@@ -46,7 +46,7 @@ const CardTaskPage = ({ stages, isLoading, projectId, tasksByStage }: CardTaskPa
             <div
                 className="grid gap-4 overflow-x-auto p-4 h-full"
                 style={{
-                    gridTemplateColumns: `repeat(${stages.length}, minmax(15rem, 1fr))`,
+                    gridTemplateColumns: `repeat(${visibleStages.length}, minmax(15rem, 1fr))`,
                 }}
             >
                 {visibleStages.map((stage) => {
