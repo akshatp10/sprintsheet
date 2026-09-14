@@ -5,6 +5,7 @@ import TaskCard from "@/features/tasks/components/TaskCard";
 import { cn } from "@/lib/cn";
 import type { Stage } from "@/lib/services/stages/type";
 import type { Task } from "@/lib/services/tasks/types";
+import { useDroppable } from "@dnd-kit/react";
 import { Plus } from "lucide-react";
 
 interface StageViewBoxProps {
@@ -44,12 +45,16 @@ const StageViewBox = ({
     isLoading,
     onCreateTask,
 }: StageViewBoxProps) => {
+
+    const { ref } = useDroppable({ id: stage.stageId });
+
     return (
         <div
             className={cn(
                 "flex h-full flex-col rounded-md",
                 stageColors[stage.name],
             )}
+            ref={ref}
         >
             <div className="flex shrink-0 items-center justify-between px-3 pt-2">
                 <div className="flex items-center gap-2">
