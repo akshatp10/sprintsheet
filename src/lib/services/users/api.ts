@@ -1,4 +1,4 @@
-import { getUserById } from "@/lib/db/dbFunctions/userFunctions";
+import { getUserById, getUsersByIds } from "@/lib/db/dbFunctions/userFunctions";
 import type { ApiResponse } from "../types";
 import type { User } from "./types";
 
@@ -20,6 +20,26 @@ export const getUser = async (id: string): Promise<ApiResponse<User>> => {
 			success: true,
 			message: "Successfully fetched user",
 			data: user,
+		};
+	} catch {
+		return {
+			status: 500,
+			success: false,
+			message: "Internal Server Error",
+			data: null,
+		};
+	}
+};
+
+export const getUsers = async (ids: string[]): Promise<ApiResponse<User[]>> => {
+	try {
+		const users = await getUsersByIds(ids);
+
+		return {
+			status: 200,
+			success: true,
+			message: "Successfully fetched users",
+			data: users,
 		};
 	} catch {
 		return {

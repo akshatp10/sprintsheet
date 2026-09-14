@@ -1,5 +1,6 @@
 export interface Task {
 	id: string;
+	key: string;
 	projectId: string;
 	stageId: string;
 	name: string;
@@ -26,6 +27,12 @@ export interface CreateTaskInput {
 export type UpdateTaskInput = Partial<
 	Omit<Task, "id" | "createdAt" | "updatedAt">
 >;
+
+import type { User } from "../users/types";
+
+export interface TaskWithUsers extends Task {
+	assignees: User[];
+}
 
 export interface UpdateTaskVariables {
 	id: string;

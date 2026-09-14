@@ -28,7 +28,13 @@ export const findOrCreateUser = async (
 
 export const getUserById = (id: string) => db.users.get(id);
 
-export const getUsersByIds = (ids: string[]) => db.users.bulkGet(ids);
+export const getUsersByIds = async (ids: string[]): Promise<UserRow[]> => {
+	if (ids.length === 0) {
+		return [];
+	}
+	const users = await db.users.bulkGet(ids);
+	return users.filter((user): user is UserRow => user !== undefined);
+};
 
 export const getProjectMemberRows = (projectId: string) =>
 	db.projectMembers.where("projectId").equals(projectId).toArray();

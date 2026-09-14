@@ -58,7 +58,7 @@ const Avatar = ({
                 variantClasses[resolvedVariant],
                 isSideBar
                     ? 'w-8 h-8 text-type-body'
-                    : 'w-6 h-6 text-type-body-sm',
+                    : 'w-6 h-6 text-type-caption',
             )}
             {...props}
         >

@@ -4,13 +4,13 @@ import TaskCardSkeleton from "@/features/tasks/components/skeletons/TaskCardSkel
 import TaskCard from "@/features/tasks/components/TaskCard";
 import { cn } from "@/lib/cn";
 import type { Stage } from "@/lib/services/stages/type";
-import type { Task } from "@/lib/services/tasks/types";
+import type { TaskWithUsers } from "@/lib/services/tasks/types";
 import { useDroppable } from "@dnd-kit/react";
 import { Plus } from "lucide-react";
 
 interface StageViewBoxProps {
     stage: Stage;
-    tasks: Task[];
+    tasks: TaskWithUsers[];
     isLoading: boolean;
     onCreateTask: (stageId: string) => void;
 }
