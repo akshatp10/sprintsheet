@@ -1,7 +1,9 @@
 import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
 import StageViewBox from "@/features/tasks/components/StageViewBox";
 import type { Stage } from "@/lib/services/stages/type";
+import { useUpdateTask } from "@/lib/services/tasks/hooks";
 import type { Task } from "@/lib/services/tasks/types";
+import { DragDropProvider } from "@dnd-kit/react";
 import { useState } from "react";
 
 interface CardTaskPageProps {
@@ -34,6 +36,12 @@ const CardTaskPage = ({
         setClickedStageId("");
     };
 
+    const { mutate } = useUpdateTask();
+
+    const handleUpdateTaskStage = (taskId: string, stageId: string) => {
+        mutate({ id: taskId, projectId, updates: { stageId }, });
+    };
+
     return (
         <>
             <div
@@ -42,15 +50,29 @@ const CardTaskPage = ({
                     gridTemplateColumns: `repeat(${visibleStages.length}, minmax(15rem, 1fr))`,
                 }}
             >
-                {visibleStages.map((stage) => (
-                    <StageViewBox
-                        key={stage.id}
-                        stage={stage}
-                        tasks={tasksByStage[stage.stageId] ?? []}
-                        isLoading={isLoading}
-                        onCreateTask={handleCreateTask}
-                    />
-                ))}
+                <DragDropProvider
+                    onDragEnd={(event) => {
+                        if (event.canceled) return;
+
+                        const taskId = event.operation.source?.id;
+                        const destinationStageId = event.operation.target?.id;
+
+                        if (!taskId || !destinationStageId) return;
+
+                        handleUpdateTaskStage(String(taskId), String(destinationStageId),
+                        );
+                    }}
+                >
+                    {visibleStages.map((stage) => (
+                        <StageViewBox
+                            key={stage.id}
+                            stage={stage}
+                            tasks={tasksByStage[stage.stageId] ?? []}
+                            isLoading={isLoading}
+                            onCreateTask={handleCreateTask}
+                        />
+                    ))}
+                </DragDropProvider>
             </div>
 
             {newTask && (
