@@ -21,6 +21,7 @@ export interface ProjectMember {
 
 export interface CreateProjectInput {
 	name: string;
+	key: string;
 	description?: string;
 	cycleLength: Project["cycleLength"];
 	startingDay?: string;

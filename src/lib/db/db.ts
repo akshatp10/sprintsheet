@@ -2,6 +2,8 @@ import Dexie, { type EntityTable } from "dexie";
 
 interface ProjectRow {
 	id: string;
+	key: string;
+	nextTaskNumber: number;
 	name: string;
 	description: string;
 	cycleLength: "default" | "custom" | "nocycle";
@@ -49,6 +51,7 @@ interface ProjectStageRow {
 interface TaskRow {
 	id: string;
 	projectId: string;
+	key: string;
 	stageId: string;
 	name: string;
 	description: string;
