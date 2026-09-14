@@ -2,13 +2,13 @@ import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
 import StageViewBox from "@/features/tasks/components/StageViewBox";
 import type { Stage } from "@/lib/services/stages/type";
 import { useUpdateTask } from "@/lib/services/tasks/hooks";
-import type { Task } from "@/lib/services/tasks/types";
+import type { TaskWithUsers } from "@/lib/services/tasks/types";
 import { DragDropProvider } from "@dnd-kit/react";
 import { useState } from "react";
 
 interface CardTaskPageProps {
     stages: Stage[];
-    tasksByStage: Record<string, Task[]>;
+    tasksByStage: Record<string, TaskWithUsers[]>;
     isLoading: boolean;
     projectId: string;
 }

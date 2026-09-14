@@ -2,7 +2,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { createNewTask, getAllProjectTasks, updateExistingTask } from "./api";
 
-import type { CreateTaskInput, Task, UpdateTaskVariables } from "./types";
+import type {
+	CreateTaskInput,
+	TaskWithUsers,
+	UpdateTaskVariables,
+} from "./types";
+import { getUsers } from "../users/api";
+import type { User } from "../users/types";
 
 export const useTasks = (projectId: string) => {
 	return useQuery({
@@ -22,15 +28,45 @@ export const useTasks = (projectId: string) => {
 
 export const useTasksByStage = (projectId: string) => {
 	return useQuery({
-		queryKey: ["tasks", projectId],
+		queryKey: ["tasks", "by-stage", projectId],
+
 		queryFn: async () => {
-			const response = await getAllProjectTasks(projectId);
-			if (!response.success) throw new Error(response.message);
-			return response.data ?? [];
+			const taskResponse = await getAllProjectTasks(projectId);
+
+			if (!taskResponse.success) {
+				throw new Error(taskResponse.message);
+			}
+
+			const tasks = taskResponse.data ?? [];
+
+			const userIds = [
+				...new Set(tasks.flatMap((task) => task.assigneeIds)),
+			];
+
+			const userResponse = await getUsers(userIds);
+
+			if (!userResponse.success) {
+				throw new Error(userResponse.message);
+			}
+
+			const users = userResponse.data ?? [];
+
+			const usersById = new Map(users.map((user) => [user.id, user]));
+
+			const tasksWithUsers = tasks.map((task) => ({
+				...task,
+				assignees: task.assigneeIds
+					.map((id) => usersById.get(id))
+					.filter((user): user is User => user !== undefined),
+			}));
+
+			return tasksWithUsers;
 		},
+
 		enabled: !!projectId,
+
 		select: (tasks) =>
-			tasks.reduce<Record<string, Task[]>>((acc, task) => {
+			tasks.reduce<Record<string, TaskWithUsers[]>>((acc, task) => {
 				(acc[task.stageId] ??= []).push(task);
 				return acc;
 			}, {}),

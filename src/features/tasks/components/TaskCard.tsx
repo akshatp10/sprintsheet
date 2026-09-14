@@ -2,12 +2,13 @@ import Avatar from "@/components/avatar/Avatar";
 import AvatarGroup from "@/components/avatar/AvatarGroups";
 import Chip from "@/components/chips/Chip";
 import Text from "@/components/common/Text";
+import { formatDate } from "@/lib/formatDate";
 
-import type { Task } from "@/lib/services/tasks/types";
+import type { TaskWithUsers } from "@/lib/services/tasks/types";
 import { useDraggable } from "@dnd-kit/react";
 
 interface TaskCardProps {
-    task: Task;
+    task: TaskWithUsers;
     isDone: boolean;
 }
 
@@ -25,7 +26,7 @@ const TaskCard = ({ task, isDone }: TaskCardProps) => {
             ref={ref}
         >
             <div className="w-full flex justify-between items-center">
-                <Text variant="micro">CRM-101</Text>
+                <Text variant="micro">{task.key}</Text>
 
                 <div className="flex gap-2">
                     {task.tags.length > 0 &&
@@ -57,9 +58,9 @@ const TaskCard = ({ task, isDone }: TaskCardProps) => {
 
             <div className="flex items-center justify-start gap-4">
                 {task.assigneeIds.length > 0 ? (
-                    task.assigneeIds.map((assignee) => (
-                        <AvatarGroup key={assignee}>
-                            <Avatar userName={assignee} />
+                    task.assignees.map((assignee) => (
+                        <AvatarGroup key={assignee.id}>
+                            <Avatar userName={assignee.name} />
                         </AvatarGroup>
                     ))
                 ) : (
@@ -74,7 +75,7 @@ const TaskCard = ({ task, isDone }: TaskCardProps) => {
                     </div>
                 )}
 
-                {task.dueDate && <Text>{task.dueDate}</Text>}
+                {task.dueDate && <Text>{formatDate(task.dueDate)}</Text>}
             </div>
         </div>
     );
