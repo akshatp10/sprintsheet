@@ -7,6 +7,7 @@ const CURRENT_USER_EMAIL = "akshat@company.com";
 
 interface CreateProjectRow {
 	name: string;
+	key: string;
 	description?: string;
 	cycleLength: ProjectRow["cycleLength"];
 	startingDay?: string;
@@ -29,6 +30,8 @@ export const createProject = async (
 
 	const project: ProjectRow = {
 		id: crypto.randomUUID(),
+		key: input.key,
+		nextTaskNumber: 1,
 		name: input.name,
 		description: input.description ?? "",
 		cycleLength: input.cycleLength,

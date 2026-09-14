@@ -15,25 +15,40 @@ interface CreateTaskRow {
 }
 
 export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
-	const now = Date.now();
+	return db.transaction("rw", db.projects, db.tasks, async () => {
+		const project = await db.projects.get(input.projectId);
 
-	const task: TaskRow = {
-		id: crypto.randomUUID(),
-		projectId: input.projectId,
-		stageId: input.stageId,
-		name: input.name,
-		description: input.description ?? "",
-		assigneeIds: input.assigneeIds ?? [],
-		dueDate: input.dueDate ?? null,
-		type: input.type,
-		tags: input.tags ?? [],
-		createdAt: now,
-		updatedAt: now,
-	};
+		if (!project) {
+			throw new Error("Project not found");
+		}
 
-	await db.tasks.add(task);
+		const taskNumber = project.nextTaskNumber;
+		const now = Date.now();
 
-	return task;
+		const task: TaskRow = {
+			id: crypto.randomUUID(),
+			projectId: input.projectId,
+			key: `${project.key}-${String(taskNumber).padStart(3, "0")}`,
+			stageId: input.stageId,
+			name: input.name,
+			description: input.description ?? "",
+			assigneeIds: input.assigneeIds ?? [],
+			dueDate: input.dueDate ?? null,
+			type: input.type,
+			tags: input.tags ?? [],
+			createdAt: now,
+			updatedAt: now,
+		};
+
+		await db.tasks.add(task);
+
+		await db.projects.update(project.id, {
+			nextTaskNumber: taskNumber + 1,
+			updatedAt: now,
+		});
+
+		return task;
+	});
 };
 
 export const getAllTasksByProject = async (

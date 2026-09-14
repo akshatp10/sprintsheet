@@ -45,6 +45,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
 
     const onSubmit = async (data: ProjectFormData) => {
         const newProject = {
+            key: data.key,
             name: data.name,
             description: data.description,
             cycleLength: data.cycleLength,
