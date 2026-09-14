@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { createNewTask, getAllProjectTasks, updateExistingTask } from "./api";
 
-import type { CreateTaskInput, UpdateTaskVariables } from "./types";
+import type { CreateTaskInput, Task, UpdateTaskVariables } from "./types";
 
 export const useTasks = (projectId: string) => {
 	return useQuery({
@@ -17,6 +17,23 @@ export const useTasks = (projectId: string) => {
 			return response.data ?? [];
 		},
 		enabled: !!projectId,
+	});
+};
+
+export const useTasksByStage = (projectId: string) => {
+	return useQuery({
+		queryKey: ["tasks", projectId],
+		queryFn: async () => {
+			const response = await getAllProjectTasks(projectId);
+			if (!response.success) throw new Error(response.message);
+			return response.data ?? [];
+		},
+		enabled: !!projectId,
+		select: (tasks) =>
+			tasks.reduce<Record<string, Task[]>>((acc, task) => {
+				(acc[task.stageId] ??= []).push(task);
+				return acc;
+			}, {}),
 	});
 };
 
