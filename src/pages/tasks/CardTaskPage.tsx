@@ -57,7 +57,7 @@ const CardTaskPage = ({
     return (
         <>
             <div
-                className="grid h-full gap-4 overflow-x-auto p-4"
+                className="grid h-full min-h-0 gap-4 overflow-x-auto p-4"
                 style={{
                     gridTemplateColumns: `repeat(${visibleStages.length}, minmax(15rem, 1fr))`,
                 }}
