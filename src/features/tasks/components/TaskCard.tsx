@@ -5,18 +5,14 @@ import Text from "@/components/common/Text";
 import { formatDate } from "@/lib/formatDate";
 
 import type { TaskWithUsers } from "@/lib/services/tasks/types";
-import { useDraggable } from "@dnd-kit/react";
 
 interface TaskCardProps {
     task: TaskWithUsers;
     isDone: boolean;
+    isOverlay?: boolean
 }
 
-const TaskCard = ({ task, isDone }: TaskCardProps) => {
-
-    const { ref } = useDraggable({
-        id: task.id,
-    });
+const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
 
     const visibleUsers = task.assignees.slice(0, 3);
     const extraUsers = task.assignees.length - 3;
@@ -26,10 +22,7 @@ const TaskCard = ({ task, isDone }: TaskCardProps) => {
 
     return (
         <div
-            className={`rounded-md border-2 border-lines-hairline w-full min-h-fit bg-surface px-4 py-2 flex flex-col gap-2 justify-center ${isDone ? "opacity-50" : ""
-                }`}
-
-            ref={ref}
+            className={`rounded-md border-2 border-lines-hairline w-full min-h-fit bg-surface px-4 py-2 flex flex-col gap-2 justify-center ${isDone ? "opacity-50" : ""} ${isOverlay ? "opacity-75" : ""}`}
         >
             <div className="flex w-full items-start justify-between gap-2">
                 <Text variant="mono" className="shrink-0">

@@ -1,9 +1,10 @@
 import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
 import StageViewBox from "@/features/tasks/components/StageViewBox";
+import TaskCard from "@/features/tasks/components/TaskCard";
 import type { Stage } from "@/lib/services/stages/type";
 import { useUpdateTask } from "@/lib/services/tasks/hooks";
 import type { TaskWithUsers } from "@/lib/services/tasks/types";
-import { DragDropProvider } from "@dnd-kit/react";
+import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import { useState } from "react";
 
 interface CardTaskPageProps {
@@ -23,6 +24,7 @@ const CardTaskPage = ({
 }: CardTaskPageProps) => {
     const [newTask, setNewTask] = useState(false);
     const [clickedStageId, setClickedStageId] = useState("");
+    const [dragging, setDragging] = useState(false)
 
     const visibleStages = stages.filter(
         (stage) => stage.name !== "Backlog",
@@ -61,9 +63,14 @@ const CardTaskPage = ({
                 }}
             >
                 <DragDropProvider
-                    onDragStart={() => onDraggingChange(true)}
+                    onDragStart={() => {
+                        onDraggingChange(true);
+                        setDragging(true)
+                    }}
                     onDragEnd={(event) => {
                         onDraggingChange(false);
+                        setDragging(false)
+
                         if (event.canceled) return;
 
                         const taskId = event.operation.source?.id;
@@ -71,7 +78,9 @@ const CardTaskPage = ({
 
                         if (!taskId || !destinationStageId) return;
 
-                        handleUpdateTaskStage(String(taskId), String(destinationStageId),
+                        handleUpdateTaskStage(
+                            String(taskId),
+                            String(destinationStageId),
                         );
                     }}
                 >
@@ -84,8 +93,26 @@ const CardTaskPage = ({
                             onCreateTask={handleCreateTask}
                         />
                     ))}
+
+                    <DragOverlay dropAnimation={null} className={dragging ? "" : "hidden"}>
+                        {(source) => {
+                            const task = Object.values(tasksByStage)
+                                .flat()
+                                .find((task) => task.id === source.id);
+
+                            if (!task) return null;
+
+                            return (
+                                <TaskCard
+                                    task={task}
+                                    isDone={false}
+                                    isOverlay
+                                />
+                            );
+                        }}
+                    </DragOverlay>
                 </DragDropProvider>
-            </div>
+            </div >
 
             {newTask && (
                 <TaskCreateForm
