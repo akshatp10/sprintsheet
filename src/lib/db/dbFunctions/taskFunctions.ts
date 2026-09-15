@@ -10,45 +10,60 @@ interface CreateTaskRow {
 	description?: string;
 	assigneeIds?: string[];
 	dueDate?: string | null;
-	type: string;
+	typeId: string;
 	tags?: string[];
 }
 
 export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
-	return db.transaction("rw", db.projects, db.tasks, async () => {
-		const project = await db.projects.get(input.projectId);
+	return db.transaction(
+		"rw",
+		db.projects,
+		db.projectTypes,
+		db.tasks,
+		async () => {
+			const project = await db.projects.get(input.projectId);
 
-		if (!project) {
-			throw new Error("Project not found");
-		}
+			if (!project) {
+				throw new Error("Project not found");
+			}
 
-		const taskNumber = project.nextTaskNumber;
-		const now = Date.now();
+			const projectType = await db.projectTypes
+				.where("[projectId+typeId]")
+				.equals([input.projectId, input.typeId])
+				.first();
 
-		const task: TaskRow = {
-			id: crypto.randomUUID(),
-			projectId: input.projectId,
-			key: `${project.key}-${String(taskNumber).padStart(3, "0")}`,
-			stageId: input.stageId,
-			name: input.name,
-			description: input.description ?? "",
-			assigneeIds: input.assigneeIds ?? [],
-			dueDate: input.dueDate ?? null,
-			type: input.type,
-			tags: input.tags ?? [],
-			createdAt: now,
-			updatedAt: now,
-		};
+			if (!projectType) {
+				throw new Error("Type is not available in this project");
+			}
 
-		await db.tasks.add(task);
+			const taskNumber = project.nextTaskNumber;
+			const now = Date.now();
 
-		await db.projects.update(project.id, {
-			nextTaskNumber: taskNumber + 1,
-			updatedAt: now,
-		});
+			const task: TaskRow = {
+				id: crypto.randomUUID(),
+				projectId: input.projectId,
+				key: `${project.key}-${String(taskNumber).padStart(3, "0")}`,
+				stageId: input.stageId,
+				name: input.name,
+				description: input.description ?? "",
+				assigneeIds: input.assigneeIds ?? [],
+				dueDate: input.dueDate ?? null,
+				typeId: input.typeId,
+				tags: input.tags ?? [],
+				createdAt: now,
+				updatedAt: now,
+			};
 
-		return task;
-	});
+			await db.tasks.add(task);
+
+			await db.projects.update(project.id, {
+				nextTaskNumber: taskNumber + 1,
+				updatedAt: now,
+			});
+
+			return task;
+		},
+	);
 };
 
 export const getAllTasksByProject = async (

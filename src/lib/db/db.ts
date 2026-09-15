@@ -49,16 +49,31 @@ interface ProjectStageRow {
 	isTerminal: boolean;
 }
 
+interface TypeRow {
+	id: string;
+	name: string;
+	createdAt: number;
+	updatedAt: number;
+}
+
+interface ProjectTypeRow {
+	id: string;
+	projectId: string;
+	typeId: string;
+	createdAt: number;
+	updatedAt: number;
+}
+
 interface TaskRow {
 	id: string;
 	projectId: string;
 	key: string;
 	stageId: string;
+	typeId: string;
 	name: string;
 	description: string;
 	assigneeIds: string[];
 	dueDate: string | null;
-	type: string;
 	tags: string[];
 	createdAt: number;
 	updatedAt: number;
@@ -70,6 +85,8 @@ const db = new Dexie("SprintsheetDB") as Dexie & {
 	projectMembers: EntityTable<ProjectMemberRow, "id">;
 	stages: EntityTable<StageRow, "id">;
 	projectStages: EntityTable<ProjectStageRow, "id">;
+	types: EntityTable<TypeRow, "id">;
+	projectTypes: EntityTable<ProjectTypeRow, "id">;
 	tasks: EntityTable<TaskRow, "id">;
 };
 
@@ -80,7 +97,9 @@ db.version(1).stores({
 	stages: "id, &name, createdAt",
 	projectStages:
 		"id, projectId, stageId, [projectId+stageId], [projectId+order]",
-	tasks: "id, projectId, stageId, createdAt, updatedAt",
+	types: "id, &name, createdAt",
+	projectTypes: "id, projectId, typeId, [projectId+typeId]",
+	tasks: "id, projectId, stageId, typeId, createdAt, updatedAt",
 });
 
 export default db;
@@ -91,5 +110,7 @@ export type {
 	ProjectMemberRow,
 	StageRow,
 	ProjectStageRow,
+	TypeRow,
+	ProjectTypeRow,
 	TaskRow,
 };

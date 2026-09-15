@@ -1,6 +1,11 @@
 import db from "../db";
 import type { ProjectRow } from "../db";
 import { createProjectStage, findOrCreateStage } from "./stageFunctions";
+import {
+	createProjectType,
+	DEFAULT_TYPES,
+	findOrCreateType,
+} from "./typeFunctions";
 import { findOrCreateUser } from "./userFunctions";
 
 const CURRENT_USER_EMAIL = "akshat@company.com";
@@ -44,11 +49,15 @@ export const createProject = async (
 
 	await db.transaction(
 		"rw",
-		db.projects,
-		db.users,
-		db.projectMembers,
-		db.stages,
-		db.projectStages,
+		[
+			db.projects,
+			db.users,
+			db.projectMembers,
+			db.stages,
+			db.projectStages,
+			db.types,
+			db.projectTypes,
+		],
 		async () => {
 			// Create project
 			await db.projects.add(project);
@@ -88,6 +97,12 @@ export const createProject = async (
 					index,
 					index === input.stages.length - 1,
 				);
+			}
+
+			for (const typeName of DEFAULT_TYPES) {
+				const type = await findOrCreateType(typeName);
+
+				await createProjectType(project.id, type.id);
 			}
 		},
 	);
