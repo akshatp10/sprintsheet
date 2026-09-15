@@ -2,7 +2,10 @@ import { z } from "zod";
 
 export const taskFormSchema = z.object({
 	name: z.string().min(1, "Task name is required"),
-	description: z.string().optional(),
+	description: z
+		.string()
+		.max(250, "Description should not exceed 250 characters")
+		.optional(),
 	stageId: z.string().min(1, "Stage is required"),
 	assigneeIds: z.array(z.string()).optional(),
 	dueDate: z.string().nullable().optional(),

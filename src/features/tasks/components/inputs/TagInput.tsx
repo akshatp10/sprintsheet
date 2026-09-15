@@ -36,16 +36,16 @@ export function TagInput({ value, onChange }: TagInputProps) {
     return (
         <div className="flex flex-wrap items-center gap-1.5">
             {value.map((tag) => (
-                <Text
-                    variant="micro"
-                    key={tag}
-                    className={commonClass}
-                >
-                    {tag}
+                <div className={commonClass} key={tag}>
+                    <Text
+                        variant="micro"
+                    >
+                        {tag}
+                    </Text>
                     <Button variant="tertiary" type="button" onClick={() => removeTag(tag)} className="text-ink-3 hover:text-ink p-0 border-none">
                         <X className="w-3 h-3" />
                     </Button>
-                </Text>
+                </div>
             ))}
 
             {adding ? (
