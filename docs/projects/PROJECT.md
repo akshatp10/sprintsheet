@@ -28,9 +28,8 @@ Project-scoped data uses the project ID to avoid mixing data between projects.
 
 ### Screenshot
 
-> **Screenshot:** Project workspace showing the major areas and navigation.
->
-> `screenshots/project-workspace.png`
+<img width="1763" height="844" alt="image" src="https://github.com/user-attachments/assets/c5e7bfd9-6749-480e-b212-5c922e1d3e38" />
+
 
 ## Reading project data
 
@@ -81,46 +80,6 @@ Cycle → groups/references Tasks
 ```
 
 A task can therefore exist in a project without belonging to a cycle.
-
-## Task views
-
-Table and Card views are **two representations of the same task dataset**.
-
-```text
-                Task[]
-                  │
-          ┌───────┴───────┐
-          ↓               ↓
-       Table             Cards
-```
-
-### Table view
-
-Tasks are displayed as rows.
-
-The drag interaction means:
-
-```text
-drag row → reorder row
-```
-
-### Card view
-
-Tasks are grouped by stage.
-
-The drag interaction means:
-
-```text
-drag card → change task stage
-```
-
-Cycle movement is **not** a drag-and-drop operation; it is an explicit action.
-
-### Screenshot
-
-> **Screenshot:** Table and Card views side-by-side.
->
-> `screenshots/project-views.png`
 
 ## Mutation flow
 
