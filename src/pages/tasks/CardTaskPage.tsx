@@ -41,7 +41,15 @@ const CardTaskPage = ({
     const { mutate } = useUpdateTask();
 
     const handleUpdateTaskStage = (taskId: string, stageId: string) => {
-        mutate({ id: taskId, projectId, updates: { stageId }, });
+        const task = Object.values(tasksByStage).flat().find((task) => task.id === taskId);
+
+        if (!task || task.stageId === stageId) return;
+
+        mutate({
+            id: taskId,
+            projectId,
+            updates: { stageId },
+        });
     };
 
     return (
