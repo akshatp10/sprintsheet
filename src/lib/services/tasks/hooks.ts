@@ -111,9 +111,7 @@ export const useUpdateTask = () => {
 			const queryKey = ["tasks", projectId, "by-stage"];
 
 			// Stop an in-flight refetch from overwriting our optimistic update.
-			await queryClient.cancelQueries({
-				queryKey,
-			});
+			await queryClient.cancelQueries({ queryKey });
 
 			// Save the current cache for rollback.
 			const previousTasks =
@@ -124,19 +122,11 @@ export const useUpdateTask = () => {
 				if (!tasks) return tasks;
 
 				return tasks.map((task) =>
-					task.id === id
-						? {
-								...task,
-								...updates,
-							}
-						: task,
+					task.id === id ? { ...task, ...updates } : task,
 				);
 			});
 
-			return {
-				previousTasks,
-				queryKey,
-			};
+			return { previousTasks, queryKey };
 		},
 
 		onError: (_, __, context) => {
