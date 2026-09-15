@@ -5,6 +5,7 @@ import Text from "@/components/common/Text";
 import { formatDate } from "@/lib/formatDate";
 
 import type { TaskWithUsers } from "@/lib/services/tasks/types";
+import { useTypeById } from "@/lib/services/types/hooks";
 
 interface TaskCardProps {
     task: TaskWithUsers;
@@ -13,6 +14,8 @@ interface TaskCardProps {
 }
 
 const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
+
+    const { data: curType } = useTypeById(task.typeId);
 
     const visibleUsers = task.assignees.slice(0, 3);
     const extraUsers = task.assignees.length - 3;
@@ -60,7 +63,7 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
 
             <Chip
                 variant="secondary"
-                text={task.type}
+                text={curType?.name ?? ""}
                 textType="text-type-caption"
                 className="px-2 py-0.5"
             />

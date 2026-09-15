@@ -10,7 +10,7 @@ export const taskFormSchema = z.object({
 	stage: z.string().min(1, "Stage is required"),
 	assigneeIds: z.array(z.string()).optional(),
 	dueDate: z.string().nullable().optional(),
-	type: z.string().min(1, "Type is required"),
+	typeId: z.string().min(1, "Type is required"),
 	tags: z.array(z.string()).optional(),
 });
 
@@ -22,7 +22,7 @@ export const defaultValues: TaskFormData = {
 	stage: "",
 	assigneeIds: [],
 	dueDate: null,
-	type: "task",
+	typeId: "",
 	tags: [],
 };
 
