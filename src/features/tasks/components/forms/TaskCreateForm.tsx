@@ -12,7 +12,7 @@ import {
 } from "../../types/taskFormData";
 import type { CreateTaskInput } from "@/lib/services/tasks/types";
 import { AssigneeSelect } from "../inputs/AssigneeSelect";
-import { TagInput } from "../inputs/TagInput";
+// import { TagInput } from "../inputs/TagInput";
 import FormInputBox from "@/components/inputs/FormInputBox";
 import TextArea from "@/components/inputs/TextArea";
 import PopupModal from "@/components/popupModals/PopupModal";
@@ -39,7 +39,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
     });
 
     const assigneeIds = watch("assigneeIds") ?? [];
-    const tags = watch("tags") ?? [];
+    // const tags = watch("tags") ?? [];
 
     const { data: stages = [] } = useProjectStages(projectId);
     const { mutate } = useCreateTask()
@@ -134,14 +134,14 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
                         ))}
                     </select>
 
-                    <TagInput
+                    {/* <TagInput
                         value={tags}
                         onChange={(next) =>
                             setValue("tags", next, {
                                 shouldDirty: true,
                             })
                         }
-                    />
+                    /> */}
 
                 </div>
 

@@ -17,8 +17,8 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
     const visibleUsers = task.assignees.slice(0, 3);
     const extraUsers = task.assignees.length - 3;
 
-    const visibleTags = task.tags.slice(0, 2);
-    const extraTags = task.tags.length - visibleTags.length;
+    // const visibleTags = task.tags.slice(0, 2);
+    // const extraTags = task.tags.length - visibleTags.length;
 
     return (
         <div
@@ -29,7 +29,7 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
                     {task.key}
                 </Text>
 
-                <div className="flex min-w-0 gap-1.5 overflow-hidden">
+                {/* <div className="flex min-w-0 gap-1.5 overflow-hidden">
                     {visibleTags.map((tag) => (
                         <Chip
                             key={tag}
@@ -48,7 +48,7 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
                             borderColor="border-lines-control rounded-lg"
                         />
                     )}
-                </div>
+                </div> */}
             </div>
 
             <Text
