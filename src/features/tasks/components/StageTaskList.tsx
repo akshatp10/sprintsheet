@@ -34,6 +34,17 @@ const StageTaskList = ({
                 ))
             ) : (
                 <>
+                    {isDropTarget && (
+                        <div
+                            className={cn(
+                                "flex h-20 items-center justify-center rounded-md border-2 sticky",
+                                chip,
+                            )}
+                        >
+                            Drop task here
+                        </div>
+                    )}
+
                     {tasks.map((task) => (
                         <DraggableTaskCard
                             key={task.id}
@@ -45,17 +56,6 @@ const StageTaskList = ({
                     {!tasks.length && !isDropTarget && (
                         <div className="flex h-24 items-center justify-center rounded-md border border-dashed border-lines-control text-sm text-ink-2">
                             No tasks
-                        </div>
-                    )}
-
-                    {isDropTarget && (
-                        <div
-                            className={cn(
-                                "flex h-20 items-center justify-center rounded-md border-2",
-                                chip,
-                            )}
-                        >
-                            Drop task here
                         </div>
                     )}
                 </>
