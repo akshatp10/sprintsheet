@@ -68,8 +68,8 @@ const StageViewBox = ({
                     <Text variant="h2">{stage.name}</Text>
 
                     <Text
-                        variant="h2"
-                        className="font-normal text-ink-fades-ghost-rows"
+                        variant="mono"
+                        className="font-normal text-ink-fades-ghost-rows text-[0.9375rem]"
                     >
                         {tasks.length}
                     </Text>
