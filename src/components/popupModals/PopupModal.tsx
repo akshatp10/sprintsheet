@@ -59,7 +59,7 @@ const PopupModal = ({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 px-4">
             <div
                 className={cn(
-                    "flex w-full max-w-2xl min-h-[30dvh] flex-col rounded-xl bg-surface px-6 shadow-xl overflow-hidden",
+                    "relative flex w-full max-w-2xl min-h-[30dvh] flex-col rounded-xl bg-surface px-6 shadow-xl",
                     className
                 )}
             >

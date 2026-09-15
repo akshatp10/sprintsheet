@@ -62,7 +62,7 @@ const PeopleStep = ({ register, control, watch, setValue }: PeopleStepProps) => 
                         <option value="member">Member</option>
                         <option value="admin">Admin</option>
                     </select>
-                    <Button type="button" handleClick={handleAdd} variant="secondary">
+                    <Button type="button" onClick={handleAdd} variant="secondary">
                         <Text variant="body-sm" className="font-medium">Add</Text>
                     </Button>
                 </div>

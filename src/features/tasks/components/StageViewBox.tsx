@@ -78,7 +78,7 @@ const StageViewBox = ({
                 <Button
                     variant="tertiary"
                     className="border-none p-0 text-ink-fades-ghost-rows"
-                    handleClick={() => onCreateTask(stage.stageId)}
+                    onClick={() => onCreateTask(stage.stageId)}
                 >
                     <Plus strokeWidth={1.5} size={15} />
                 </Button>

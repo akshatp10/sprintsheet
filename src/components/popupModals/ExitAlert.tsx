@@ -27,10 +27,10 @@ const ExitAlert = ({
                     {alertContent}
                 </Text>
                 <div className="flex justify-center gap-2">
-                    <Button type="button" variant="tertiary" handleClick={onClose}>
+                    <Button type="button" variant="tertiary" onClick={onClose} autoFocus>
                         {rejectText}
                     </Button>
-                    <Button type="button" variant="secondary" handleClick={exitPopup}>
+                    <Button type="button" variant="secondary" onClick={exitPopup}>
                         {acceptText}
                     </Button>
                 </div>

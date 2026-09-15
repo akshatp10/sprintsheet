@@ -10,16 +10,16 @@ export const TestPage = () => {
 
     const [radioButtonOption, setradioButtonOption] = useState("table")
 
-    const testClick = () => { console.log("handleClick") }
+    const testClick = () => { console.log("Button clicked") }
     return (
         <div className="text-type-body">
-            <Button variant="primary" handleClick={testClick} className="bg-accent-deep text-accent-tint text-type-micro">
+            <Button variant="primary" onClick={testClick} className="bg-accent-deep text-accent-tint text-type-micro">
                 + Button
             </Button>
-            <Button variant="secondary" handleClick={testClick}>
+            <Button variant="secondary" onClick={testClick}>
                 % Backlog
             </Button>
-            <Button variant="tertiary" handleClick={testClick}>
+            <Button variant="tertiary" onClick={testClick}>
                 Default
             </Button>
             <Avatar userName="Rohit" isSideBar />

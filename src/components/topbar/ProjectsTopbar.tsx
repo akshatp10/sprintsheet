@@ -53,7 +53,7 @@ const ProjectsTopbar = () => {
                     <Button
                         variant="secondary"
                         className="h-full py-0.5 font-medium"
-                        handleClick={() => setOpenTaskForm(true)}
+                        onClick={() => setOpenTaskForm(true)}
                     >
                         + New Task
                     </Button>

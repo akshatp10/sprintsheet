@@ -48,7 +48,7 @@ const ProjectsSidebar = () => {
     return (
         <div className="flex flex-col gap-3">
             {/* Back to all projects */}
-            <Button className="flex items-center gap-2 border-none" handleClick={() => { navigate("/") }} variant="tertiary">
+            <Button className="flex items-center gap-2 border-none" onClick={() => { navigate("/") }} variant="tertiary">
                 <ArrowLeft
                     size={20}
                     strokeWidth={1.5}

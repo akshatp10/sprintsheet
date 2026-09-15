@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Check, Plus } from "lucide-react";
-import UserPanel from "@/components/sidebar/UserPanel";
-import Text from "@/components/common/Text";
-import { cn } from "@/lib/cn";
-import Button from "@/components/button/Button";
-import { useProjectMembers } from "@/lib/services/projects/hooks";
+
 import Avatar from "@/components/avatar/Avatar";
 import AvatarGroup from "@/components/avatar/AvatarGroups";
+import Button from "@/components/button/Button";
+import Text from "@/components/common/Text";
+import UserPanel from "@/components/sidebar/UserPanel";
+import { cn } from "@/lib/cn";
+import { useProjectMembers } from "@/lib/services/projects/hooks";
 
 interface AssigneeSelectProps {
     projectId: string;
@@ -22,7 +23,7 @@ export function AssigneeSelect({
     const { data: members = [], isLoading } = useProjectMembers(projectId);
     const [open, setOpen] = useState(false);
 
-    const toggle = (userId: string) => {
+    const toggleAssignee = (userId: string) => {
         const nextValue = value.includes(userId)
             ? value.filter((id) => id !== userId)
             : [...value, userId];
@@ -40,18 +41,18 @@ export function AssigneeSelect({
     return (
         <div className="relative">
             <div className="flex flex-wrap items-center gap-1.5">
-
-                {selectedMembers.length > 0 ?
+                {selectedMembers.length > 0 ? (
                     <AvatarGroup>
                         {selectedMembers.map(member => (<Avatar userName={member.name} key={member.id} />))}
-                    </AvatarGroup> :
-                    <Avatar />
-                }
+                    </AvatarGroup>)
+                    : (
+                        <Avatar />
+                    )}
 
                 <Button
                     variant="tertiary"
                     type="button"
-                    onClick={() => setOpen(!open)}
+                    onClick={() => setOpen((prev) => !prev)}
                     className={cn(
                         commonClass,
                         "border-dashed text-ink-3 hover:text-ink-2"
@@ -67,46 +68,47 @@ export function AssigneeSelect({
 
             {open && (
                 <div className="absolute z-10 mt-1.5 w-52 rounded-md border border-lines-hairline bg-surface py-1 shadow-md">
-                    {isLoading && (
+                    {isLoading ? (
                         <Text
                             variant="caption"
                             className="px-3 py-1.5 text-ink-3"
                         >
                             Loading…
                         </Text>
-                    )}
-
-                    {!isLoading && members.length === 0 && (
+                    ) : members.length === 0 ? (
                         <Text
                             variant="caption"
                             className="px-3 py-1.5 text-ink-3"
                         >
                             No members found
                         </Text>
+                    ) : (
+                        members.map((member) => {
+                            const selected = value.includes(member.userId);
+
+                            return (
+                                <Button
+                                    key={member.userId}
+                                    variant="tertiary"
+                                    type="button"
+                                    onClick={() =>
+                                        toggleAssignee(member.userId)
+                                    }
+                                    className="flex w-full items-center justify-between border-0 px-3 py-1.5 text-left hover:bg-surface-page"
+                                >
+                                    <UserPanel
+                                        userName={member.name}
+                                        textVariant="body-sm"
+                                        textColor="text-ink"
+                                    />
+
+                                    {selected && (
+                                        <Check className="h-3.5 w-3.5 text-accent-deep" />
+                                    )}
+                                </Button>
+                            );
+                        })
                     )}
-
-                    {members.map((member) => {
-                        const selected = value.includes(member.userId);
-
-                        return (
-                            <button
-                                key={member.userId}
-                                type="button"
-                                onClick={() => { toggle(member.userId); setOpen(false) }}
-                                className="flex w-full items-center justify-between px-3 py-1.5 text-left hover:bg-surface-2"
-                            >
-                                <UserPanel
-                                    userName={member.name}
-                                    textVariant="body-sm"
-                                    textColor="text-ink"
-                                />
-
-                                {selected && (
-                                    <Check className="h-3.5 w-3.5 text-accent-deep" />
-                                )}
-                            </button>
-                        );
-                    })}
                 </div>
             )}
         </div>

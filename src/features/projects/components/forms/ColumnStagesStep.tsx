@@ -102,7 +102,7 @@ const ColumnStagesStep = ({ control }: ColumnStagesStepProps) => {
                 </DragDropProvider>
 
                 {/* Add stage - To be added in upcoming features */}
-                {/* <Button handleClick={handleAddStage} variant="tertiary" type="button"
+                {/* <Button onClick={handleAddStage} variant="tertiary" type="button"
                     className="flex items-center justify-between rounded-md border border-lines-hairline px-3 py-2"
                 >
                     <div className="flex items-center gap-2">
