@@ -28,15 +28,17 @@ const StageViewBox = ({
     return (
         <div
             className={cn(
-                "flex h-full flex-col rounded-md border",
+                "flex h-full min-h-0 flex-col rounded-md border",
                 container,
             )}
         >
-            <StageHeader
-                stage={stage}
-                taskCount={tasks?.length}
-                onCreateTask={onCreateTask}
-            />
+            <div className="sticky top-0 z-10">
+                <StageHeader
+                    stage={stage}
+                    taskCount={tasks?.length}
+                    onCreateTask={onCreateTask}
+                />
+            </div>
 
             <StageTaskList
                 tasks={tasks}

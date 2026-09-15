@@ -26,7 +26,7 @@ const StageTaskList = ({
     return (
         <div
             ref={containerRef}
-            className="flex-1 space-y-3 overflow-y-auto p-2"
+            className="flex-1 space-y-3 overflow-y-auto p-2 sticky"
         >
             {isLoading ? (
                 Array.from({ length: 2 }, (_, index) => (
