@@ -28,7 +28,7 @@ export const useTasks = (projectId: string) => {
 
 export const useTasksByStage = (projectId: string) => {
 	return useQuery({
-		queryKey: ["tasks", "by-stage", projectId],
+		queryKey: ["tasks", projectId, "by-stage"],
 
 		queryFn: async () => {
 			const taskResponse = await getAllProjectTasks(projectId);

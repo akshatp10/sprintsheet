@@ -26,7 +26,7 @@ const TaskCard = ({ task, isDone }: TaskCardProps) => {
             ref={ref}
         >
             <div className="w-full flex justify-between items-center">
-                <Text variant="micro">{task.key}</Text>
+                <Text variant="mono">{task.key}</Text>
 
                 <div className="flex gap-2">
                     {task.tags.length > 0 &&
@@ -75,7 +75,7 @@ const TaskCard = ({ task, isDone }: TaskCardProps) => {
                     </div>
                 )}
 
-                {task.dueDate && <Text>{formatDate(task.dueDate)}</Text>}
+                {task.dueDate && <Text variant="mono">{formatDate(task.dueDate)}</Text>}
             </div>
         </div>
     );
