@@ -94,7 +94,7 @@ const StageViewBox = ({
                         <TaskCard
                             key={task.id}
                             task={task}
-                            isDone={stage.name === "Done"}
+                            isDone={stage.isTerminal}
                         />
                     ))
                 ) : (

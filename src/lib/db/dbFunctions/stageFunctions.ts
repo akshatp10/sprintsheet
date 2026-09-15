@@ -26,6 +26,7 @@ export const createProjectStage = async (
 	projectId: string,
 	stage: StageRow,
 	order: number,
+	isTerminal: boolean,
 ): Promise<ProjectStageRow> => {
 	const now = Date.now();
 
@@ -35,6 +36,7 @@ export const createProjectStage = async (
 		stageId: stage.id,
 		order,
 		name: stage.name,
+		isTerminal,
 		createdAt: now,
 		updatedAt: now,
 	};
