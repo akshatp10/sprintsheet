@@ -82,7 +82,12 @@ export const createProject = async (
 			// Create/reuse global stages
 			for (const [index, stageInput] of input.stages.entries()) {
 				const stage = await findOrCreateStage(stageInput.name);
-				await createProjectStage(project.id, stage, index);
+				await createProjectStage(
+					project.id,
+					stage,
+					index,
+					index === input.stages.length - 1,
+				);
 			}
 		},
 	);

@@ -4,6 +4,7 @@ export interface Stage {
 	stageId: string;
 	order: number;
 	name: string;
+	isTerminal: boolean;
 	createdAt: number;
 	updatedAt: number;
 }

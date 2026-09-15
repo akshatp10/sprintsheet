@@ -46,6 +46,7 @@ interface ProjectStageRow {
 	name: string;
 	createdAt: number;
 	updatedAt: number;
+	isTerminal: boolean;
 }
 
 interface TaskRow {
