@@ -68,9 +68,7 @@ The drag library handles **interaction detection**. It does not own project busi
 
 ### Screenshot
 
-> **Screenshot:** Stage being dragged to a new position.
->
-> `screenshots/reorder-stages.png`
+<img width="1902" height="900" alt="20260915-0511-14 3308177" src="https://github.com/user-attachments/assets/14f44a77-7d1f-480d-9872-dbf940fa832b" />
 
 ## Reordering example
 
