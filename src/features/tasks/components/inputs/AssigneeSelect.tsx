@@ -67,7 +67,7 @@ export function AssigneeSelect({
             </div>
 
             {open && (
-                <div className="absolute z-10 mt-1.5 w-52 rounded-md border border-lines-hairline bg-surface py-1 shadow-md">
+                <div className="absolute z-10 mt-1.5 w-52 rounded-md border border-lines-hairline bg-surface py-1 shadow-md max-h-50 overflow-auto">
                     {isLoading ? (
                         <Text
                             variant="caption"
