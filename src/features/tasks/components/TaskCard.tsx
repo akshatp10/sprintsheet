@@ -21,6 +21,9 @@ const TaskCard = ({ task, isDone }: TaskCardProps) => {
     const visibleUsers = task.assignees.slice(0, 3);
     const extraUsers = task.assignees.length - 3;
 
+    const visibleTags = task.tags.slice(0, 2);
+    const extraTags = task.tags.length - visibleTags.length;
+
     return (
         <div
             className={`rounded-md border-2 border-lines-hairline w-full min-h-fit bg-surface px-4 py-2 flex flex-col gap-2 justify-center ${isDone ? "opacity-50" : ""
@@ -28,20 +31,30 @@ const TaskCard = ({ task, isDone }: TaskCardProps) => {
 
             ref={ref}
         >
-            <div className="w-full flex justify-between items-center">
-                <Text variant="mono">{task.key}</Text>
+            <div className="flex w-full items-start justify-between gap-2">
+                <Text variant="mono" className="shrink-0">
+                    {task.key}
+                </Text>
 
-                <div className="flex gap-2">
-                    {task.tags.length > 0 &&
-                        task.tags.map((tag) => (
-                            <Chip
-                                variant="secondary"
-                                textType="text-type-caption"
-                                text={tag}
-                                key={tag}
-                                borderColor="border-lines-hairline"
-                            />
-                        ))}
+                <div className="flex min-w-0 gap-1.5 overflow-hidden">
+                    {visibleTags.map((tag) => (
+                        <Chip
+                            key={tag}
+                            variant="secondary"
+                            textType="text-type-caption"
+                            text={tag}
+                            borderColor="border-lines-control rounded-lg"
+                        />
+                    ))}
+
+                    {extraTags > 0 && (
+                        <Chip
+                            variant="secondary"
+                            textType="text-type-caption"
+                            text={`+${extraTags}`}
+                            borderColor="border-lines-control rounded-lg"
+                        />
+                    )}
                 </div>
             </div>
 
