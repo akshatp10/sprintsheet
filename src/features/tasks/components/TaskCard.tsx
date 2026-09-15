@@ -58,11 +58,11 @@ const TaskCard = ({ task, isDone }: TaskCardProps) => {
 
             <div className="flex items-center justify-start gap-4">
                 {task.assigneeIds.length > 0 ? (
-                    task.assignees.map((assignee) => (
-                        <AvatarGroup key={assignee.id}>
-                            <Avatar userName={assignee.name} />
-                        </AvatarGroup>
-                    ))
+                    <AvatarGroup>
+                        {task.assignees.map((assignee) => (
+                            <Avatar key={assignee.id} userName={assignee.name} />
+                        ))}
+                    </AvatarGroup>
                 ) : (
                     <div className="flex items-center gap-1">
                         <Avatar />
