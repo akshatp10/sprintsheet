@@ -65,9 +65,7 @@ UI updates
 
 ### Screenshot
 
-> **Screenshot:** A task being dragged from one stage column to another.
->
-> `screenshots/task-stage-dnd.png`
+<img width="1896" height="904" alt="20260915-1017-19 9171900" src="https://github.com/user-attachments/assets/9afe91a1-e734-4e95-98e0-b8f67ccbddb6" />
 
 ## Why separate DnD from task logic?
 
