@@ -30,7 +30,7 @@ export const mapProjectToCard = (
 	project: Project,
 	members: ProjectMember[] = [],
 ) => {
-	const users: ProjectUser[] = members.slice(0, 4).map((m, i) => ({
+	const users: ProjectUser[] = members.map((m, i) => ({
 		userName: m.name || m.email,
 		variant: avatarVariants[i % avatarVariants.length],
 	}));
@@ -45,6 +45,5 @@ export const mapProjectToCard = (
 		progress: 0,
 		progressText: "0% this cycle",
 		users,
-		extraUsers: members.length > 4 ? members.length - 4 : 0,
 	};
 };

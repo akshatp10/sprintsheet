@@ -18,6 +18,9 @@ const TaskCard = ({ task, isDone }: TaskCardProps) => {
         id: task.id,
     });
 
+    const visibleUsers = task.assignees.slice(0, 3);
+    const extraUsers = task.assignees.length - 3;
+
     return (
         <div
             className={`rounded-md border-2 border-lines-hairline w-full min-h-fit bg-surface px-4 py-2 flex flex-col gap-2 justify-center ${isDone ? "opacity-50" : ""
@@ -59,9 +62,13 @@ const TaskCard = ({ task, isDone }: TaskCardProps) => {
             <div className="flex items-center justify-start gap-4">
                 {task.assigneeIds.length > 0 ? (
                     <AvatarGroup>
-                        {task.assignees.map((assignee) => (
+                        {visibleUsers.map((assignee) => (
                             <Avatar key={assignee.id} userName={assignee.name} />
                         ))}
+
+                        {extraUsers > 0 && (
+                            <Avatar extraUsers={extraUsers} />
+                        )}
                     </AvatarGroup>
                 ) : (
                     <div className="flex items-center gap-1">

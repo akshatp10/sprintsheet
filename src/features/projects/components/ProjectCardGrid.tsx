@@ -22,7 +22,6 @@ type ProjectCardProps = {
     progress: number;
     progressText: string;
     users: ProjectUser[];
-    extraUsers?: number;
 };
 
 const ProjectCardGrid = ({
