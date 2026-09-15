@@ -3,11 +3,11 @@ export interface Task {
 	key: string;
 	projectId: string;
 	stageId: string;
+	typeId: string;
 	name: string;
 	description: string;
 	assigneeIds: string[];
 	dueDate: string | null;
-	type: string;
 	tags: string[];
 	createdAt: number;
 	updatedAt: number;
@@ -20,7 +20,7 @@ export interface CreateTaskInput {
 	description?: string;
 	assigneeIds?: string[];
 	dueDate?: string | null;
-	type: string;
+	typeId: string;
 	tags?: string[];
 }
 

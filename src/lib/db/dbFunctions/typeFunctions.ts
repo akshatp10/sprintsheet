@@ -51,3 +51,22 @@ export const createProjectType = async (
 
 	return projectType;
 };
+
+export const getAllTypesByProject = async (
+	projectId: string,
+): Promise<TypeRow[]> => {
+	const projectTypes = await db.projectTypes
+		.where("projectId")
+		.equals(projectId)
+		.toArray();
+
+	const types = await Promise.all(
+		projectTypes.map((projectType) => db.types.get(projectType.typeId)),
+	);
+
+	return types.filter((type): type is TypeRow => type !== undefined);
+};
+
+export const getType = async (id: string): Promise<TypeRow | undefined> => {
+	return db.types.get(id);
+};

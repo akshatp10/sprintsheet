@@ -7,7 +7,6 @@ import Input from "@/components/inputs/Input";
 import {
     taskFormSchema,
     defaultValues,
-    typeOptions,
     type TaskFormData,
 } from "../../types/taskFormData";
 import type { CreateTaskInput } from "@/lib/services/tasks/types";
@@ -18,6 +17,7 @@ import TextArea from "@/components/inputs/TextArea";
 import PopupModal from "@/components/popupModals/PopupModal";
 import { useProjectStages } from "@/lib/services/stages/hooks";
 import { useCreateTask } from "@/lib/services/tasks/hooks";
+import { useProjectTypes } from "@/lib/services/types/hooks";
 
 interface TaskCreateFormProps {
     projectId: string;
@@ -42,6 +42,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
     // const tags = watch("tags") ?? [];
 
     const { data: stages = [] } = useProjectStages(projectId);
+    const { data: projectTypes = [] } = useProjectTypes(projectId);
     const { mutate } = useCreateTask()
 
     const handleFormSubmit = (data: TaskFormData) => {
@@ -52,7 +53,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
             description: data.description,
             assigneeIds: data.assigneeIds,
             dueDate: data.dueDate,
-            type: data.type,
+            typeId: data.typeId,
             tags: data.tags,
         };
         mutate(newTask)
@@ -124,12 +125,13 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
                     />
 
                     <select
-                        {...register("type")}
+                        {...register("typeId")}
                         className="rounded-md border border-lines-hairline bg-surface px-2.5 py-1 text-type-caption text-ink-2"
                     >
-                        {typeOptions.map((type) => (
-                            <option key={type.value} value={type.value}>
-                                {type.label}
+                        <option value="">Type</option>
+                        {projectTypes.map((type) => (
+                            <option key={type.id} value={type.id}>
+                                {type.name}
                             </option>
                         ))}
                     </select>
