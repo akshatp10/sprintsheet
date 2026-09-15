@@ -76,6 +76,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
                         register={register("name")}
                         placeholder="Task Title"
                         className="h-auto border-none bg-transparent px-0 py-0 text-type-display font-medium focus:outline-none"
+                        autoFocus
                     />
                 </FormInputBox>
 
