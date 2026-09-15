@@ -107,9 +107,49 @@ export const useUpdateTask = () => {
 			return response.data;
 		},
 
-		onSuccess: (_, variables) => {
+		onMutate: async ({ id, projectId, updates }) => {
+			const queryKey = ["tasks", projectId, "by-stage"];
+
+			// Stop an in-flight refetch from overwriting our optimistic update.
+			await queryClient.cancelQueries({
+				queryKey,
+			});
+
+			// Save the current cache for rollback.
+			const previousTasks =
+				queryClient.getQueryData<TaskWithUsers[]>(queryKey);
+
+			// Update the cached task immediately.
+			queryClient.setQueryData<TaskWithUsers[]>(queryKey, (tasks) => {
+				if (!tasks) return tasks;
+
+				return tasks.map((task) =>
+					task.id === id
+						? {
+								...task,
+								...updates,
+							}
+						: task,
+				);
+			});
+
+			return {
+				previousTasks,
+				queryKey,
+			};
+		},
+
+		onError: (_, __, context) => {
+			if (!context) return;
+
+			queryClient.setQueryData(context.queryKey, context.previousTasks);
+		},
+
+		onSettled: (_, __, ___, context) => {
+			if (!context) return;
+
 			queryClient.invalidateQueries({
-				queryKey: ["tasks", variables.projectId],
+				queryKey: context.queryKey,
 			});
 		},
 	});
