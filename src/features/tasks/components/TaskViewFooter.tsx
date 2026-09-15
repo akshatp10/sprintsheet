@@ -25,7 +25,7 @@ const TaskViewFooter = ({ onClick, isCardHeld = true, taskLength = 0 }: TaskView
             </div>
             <div className="flex gap-3 items-center">
                 {isCardHeld && <Text variant="body-sm" className="text-ink-3">Card held - drop it in any stage column</Text>}
-                <Button variant="tertiary" className="flex gap-1 items-center justify-center" handleClick={onClick}>
+                <Button variant="tertiary" className="flex gap-1 items-center justify-center" onClick={onClick}>
                     <Inbox strokeWidth={1.5} size={13} />
                     <Text className="text-ink-2">Backlog</Text>
                     <Text variant="body-sm" className="font-normal text-ink-3">{taskLength}</Text>

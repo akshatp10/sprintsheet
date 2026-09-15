@@ -3,7 +3,7 @@ import type { ButtonHTMLAttributes } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     children: React.ReactNode;
-    handleClick?: () => void;
+    onClick?: () => void;
     variant: "primary" | "secondary" | "tertiary";
     disabled?: boolean;
     className?: string;
@@ -18,12 +18,12 @@ const variantClasses = {
     tertiary: "bg-transparent text-ink-2 border border-lines-control",
 }
 
-const Button = ({ handleClick, children, disabled, variant, className, type = "button", ...props }: ButtonProps) => {
+const Button = ({ onClick, children, disabled, variant, className, type = "button", ...props }: ButtonProps) => {
 
     return (
         <button
             className={cn("cursor-pointer text-center py-0.5 px-2 rounded-md font-medium text-type-body-sm", variantClasses[variant], className)}
-            onClick={handleClick}
+            onClick={onClick}
             disabled={disabled}
             type={type}
             {...props}

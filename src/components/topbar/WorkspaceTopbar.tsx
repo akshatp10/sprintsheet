@@ -23,7 +23,7 @@ const WorkspaceTopbar = () => {
         <>
             <div className="flex justify-end items-center w-full">
                 {/* Workspace Dropdown */}
-                {/* <Button handleClick={() => { }} variant='tertiary' className='border-0 flex justify-center items-center gap-2'>
+                {/* <Button onClick={() => { }} variant='tertiary' className='border-0 flex justify-center items-center gap-2'>
                     <Text variant="h2">Alter Office</Text>
                     <ChevronDown size={15} strokeWidth={1.5} className="text-ink-fades-ghost-rows" />
                 </Button> */}
@@ -33,7 +33,7 @@ const WorkspaceTopbar = () => {
                 <div className="flex items-center gap-2">
                     <SearchInput value={searchProject} onChange={setSearchProject} placeholder="Search projects, tasks...  &#8984;+K" />
 
-                    <Button variant="secondary" className="h-full font-medium" handleClick={handleClick}>
+                    <Button variant="secondary" className="h-full font-medium" onClick={handleClick}>
                         + New Project
                     </Button>
                 </div>

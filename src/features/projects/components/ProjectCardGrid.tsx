@@ -48,7 +48,7 @@ const ProjectCardGrid = ({
 
     return (
         <Button
-            handleClick={clickingProjectCard}
+            onClick={clickingProjectCard}
             variant="tertiary"
             className="flex h-50 w-full flex-col items-stretch justify-between rounded-xl border border-lines-hairline bg-surface px-6 py-4 text-left"
         >

@@ -17,7 +17,7 @@ const ProjectFormHeader = ({
 
             <Button
                 type="button"
-                handleClick={onClose}
+                onClick={onClose}
                 className="border-none"
                 variant="tertiary"
             >

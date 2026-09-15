@@ -23,7 +23,7 @@ const ProjectFormFooter = ({
             {currentStep === 1 && (
                 <Button
                     type="button"
-                    handleClick={onClose}
+                    onClick={onClose}
                     variant="tertiary"
                 >
                     <Text variant="body" className="font-medium">
@@ -37,7 +37,7 @@ const ProjectFormFooter = ({
                 {currentStep > 1 && (
                     <Button
                         type="button"
-                        handleClick={onBack}
+                        onClick={onBack}
                         variant="tertiary"
                         className="flex items-center gap-1 border-none"
                     >
@@ -56,7 +56,7 @@ const ProjectFormFooter = ({
                 {currentStep < 3 ? (
                     <Button
                         type="button"
-                        handleClick={onNext}
+                        onClick={onNext}
                         variant="secondary"
                         className="group flex items-center gap-1 disabled:cursor-not-allowed disabled:bg-ink-fades-disabled disabled:border-ink-fades-disabled disabled:text-ink-fades-disabled disabled:shadow-ink-fades-disabled"
                         disabled={isNextDisabled}
