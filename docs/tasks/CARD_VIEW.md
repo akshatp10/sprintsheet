@@ -34,9 +34,8 @@ The project stages determine the columns. Each task is rendered in the column ma
 
 ### Screenshot
 
-> **Screenshot:** Complete Card View showing multiple stage columns and tasks.
->
-> `screenshots/card-view.png`
+<img width="1763" height="844" alt="image" src="https://github.com/user-attachments/assets/2e597236-67d1-459d-a153-00cc530aec62" />
+
 
 ## Task card
 
@@ -116,12 +115,6 @@ Card and Table views consume the same task data.
 If a card changes stage, the table should show the same stage.
 
 This is a core Sprintsheet invariant.
-
-### Screenshot
-
-> **Screenshot:** The same task represented in Card and Table views.
->
-> `screenshots/card-table-sync.png`
 
 ## Related
 
