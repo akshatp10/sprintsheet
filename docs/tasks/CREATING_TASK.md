@@ -90,9 +90,8 @@ new task appears in the current project
 
 ### Screenshot
 
-> **Screenshot:** Task creation form with the important fields.
->
-> `screenshots/create-task.png`
+<img width="1763" height="844" alt="image" src="https://github.com/user-attachments/assets/f7aafa71-35a6-4c31-97f0-592462b10700" />
+
 
 ## Developer checklist
 
