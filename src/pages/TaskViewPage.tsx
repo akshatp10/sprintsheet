@@ -8,6 +8,8 @@ import { useState } from "react";
 import BacklogDrawer from "@/features/tasks/components/BacklogDrawer";
 
 const TaskViewPage = () => {
+    const [isDragging, setIsDragging] = useState(false)
+
     const [searchParams] = useSearchParams();
     const [openBacklog, setOpenBacklog] = useState(false);
 
@@ -34,9 +36,10 @@ const TaskViewPage = () => {
                         tasksByStage={tasksByStage}
                         isLoading={isLoading}
                         projectId={projectid ?? ""}
+                        onDraggingChange={setIsDragging}
                     />
                 )}
-                <TaskViewFooter taskLength={backlogTasks.length} onClick={() => setOpenBacklog((prev) => !prev)} />
+                <TaskViewFooter taskLength={backlogTasks.length} isCardHeld={isDragging} onClick={() => setOpenBacklog((prev) => !prev)} />
             </div>
 
             {openBacklog && <BacklogDrawer handleClose={() => setOpenBacklog(false)} />}

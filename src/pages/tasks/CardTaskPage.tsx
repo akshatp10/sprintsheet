@@ -11,6 +11,7 @@ interface CardTaskPageProps {
     tasksByStage: Record<string, TaskWithUsers[]>;
     isLoading: boolean;
     projectId: string;
+    onDraggingChange: (isDragging: boolean) => void;
 }
 
 const CardTaskPage = ({
@@ -18,6 +19,7 @@ const CardTaskPage = ({
     isLoading,
     projectId,
     tasksByStage,
+    onDraggingChange,
 }: CardTaskPageProps) => {
     const [newTask, setNewTask] = useState(false);
     const [clickedStageId, setClickedStageId] = useState("");
@@ -51,7 +53,9 @@ const CardTaskPage = ({
                 }}
             >
                 <DragDropProvider
+                    onDragStart={() => onDraggingChange(true)}
                     onDragEnd={(event) => {
+                        onDraggingChange(false);
                         if (event.canceled) return;
 
                         const taskId = event.operation.source?.id;
