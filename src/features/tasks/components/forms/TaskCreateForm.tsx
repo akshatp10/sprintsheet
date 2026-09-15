@@ -145,8 +145,8 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
 
                 </div>
 
-                <div className="mt-auto flex justify-end">
-                    <Button type="submit" variant="tertiary">
+                <div className="mt-auto flex justify-end items-center">
+                    <Button type="submit" variant="primary">
                         <Text variant="body-sm" className="font-medium">
                             Create Task
                         </Text>

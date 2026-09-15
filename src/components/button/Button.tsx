@@ -11,7 +11,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses = {
     //Filled Button
-    primary: "bg-accent text-accent-deep border border-transparent",
+    primary: "bg-accent text-surface border border-transparent",
     //Outline Button
     secondary: "bg-transparent text-accent-deep border border-accent shadow-xs shadow-accent",
     //Default Gray Button
