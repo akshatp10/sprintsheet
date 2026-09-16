@@ -68,7 +68,6 @@ interface TaskRow {
 	id: string;
 	projectId: string;
 	key: string;
-	stageId: string;
 	typeId: string;
 	name: string;
 	description: string;
@@ -120,7 +119,7 @@ db.version(1).stores({
 		"id, projectId, stageId, [projectId+stageId], [projectId+order]",
 	types: "id, &name, createdAt",
 	projectTypes: "id, projectId, typeId, [projectId+typeId]",
-	tasks: "id, projectId, stageId, typeId, createdAt, updatedAt",
+	tasks: "id, projectId, typeId, createdAt, updatedAt",
 	cycles: "id, projectId, startDate, endDate, createdAt",
 	taskCycles: "id, taskId, cycleId, [cycleId+taskId]",
 });

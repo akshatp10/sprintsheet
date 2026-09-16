@@ -71,5 +71,9 @@ export const updateCycle = async (
 };
 
 export const deleteCycle = async (id: string): Promise<void> => {
-	await db.cycles.delete(id);
+	await db.transaction("rw", [db.cycles, db.taskCycles], async () => {
+		await db.taskCycles.where("cycleId").equals(id).delete();
+
+		await db.cycles.delete(id);
+	});
 };
