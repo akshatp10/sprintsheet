@@ -2,24 +2,25 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { createNewTask, getAllProjectTasks, updateExistingTask } from "./api";
 
-import type {
-	CreateTaskInput,
-	TaskWithUsers,
-	UpdateTaskVariables,
-} from "./types";
-import { getUsers } from "../users/api";
-import type { User } from "../users/types";
+import type { CreateTaskInput, Task, UpdateTaskVariables } from "./types";
 
 export const taskQueryKeys = {
 	all: ["tasks"] as const,
-	project: (projectId: string) => [...taskQueryKeys.all, projectId] as const,
-	byStage: (projectId: string) =>
-		[...taskQueryKeys.all, projectId, "by-stage"] as const,
+
+	project: (projectId: string) =>
+		[...taskQueryKeys.all, "project", projectId] as const,
+
+	cycle: (cycleId: string) =>
+		[...taskQueryKeys.all, "cycle", cycleId] as const,
+
+	backlog: (projectId: string) =>
+		[...taskQueryKeys.all, "backlog", projectId] as const,
 };
 
 export const useTasks = (projectId: string) => {
 	return useQuery({
 		queryKey: taskQueryKeys.project(projectId),
+
 		queryFn: async () => {
 			const response = await getAllProjectTasks(projectId);
 
@@ -29,54 +30,8 @@ export const useTasks = (projectId: string) => {
 
 			return response.data ?? [];
 		},
-		enabled: !!projectId,
-	});
-};
-
-export const useTasksByStage = (projectId: string) => {
-	return useQuery({
-		queryKey: taskQueryKeys.byStage(projectId),
-
-		queryFn: async () => {
-			const taskResponse = await getAllProjectTasks(projectId);
-
-			if (!taskResponse.success) {
-				throw new Error(taskResponse.message);
-			}
-
-			const tasks = taskResponse.data ?? [];
-
-			const userIds = [
-				...new Set(tasks.flatMap((task) => task.assigneeIds)),
-			];
-
-			const userResponse = await getUsers(userIds);
-
-			if (!userResponse.success) {
-				throw new Error(userResponse.message);
-			}
-
-			const users = userResponse.data ?? [];
-
-			const usersById = new Map(users.map((user) => [user.id, user]));
-
-			const tasksWithUsers = tasks.map((task) => ({
-				...task,
-				assignees: task.assigneeIds
-					.map((id) => usersById.get(id))
-					.filter((user): user is User => user !== undefined),
-			}));
-
-			return tasksWithUsers;
-		},
 
 		enabled: !!projectId,
-
-		select: (tasks) =>
-			tasks.reduce<Record<string, TaskWithUsers[]>>((acc, task) => {
-				(acc[task.stageId] ??= []).push(task);
-				return acc;
-			}, {}),
 	});
 };
 
@@ -90,8 +45,10 @@ export const useCreateTask = () => {
 			if (!response.success) {
 				throw new Error(response.message);
 			}
+
 			return response.data;
 		},
+
 		onSuccess: (_, variables) => {
 			queryClient.invalidateQueries({
 				queryKey: taskQueryKeys.project(variables.projectId),
@@ -115,35 +72,42 @@ export const useUpdateTask = () => {
 		},
 
 		onMutate: async ({ id, projectId, updates }) => {
-			const queryKey = taskQueryKeys.byStage(projectId);
+			const queryKey = taskQueryKeys.project(projectId);
 
-			// Stop an in-flight refetch from overwriting our optimistic update.
-			await queryClient.cancelQueries({ queryKey });
+			await queryClient.cancelQueries({
+				queryKey,
+			});
 
-			// Save the current cache for rollback.
-			const previousTasks =
-				queryClient.getQueryData<TaskWithUsers[]>(queryKey);
+			const previousTasks = queryClient.getQueryData<Task[]>(queryKey);
 
-			// Update the cached task immediately.
-			queryClient.setQueryData<TaskWithUsers[]>(queryKey, (tasks) => {
-				if (!tasks) return tasks;
+			queryClient.setQueryData<Task[]>(queryKey, (tasks) => {
+				if (!tasks) {
+					return tasks;
+				}
 
 				return tasks.map((task) =>
 					task.id === id ? { ...task, ...updates } : task,
 				);
 			});
 
-			return { previousTasks, queryKey };
+			return {
+				previousTasks,
+				queryKey,
+			};
 		},
 
 		onError: (_, __, context) => {
-			if (!context) return;
+			if (!context) {
+				return;
+			}
 
 			queryClient.setQueryData(context.queryKey, context.previousTasks);
 		},
 
 		onSettled: (_, __, ___, context) => {
-			if (!context) return;
+			if (!context) {
+				return;
+			}
 
 			queryClient.invalidateQueries({
 				queryKey: context.queryKey,
