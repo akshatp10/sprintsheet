@@ -10,9 +10,16 @@ import type {
 import { getUsers } from "../users/api";
 import type { User } from "../users/types";
 
+export const taskQueryKeys = {
+	all: ["tasks"] as const,
+	project: (projectId: string) => [...taskQueryKeys.all, projectId] as const,
+	byStage: (projectId: string) =>
+		[...taskQueryKeys.all, projectId, "by-stage"] as const,
+};
+
 export const useTasks = (projectId: string) => {
 	return useQuery({
-		queryKey: ["tasks", projectId],
+		queryKey: taskQueryKeys.project(projectId),
 		queryFn: async () => {
 			const response = await getAllProjectTasks(projectId);
 
@@ -28,7 +35,7 @@ export const useTasks = (projectId: string) => {
 
 export const useTasksByStage = (projectId: string) => {
 	return useQuery({
-		queryKey: ["tasks", projectId, "by-stage"],
+		queryKey: taskQueryKeys.byStage(projectId),
 
 		queryFn: async () => {
 			const taskResponse = await getAllProjectTasks(projectId);
@@ -87,7 +94,7 @@ export const useCreateTask = () => {
 		},
 		onSuccess: (_, variables) => {
 			queryClient.invalidateQueries({
-				queryKey: ["tasks", variables.projectId],
+				queryKey: taskQueryKeys.project(variables.projectId),
 			});
 		},
 	});
@@ -108,7 +115,7 @@ export const useUpdateTask = () => {
 		},
 
 		onMutate: async ({ id, projectId, updates }) => {
-			const queryKey = ["tasks", projectId, "by-stage"];
+			const queryKey = taskQueryKeys.byStage(projectId);
 
 			// Stop an in-flight refetch from overwriting our optimistic update.
 			await queryClient.cancelQueries({ queryKey });

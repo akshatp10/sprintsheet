@@ -1,9 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { getStagesForProject } from "./api";
 
+export const stageQueryKeys = {
+	all: ["stages"] as const,
+	project: (projectId: string) => [...stageQueryKeys.all, projectId] as const,
+};
+
 export const useProjectStages = (projectId: string) => {
 	return useQuery({
-		queryKey: ["projects", "projectStages", projectId],
+		queryKey: stageQueryKeys.project(projectId),
 		queryFn: async () => {
 			const response = await getStagesForProject(projectId);
 
