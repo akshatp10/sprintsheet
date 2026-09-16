@@ -18,7 +18,7 @@ const ProjectFormStepper = ({
     return (
         <div className="flex items-center w-full">
             {steps.map((step, index) => (
-                <Fragment key={step.step}>
+                <Fragment key={step.step.toString()}>
                     <div className="flex items-center gap-1">
                         <FormStepCompontent
                             currentStep={currentStep}
