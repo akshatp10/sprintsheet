@@ -107,7 +107,7 @@ const BasicsStep = ({
             {/* Cycle length */}
             <FormInputBox
                 label="Cycle length"
-                error={errors.customCycleDays?.message}
+                error={formValues.cycleLength === "custom" ? errors.customCycleDays?.message : ""}
             >
                 <div className="flex items-center gap-3">
                     <Tabs
