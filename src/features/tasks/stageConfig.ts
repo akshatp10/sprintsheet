@@ -39,7 +39,7 @@ export const stageConfig: Record<Stage["name"], StageStyle> = {
 	Blocked: {
 		container:
 			"bg-stage-blocked-bg border-stage-blocked-border text-stage-blocked-text",
-		chip: "bg-stage-blocked-chip border-stage-blocked-dot text-stage-blocked-text",
+		chip: "bg-stage-blocked-bg border-stage-blocked-dot text-stage-blocked-text",
 		dot: "bg-stage-blocked-dot",
 	},
 };

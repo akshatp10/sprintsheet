@@ -1,14 +1,11 @@
 import TaskCardSkeleton from "@/features/tasks/components/skeletons/TaskCardSkeleton";
 import type { TaskWithUsers } from "@/lib/services/tasks/types";
-import { cn } from "@/lib/cn";
 import DraggableTaskCard from "./DraggableTaskCard";
-import { stageConfig } from "../stageConfig";
 
 interface StageTaskListProps {
     tasks: TaskWithUsers[];
     isLoading: boolean;
     isDropTarget: boolean;
-    stageName: keyof typeof stageConfig;
     isTerminal: boolean;
     containerRef: (element: HTMLElement | null) => void;
 }
@@ -17,12 +14,9 @@ const StageTaskList = ({
     tasks,
     isLoading,
     isDropTarget,
-    stageName,
     isTerminal,
     containerRef,
 }: StageTaskListProps) => {
-    const { chip } = stageConfig[stageName];
-
     return (
         <div
             ref={containerRef}
@@ -34,17 +28,6 @@ const StageTaskList = ({
                 ))
             ) : (
                 <>
-                    {isDropTarget && (
-                        <div
-                            className={cn(
-                                "flex h-20 items-center justify-center rounded-md border-2 sticky",
-                                chip,
-                            )}
-                        >
-                            Drop task here
-                        </div>
-                    )}
-
                     {tasks.map((task) => (
                         <DraggableTaskCard
                             key={task.id}

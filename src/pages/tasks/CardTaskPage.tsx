@@ -25,6 +25,7 @@ const CardTaskPage = ({
     const [newTask, setNewTask] = useState(false);
     const [clickedStageId, setClickedStageId] = useState("");
     const [dragging, setDragging] = useState(false)
+    const [draggedTask, setDraggedTask] = useState<TaskWithUsers | null>()
 
     const visibleStages = stages.filter(
         (stage) => stage.name !== "Backlog",
@@ -63,9 +64,19 @@ const CardTaskPage = ({
                 }}
             >
                 <DragDropProvider
-                    onDragStart={() => {
+                    onDragStart={(event) => {
                         onDraggingChange(true);
                         setDragging(true)
+
+                        const taskId = event.operation.source?.id;
+
+                        if (!taskId) return;
+
+                        const task = Object.values(tasksByStage)
+                            .flat()
+                            .find((task) => task.id === taskId);
+
+                        setDraggedTask(task ?? null);
                     }}
                     onDragEnd={(event) => {
                         onDraggingChange(false);
@@ -91,6 +102,7 @@ const CardTaskPage = ({
                             tasks={tasksByStage[stage.stageId] ?? []}
                             isLoading={isLoading}
                             onCreateTask={handleCreateTask}
+                            isCurrentStage={draggedTask?.stageId === stage.stageId}
                         />
                     ))}
 
