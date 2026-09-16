@@ -2,7 +2,6 @@ export interface Task {
 	id: string;
 	key: string;
 	projectId: string;
-	stageId: string;
 	typeId: string;
 	name: string;
 	description: string;
@@ -15,13 +14,16 @@ export interface Task {
 
 export interface CreateTaskInput {
 	projectId: string;
-	stageId: string;
 	name: string;
 	description?: string;
 	assigneeIds?: string[];
 	dueDate?: string | null;
 	typeId: string;
 	tags?: string[];
+	cycle?: {
+		id: string;
+		stageId: string;
+	};
 }
 
 export type UpdateTaskInput = Partial<

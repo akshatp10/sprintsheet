@@ -1,25 +1,33 @@
 import db from "../db";
 
-import type { TaskRow } from "../db";
+import type { TaskCycleRow, TaskRow } from "../db";
 type UpdateTaskInput = Partial<Omit<TaskRow, "id" | "createdAt" | "updatedAt">>;
 
 interface CreateTaskRow {
 	projectId: string;
-	stageId: string;
 	name: string;
 	description?: string;
 	assigneeIds?: string[];
 	dueDate?: string | null;
 	typeId: string;
 	tags?: string[];
+	cycle?: {
+		id: string;
+		stageId: string;
+	};
 }
 
 export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
 	return db.transaction(
 		"rw",
-		db.projects,
-		db.projectTypes,
-		db.tasks,
+		[
+			db.projects,
+			db.projectTypes,
+			db.tasks,
+			db.cycles,
+			db.projectStages,
+			db.taskCycles,
+		],
 		async () => {
 			const project = await db.projects.get(input.projectId);
 
@@ -43,7 +51,6 @@ export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
 				id: crypto.randomUUID(),
 				projectId: input.projectId,
 				key: `${project.key}-${String(taskNumber).padStart(3, "0")}`,
-				stageId: input.stageId,
 				name: input.name,
 				description: input.description ?? "",
 				assigneeIds: input.assigneeIds ?? [],
@@ -61,6 +68,40 @@ export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
 				updatedAt: now,
 			});
 
+			if (input.cycle) {
+				const cycle = await db.cycles.get(input.cycle.id);
+
+				if (!cycle) {
+					throw new Error("Cycle not found");
+				}
+
+				if (cycle.projectId !== input.projectId) {
+					throw new Error("Cycle does not belong to this project");
+				}
+
+				const projectStage = await db.projectStages.get(
+					input.cycle.stageId,
+				);
+
+				if (!projectStage) {
+					throw new Error("Project stage not found");
+				}
+
+				if (projectStage.projectId !== input.projectId) {
+					throw new Error("Stage does not belong to this project");
+				}
+
+				const newTaskCycle: TaskCycleRow = {
+					id: crypto.randomUUID(),
+					taskId: task.id,
+					cycleId: input.cycle.id,
+					stageId: input.cycle.stageId,
+					createdAt: now,
+					updatedAt: now,
+				};
+
+				await db.taskCycles.add(newTaskCycle);
+			}
 			return task;
 		},
 	);
@@ -70,6 +111,24 @@ export const getAllTasksByProject = async (
 	projectId: string,
 ): Promise<TaskRow[]> => {
 	return db.tasks.where("projectId").equals(projectId).sortBy("createdAt");
+};
+
+export const getBacklogTasksByProject = async (
+	projectId: string,
+): Promise<TaskRow[]> => {
+	const [tasks, taskCycles] = await Promise.all([
+		db.tasks.where("projectId").equals(projectId).toArray(),
+
+		db.taskCycles.toArray(),
+	]);
+
+	const cycleTaskIds = new Set(
+		taskCycles.map((taskCycle) => taskCycle.taskId),
+	);
+
+	return tasks
+		.filter((task) => !cycleTaskIds.has(task.id))
+		.sort((a, b) => a.createdAt - b.createdAt);
 };
 
 export const updateTask = async (
