@@ -23,7 +23,7 @@ const ProjectStage = ({ color, label, tag, className, ...props }: ProjectStagePr
                 </Text>
             </div>
 
-            {tag && (
+            {!!tag && (
                 <span className="rounded-md border border-lines-hairline px-2 py-0.5 shrink-0">
                     <Text variant="caption" className="text-ink-3">
                         {tag}
