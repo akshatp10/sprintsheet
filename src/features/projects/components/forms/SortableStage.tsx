@@ -7,6 +7,7 @@ import type { FieldArrayWithId } from "react-hook-form";
 import type { ProjectFormData } from "../../types/projectFormData";
 
 import ProjectStage from "./ProjectStage";
+import { stageConfig } from "@/lib/stageConfig";
 
 type StageField = FieldArrayWithId<
     ProjectFormData,
@@ -20,14 +21,6 @@ interface SortableStageProps {
     total: number;
 }
 
-const stageColors: Record<string, string> = {
-    Backlog: "bg-stage-backlog-dot",
-    Todo: "bg-stage-todo-dot",
-    "In progress": "bg-stage-progress-dot",
-    "In QA": "bg-stage-qa-dot",
-    Done: "bg-stage-done-dot",
-    Blocked: "bg-stage-blocked-dot",
-};
 
 const SortableStage = ({
     stage,
@@ -35,6 +28,7 @@ const SortableStage = ({
     total,
 }: SortableStageProps) => {
     const [element, setElement] = useState<HTMLDivElement | null>(null);
+    const { dot } = stageConfig[stage.name];
 
     const sortable = useSortable({
         id: stage.id,
@@ -62,7 +56,7 @@ const SortableStage = ({
 
             <div className="min-w-0 flex-1">
                 <ProjectStage
-                    color={stageColors[stage.name] ?? "bg-ink-3"}
+                    color={dot ?? "bg-ink-3"}
                     label={stage.name}
                     tag={
                         index === 0

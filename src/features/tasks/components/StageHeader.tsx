@@ -3,7 +3,7 @@ import Text from "@/components/common/Text";
 import { Plus } from "lucide-react";
 import type { Stage } from "@/lib/services/stages/type";
 import { cn } from "@/lib/cn";
-import { stageConfig } from "../stageConfig";
+import { stageConfig } from "../../../lib/stageConfig";
 
 interface StageHeaderProps {
     stage: Stage;
