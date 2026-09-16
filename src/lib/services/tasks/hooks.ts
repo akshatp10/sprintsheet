@@ -142,5 +142,18 @@ export const useUpdateTask = () => {
 				queryKey: context.queryKey,
 			});
 		},
+
+		onSuccess: (_, variables) => {
+			const { id } = variables;
+
+			requestAnimationFrame(() => {
+				const element = document.getElementById(`task-${id}`);
+
+				element?.scrollIntoView({
+					behavior: "smooth",
+					block: "nearest",
+				});
+			});
+		},
 	});
 };

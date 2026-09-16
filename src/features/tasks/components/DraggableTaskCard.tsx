@@ -16,7 +16,7 @@ const DraggableTaskCard = ({
     });
 
     return (
-        <div ref={ref}>
+        <div ref={ref} id={`task-${task.id}`}>
             {isDragging ? <div
                 className={`h-20 rounded-md border-2 border-dashed border-lines-hairline w-full`}
             /> :
