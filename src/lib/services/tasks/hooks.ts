@@ -1,6 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { createNewTask, getAllProjectTasks, updateExistingTask } from "./api";
+import {
+	createNewTask,
+	getAllProjectBacklogTasks,
+	getAllProjectTasks,
+	updateExistingTask,
+} from "./api";
 
 import type { CreateTaskInput, Task, UpdateTaskVariables } from "./types";
 
@@ -23,6 +28,24 @@ export const useTasks = (projectId: string) => {
 
 		queryFn: async () => {
 			const response = await getAllProjectTasks(projectId);
+
+			if (!response.success) {
+				throw new Error(response.message);
+			}
+
+			return response.data ?? [];
+		},
+
+		enabled: !!projectId,
+	});
+};
+
+export const useBacklogTasks = (projectId: string) => {
+	return useQuery({
+		queryKey: taskQueryKeys.backlog(projectId),
+
+		queryFn: async () => {
+			const response = await getAllProjectBacklogTasks(projectId);
 
 			if (!response.success) {
 				throw new Error(response.message);
