@@ -2,7 +2,7 @@ import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
 import StageViewBox from "@/features/tasks/components/StageViewBox";
 import TaskCard from "@/features/tasks/components/TaskCard";
 import type { Stage } from "@/lib/services/stages/type";
-import { useUpdateTask } from "@/lib/services/tasks/hooks";
+import { useUpdateTaskCycle } from "@/lib/services/taskCycles/hooks";
 import type { TaskWithUsers } from "@/lib/services/tasks/types";
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import { useState } from "react";
@@ -12,6 +12,7 @@ interface CardTaskPageProps {
     tasksByStage: Record<string, TaskWithUsers[]>;
     isLoading: boolean;
     projectId: string;
+    cycleId: string;
     onDraggingChange: (isDragging: boolean) => void;
 }
 
@@ -21,6 +22,7 @@ const CardTaskPage = ({
     projectId,
     tasksByStage,
     onDraggingChange,
+    cycleId
 }: CardTaskPageProps) => {
     const [newTask, setNewTask] = useState(false);
     const [clickedStageId, setClickedStageId] = useState("");
@@ -41,7 +43,7 @@ const CardTaskPage = ({
         setClickedStageId("");
     };
 
-    const { mutate } = useUpdateTask();
+    const { mutate } = useUpdateTaskCycle();
 
     const handleUpdateTaskStage = (taskId: string, stageId: string) => {
         const task = Object.values(tasksByStage).flat().find((task) => task.id === taskId);
@@ -131,6 +133,7 @@ const CardTaskPage = ({
                     projectId={projectId}
                     defaultStageId={clickedStageId}
                     onClose={handleCloseTaskForm}
+                    cycleId={cycleId}
                 />
             )}
         </>

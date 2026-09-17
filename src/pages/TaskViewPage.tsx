@@ -12,9 +12,10 @@ import { useBacklogTasks } from "@/lib/services/tasks/hooks";
 const TaskViewPage = () => {
     const [isDragging, setIsDragging] = useState(false)
 
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [openBacklog, setOpenBacklog] = useState(false);
-    const [curretnCycleId, setCurrentCycleId] = useState("");
+
+    const currentCycleId = searchParams.get("cycle") ?? "";
 
     const view = searchParams.get("view") === "table" ? "table" : "cards";
     const { projectid } = useParams<{ projectid: string }>();
@@ -28,8 +29,14 @@ const TaskViewPage = () => {
     // const backlogStage = sortedStages.find((stage) => stage.name === "Backlog");
     const { data: backlogTasks = [] } = useBacklogTasks(projectid ?? "");
 
-    // if (isError) return <div>Error: {error.message}</div>;
+    const handleCycleChange = (cycleId: string) => {
+        setSearchParams((prev) => {
+            prev.set("cycle", cycleId);
+            return prev;
+        });
+    };
 
+    // if (isError) return <div>Error: {error.message}</div>;
     return (
         <>
             <div className="grid h-full min-h-0 min-w-fit grid-rows-[1fr_5dvh]">
@@ -38,6 +45,7 @@ const TaskViewPage = () => {
                     <CardTaskPage
                         stages={sortedStages}
                         tasksByStage={tasksByStage}
+                        cycleId={currentCycleId}
                         isLoading={false}
                         projectId={projectid ?? ""}
                         onDraggingChange={setIsDragging}
@@ -51,7 +59,7 @@ const TaskViewPage = () => {
                             setOpenBacklog((prev) => !prev);
                         }
                     }}
-                    currentCycleId={curretnCycleId} setCurrentCycleId={setCurrentCycleId} />
+                    currentCycleId={currentCycleId} setCurrentCycleId={handleCycleChange} />
             </div>
 
             {openBacklog && <BacklogDrawer handleClose={() => setOpenBacklog(false)} />}
