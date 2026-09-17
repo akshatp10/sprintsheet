@@ -67,8 +67,6 @@ const TaskCreateForm = ({
                 : {}),
         };
 
-        console.log(newTask)
-        console.log("CycleID:" + cycleId)
         mutate(newTask)
         reset();
         onClose();
