@@ -3,13 +3,13 @@ import StageViewBox from "@/features/tasks/components/StageViewBox";
 import TaskCard from "@/features/tasks/components/TaskCard";
 import type { Stage } from "@/lib/services/stages/type";
 import { useUpdateTaskCycle } from "@/lib/services/taskCycles/hooks";
-import type { TaskWithUsers } from "@/lib/services/tasks/types";
+import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import { useState } from "react";
 
 interface CardTaskPageProps {
     stages: Stage[];
-    tasksByStage: Record<string, TaskWithUsers[]>;
+    tasksByStage: Record<string, CycleTaskWithUsers[]>;
     isLoading: boolean;
     projectId: string;
     cycleId: string;
@@ -27,13 +27,17 @@ const CardTaskPage = ({
     const [newTask, setNewTask] = useState(false);
     const [clickedStageId, setClickedStageId] = useState("");
     const [dragging, setDragging] = useState(false)
-    const [draggedTask, setDraggedTask] = useState<TaskWithUsers | null>()
+    const [draggedTask, setDraggedTask] = useState<CycleTaskWithUsers | null>()
 
     const visibleStages = stages.filter(
         (stage) => stage.name !== "Backlog",
     );
 
     const handleCreateTask = (stageId: string) => {
+        console.log(
+            "All tasks:",
+            Object.values(tasksByStage).flat()
+        );
         setClickedStageId(stageId);
         setNewTask(true);
     };
@@ -48,12 +52,13 @@ const CardTaskPage = ({
     const handleUpdateTaskStage = (taskId: string, stageId: string) => {
         const task = Object.values(tasksByStage).flat().find((task) => task.id === taskId);
 
-        if (!task || task.stageId === stageId) return;
+        if (!task || task.stage.stageId === stageId) return;
 
         mutate({
-            id: taskId,
-            projectId,
-            updates: { stageId },
+            id: task.taskCycleId,
+            cycleId: cycleId,
+            stageId: stageId,
+            taskId: taskId
         });
     };
 
@@ -101,10 +106,10 @@ const CardTaskPage = ({
                         <StageViewBox
                             key={stage.id}
                             stage={stage}
-                            tasks={tasksByStage[stage.stageId] ?? []}
+                            tasks={tasksByStage[stage.id] ?? []}
                             isLoading={isLoading}
                             onCreateTask={handleCreateTask}
-                            isCurrentStage={draggedTask?.stageId === stage.stageId}
+                            isCurrentStage={draggedTask?.stage.stageId === stage.stageId}
                         />
                     ))}
 

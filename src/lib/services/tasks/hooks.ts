@@ -2,12 +2,20 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
 	createNewTask,
+	getAllCycleTasks,
 	getAllProjectBacklogTasks,
 	getAllProjectTasks,
 	updateExistingTask,
 } from "./api";
 
-import type { CreateTaskInput, Task, UpdateTaskVariables } from "./types";
+import type {
+	CreateTaskInput,
+	CycleTaskWithUsers,
+	Task,
+	UpdateTaskVariables,
+} from "./types";
+import { getUsers } from "../users/api";
+import type { User } from "../users/types";
 
 export const taskQueryKeys = {
 	all: ["tasks"] as const,
@@ -20,6 +28,9 @@ export const taskQueryKeys = {
 
 	backlog: (projectId: string) =>
 		[...taskQueryKeys.all, "backlog", projectId] as const,
+
+	cycleByStage: (cycleId: string) =>
+		[...taskQueryKeys.cycle(cycleId), "by-stage"] as const,
 };
 
 export const useTasks = (projectId: string) => {
@@ -55,6 +66,57 @@ export const useBacklogTasks = (projectId: string) => {
 		},
 
 		enabled: !!projectId,
+	});
+};
+
+export const useTasksByStage = (cycleId: string) => {
+	return useQuery({
+		queryKey: taskQueryKeys.cycleByStage(cycleId),
+
+		queryFn: async () => {
+			const response = await getAllCycleTasks(cycleId);
+
+			if (!response.success) {
+				throw new Error(response.message);
+			}
+
+			const tasks = response.data ?? [];
+
+			const userIds = [
+				...new Set(tasks.flatMap((task) => task.assigneeIds)),
+			];
+
+			const userResponse = await getUsers(userIds);
+
+			if (!userResponse.success) {
+				throw new Error(userResponse.message);
+			}
+
+			const users = userResponse.data ?? [];
+
+			const usersById = new Map(users.map((user) => [user.id, user]));
+
+			console.log(tasks);
+
+			return tasks.map((task) => ({
+				...task,
+
+				assignees: task.assigneeIds
+					.map((id) => usersById.get(id))
+					.filter((user): user is User => user !== undefined),
+			}));
+		},
+
+		enabled: !!cycleId,
+
+		select: (tasks) =>
+			tasks.reduce<Record<string, CycleTaskWithUsers[]>>((acc, task) => {
+				const stageId = task.stage.id;
+
+				(acc[stageId] ??= []).push(task);
+				console.log(acc);
+				return acc;
+			}, {}),
 	});
 };
 
