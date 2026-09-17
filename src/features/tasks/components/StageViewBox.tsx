@@ -23,7 +23,7 @@ const StageViewBox = ({
         id: stage.stageId,
     });
 
-    const { container } = stageConfig[stage.name];
+    const { container } = stageConfig[stage?.name];
 
     return (
         <div
@@ -34,7 +34,7 @@ const StageViewBox = ({
         >
             <StageHeader
                 stage={stage}
-                taskCount={tasks.length}
+                taskCount={tasks?.length}
                 onCreateTask={onCreateTask}
             />
 
@@ -42,8 +42,8 @@ const StageViewBox = ({
                 tasks={tasks}
                 isLoading={isLoading}
                 isDropTarget={isDropTarget}
-                stageName={stage.name}
-                isTerminal={stage.isTerminal}
+                stageName={stage?.name}
+                isTerminal={stage?.isTerminal}
                 containerRef={ref}
             />
         </div>
