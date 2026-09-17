@@ -125,7 +125,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
                     />
 
                     <select
-                        {...register("typeId")}
+                        {...register("type")}
                         className="rounded-md border border-lines-hairline bg-surface px-2.5 py-1 text-type-caption text-ink-2"
                     >
                         <option value="">Type</option>
