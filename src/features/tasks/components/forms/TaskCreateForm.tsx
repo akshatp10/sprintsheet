@@ -22,10 +22,11 @@ import { useProjectTypes } from "@/lib/services/types/hooks";
 interface TaskCreateFormProps {
     projectId: string;
     onClose: () => void;
+    cycleId?: string;
     defaultStageId?: string;
 }
 
-const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormProps) => {
+const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCreateFormProps) => {
     const {
         register,
         handleSubmit,
@@ -42,20 +43,31 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
     // const tags = watch("tags") ?? [];
 
     const { data: stages = [] } = useProjectStages(projectId);
+    console.log(stages)
     const { data: projectTypes = [] } = useProjectTypes(projectId);
     const { mutate } = useCreateTask()
 
     const handleFormSubmit = (data: TaskFormData) => {
         const newTask: CreateTaskInput = {
             projectId,
-            stageId: data.stage,
             name: data.name,
             description: data.description,
             assigneeIds: data.assigneeIds,
             dueDate: data.dueDate,
             typeId: data.type,
             tags: data.tags,
+            ...(cycleId
+                ? {
+                    cycle: {
+                        id: cycleId,
+                        stageId: data.stage,
+                    },
+                }
+                : {}),
         };
+
+        console.log(newTask)
+        console.log("CycleID:" + cycleId)
         mutate(newTask)
         reset();
         onClose();
@@ -102,7 +114,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
                         <option value="">Stage</option>
 
                         {stages.map((stage) => (
-                            <option key={stage.stageId} value={stage.stageId}>
+                            <option key={stage.stageId} value={stage.id}>
                                 {stage.name}
                             </option>
                         ))}

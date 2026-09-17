@@ -76,6 +76,14 @@ export const useCreateTask = () => {
 			queryClient.invalidateQueries({
 				queryKey: taskQueryKeys.project(variables.projectId),
 			});
+			queryClient.invalidateQueries({
+				queryKey: taskQueryKeys.backlog(variables.projectId),
+			});
+			if (variables.cycle) {
+				queryClient.invalidateQueries({
+					queryKey: taskQueryKeys.cycle(variables.cycle.id),
+				});
+			}
 		},
 	});
 };
