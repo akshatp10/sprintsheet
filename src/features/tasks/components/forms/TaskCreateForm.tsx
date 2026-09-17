@@ -43,7 +43,6 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCre
     // const tags = watch("tags") ?? [];
 
     const { data: stages = [] } = useProjectStages(projectId);
-    console.log(stages)
     const { data: projectTypes = [] } = useProjectTypes(projectId);
     const { mutate } = useCreateTask()
 
