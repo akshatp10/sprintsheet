@@ -96,8 +96,6 @@ export const useTasksByStage = (cycleId: string) => {
 
 			const usersById = new Map(users.map((user) => [user.id, user]));
 
-			console.log(tasks);
-
 			return tasks.map((task) => ({
 				...task,
 
@@ -114,7 +112,6 @@ export const useTasksByStage = (cycleId: string) => {
 				const stageId = task.stage.id;
 
 				(acc[stageId] ??= []).push(task);
-				console.log(acc);
 				return acc;
 			}, {}),
 	});
