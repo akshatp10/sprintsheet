@@ -13,6 +13,8 @@ const ProjectsTopbar = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
 
+    const currentCycleId = searchParams.get("cycle") ?? "";
+
     const currentView = searchParams.get("view") === "cards" ? "cards" : "table";
 
     const tabs: TabsOption<"table" | "cards">[] = [
@@ -67,6 +69,7 @@ const ProjectsTopbar = () => {
                 <TaskCreateForm
                     projectId={projectid ?? ""}
                     onClose={() => setOpenTaskForm(false)}
+                    cycleId={currentCycleId}
                 />
             )}
         </>

@@ -8,6 +8,7 @@ export interface Task {
 	assigneeIds: string[];
 	dueDate: string | null;
 	tags: string[];
+	isBacklog: 0 | 1;
 	createdAt: number;
 	updatedAt: number;
 }
