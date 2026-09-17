@@ -3,7 +3,7 @@ import Text from "@/components/common/Text";
 import { Plus } from "lucide-react";
 import type { Stage } from "@/lib/services/stages/type";
 import { cn } from "@/lib/cn";
-import { stageConfig } from "../../../lib/stageConfig";
+import { stageConfig, StageName } from "@/lib/stageConfig";
 
 interface StageHeaderProps {
     stage: Stage;
@@ -16,7 +16,7 @@ const StageHeader = ({
     taskCount,
     onCreateTask,
 }: StageHeaderProps) => {
-    const { dot } = stageConfig[stage.name];
+    const { dot } = stageConfig[stage.name as StageName];
 
     return (
         <div className="flex shrink-0 items-center justify-between px-3 pt-2">

@@ -4,7 +4,7 @@ import { useDroppable } from "@dnd-kit/react";
 import { cn } from "@/lib/cn";
 import StageHeader from "./StageHeader";
 import StageTaskList from "./StageTaskList";
-import { stageConfig } from "../../../lib/stageConfig";
+import { stageConfig, StageName } from "@/lib/stageConfig";
 import Text from "@/components/common/Text";
 
 interface StageViewBoxProps {
@@ -28,7 +28,7 @@ const StageViewBox = ({
         id: stage.stageId,
     });
 
-    const { container, chip } = stageConfig[stage?.name];
+    const { container, chip } = stageConfig[stage?.name as StageName];
 
     return (
         <div
