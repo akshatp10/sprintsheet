@@ -34,6 +34,13 @@ const TaskViewPage = () => {
         });
     };
 
+    const handleCycleChange = (cycleId: string) => {
+        setSearchParams((prev) => {
+            prev.set("cycle", cycleId);
+            return prev;
+        });
+    };
+
     if (isError) return <div>Error: {error.message}</div>;
     return (
         <>
