@@ -7,7 +7,7 @@ import TaskViewFooter from "@/features/tasks/components/TaskViewFooter";
 import { useState } from "react";
 import BacklogDrawer from "@/features/tasks/components/BacklogDrawer";
 import { isFeatureEnabled } from "@/config/features";
-import { useBacklogTasks } from "@/lib/services/tasks/hooks";
+import { useBacklogTasks, useTasksByStage } from "@/lib/services/tasks/hooks";
 
 const TaskViewPage = () => {
     const [isDragging, setIsDragging] = useState(false)
@@ -20,12 +20,11 @@ const TaskViewPage = () => {
     const view = searchParams.get("view") === "table" ? "table" : "cards";
     const { projectid } = useParams<{ projectid: string }>();
 
-    const { data: tasksByStage = {}, isLoading, isError, error } = useTasksByStage(projectid ?? "");
+    const { data: tasksByStage = {}, isLoading, isError, error } = useTasksByStage(currentCycleId ?? "");
     const { data: stages = [] } = useProjectStages(projectid ?? "");
 
     const sortedStages = [...stages].sort((a, b) => a.order - b.order);
 
-    // const backlogStage = sortedStages.find((stage) => stage.name === "Backlog");
     const { data: backlogTasks = [] } = useBacklogTasks(projectid ?? "");
 
     const handleCycleChange = (cycleId: string) => {
@@ -36,7 +35,6 @@ const TaskViewPage = () => {
     };
 
     if (isError) return <div>Error: {error.message}</div>;
-
     return (
         <>
             <div className="grid h-full min-h-0 min-w-fit grid-rows-[1fr_5dvh]">
@@ -45,6 +43,7 @@ const TaskViewPage = () => {
                     <CardTaskPage
                         stages={sortedStages}
                         tasksByStage={tasksByStage}
+                        cycleId={currentCycleId}
                         isLoading={isLoading}
                         projectId={projectid ?? ""}
                         onDraggingChange={setIsDragging}

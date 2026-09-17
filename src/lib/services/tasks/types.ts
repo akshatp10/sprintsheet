@@ -31,10 +31,16 @@ export type UpdateTaskInput = Partial<
 	Omit<Task, "id" | "createdAt" | "updatedAt">
 >;
 
+import type { ProjectStageRow } from "@/lib/db/db";
 import type { User } from "../users/types";
 
 export interface TaskWithUsers extends Task {
 	assignees: User[];
+}
+
+export interface CycleTaskWithUsers extends TaskWithUsers {
+	taskCycleId: string;
+	stage: ProjectStageRow;
 }
 
 export interface UpdateTaskVariables {

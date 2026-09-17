@@ -1,6 +1,6 @@
 import db from "../db";
 
-import type { TaskCycleRow, TaskRow } from "../db";
+import type { ProjectStageRow, TaskCycleRow, TaskRow } from "../db";
 type UpdateTaskInput = Partial<Omit<TaskRow, "id" | "createdAt" | "updatedAt">>;
 
 interface CreateTaskRow {
@@ -15,6 +15,11 @@ interface CreateTaskRow {
 		id: string;
 		stageId: string;
 	};
+}
+
+export interface CycleTaskRow extends TaskRow {
+	taskCycleId: string;
+	stage: ProjectStageRow;
 }
 
 export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
@@ -121,6 +126,57 @@ export const getBacklogTasksByProject = async (
 		.where("[projectId+isBacklog]")
 		.equals([projectId, 1])
 		.sortBy("createdAt");
+};
+
+export const getTasksByCycle = async (
+	cycleId: string,
+): Promise<CycleTaskRow[]> => {
+	const taskCycles = await db.taskCycles
+		.where("cycleId")
+		.equals(cycleId)
+		.toArray();
+
+	if (taskCycles.length === 0) {
+		return [];
+	}
+
+	const taskIds = taskCycles.map((taskCycle) => taskCycle.taskId);
+
+	const stageIds = taskCycles.map((taskCycle) => taskCycle.stageId);
+
+	const [tasks, stages] = await Promise.all([
+		db.tasks.bulkGet(taskIds),
+		db.projectStages.bulkGet(stageIds),
+	]);
+
+	const tasksById = new Map(
+		tasks
+			.filter((task): task is TaskRow => task !== undefined)
+			.map((task) => [task.id, task]),
+	);
+
+	const stagesById = new Map(
+		stages
+			.filter((stage): stage is ProjectStageRow => stage !== undefined)
+			.map((stage) => [stage.id, stage]),
+	);
+
+	return taskCycles.flatMap((taskCycle) => {
+		const task = tasksById.get(taskCycle.taskId);
+		const stage = stagesById.get(taskCycle.stageId);
+
+		if (!task || !stage) {
+			return [];
+		}
+
+		return [
+			{
+				...task,
+				taskCycleId: taskCycle.id,
+				stage,
+			},
+		];
+	});
 };
 
 export const updateTask = async (
