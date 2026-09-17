@@ -57,6 +57,7 @@ export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
 				dueDate: input.dueDate ?? null,
 				typeId: input.typeId,
 				tags: input.tags ?? [],
+				isBacklog: input.cycle?.id ? 0 : 1,
 				createdAt: now,
 				updatedAt: now,
 			};
@@ -116,19 +117,10 @@ export const getAllTasksByProject = async (
 export const getBacklogTasksByProject = async (
 	projectId: string,
 ): Promise<TaskRow[]> => {
-	const [tasks, taskCycles] = await Promise.all([
-		db.tasks.where("projectId").equals(projectId).toArray(),
-
-		db.taskCycles.toArray(),
-	]);
-
-	const cycleTaskIds = new Set(
-		taskCycles.map((taskCycle) => taskCycle.taskId),
-	);
-
-	return tasks
-		.filter((task) => !cycleTaskIds.has(task.id))
-		.sort((a, b) => a.createdAt - b.createdAt);
+	return db.tasks
+		.where("[projectId+isBacklog]")
+		.equals([projectId, 1])
+		.sortBy("createdAt");
 };
 
 export const updateTask = async (
