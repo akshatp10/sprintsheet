@@ -53,7 +53,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
             description: data.description,
             assigneeIds: data.assigneeIds,
             dueDate: data.dueDate,
-            typeId: data.typeId,
+            typeId: data.type,
             tags: data.tags,
         };
         mutate(newTask)
@@ -125,7 +125,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
                     />
 
                     <select
-                        {...register("typeId")}
+                        {...register("type")}
                         className="rounded-md border border-lines-hairline bg-surface px-2.5 py-1 text-type-caption text-ink-2"
                     >
                         <option value="">Type</option>
