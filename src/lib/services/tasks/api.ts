@@ -2,7 +2,9 @@ import {
 	createTask,
 	getAllTasksByProject,
 	getBacklogTasksByProject,
+	getTasksByCycle,
 	updateTask,
+	type CycleTaskRow,
 } from "@/lib/db/dbFunctions/taskFunctions";
 
 import type { ApiResponse } from "../types";
@@ -61,6 +63,28 @@ export const getAllProjectBacklogTasks = async (
 			status: 200,
 			success: true,
 			message: "Successfully fetched tasks",
+			data: tasks,
+		};
+	} catch {
+		return {
+			status: 500,
+			success: false,
+			message: "Internal Server Error",
+			data: null,
+		};
+	}
+};
+
+export const getAllCycleTasks = async (
+	cycleId: string,
+): Promise<ApiResponse<CycleTaskRow[]>> => {
+	try {
+		const tasks = await getTasksByCycle(cycleId);
+
+		return {
+			status: 200,
+			success: true,
+			message: "Successfully fetched cycle tasks",
 			data: tasks,
 		};
 	} catch {
