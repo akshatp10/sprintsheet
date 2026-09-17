@@ -134,7 +134,6 @@ const TaskCreateForm = ({
                             </select>
                         </FormInputBox>
 
-
                         {/* Assignee */}
                         <AssigneeSelect
                             projectId={projectId}
