@@ -35,7 +35,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
         formState: { errors, isDirty },
     } = useForm<TaskFormData>({
         resolver: zodResolver(taskFormSchema),
-        defaultValues: { ...defaultValues, stageId: defaultStageId ?? defaultValues.stageId },
+        defaultValues: { ...defaultValues, stage: defaultStageId ?? defaultValues.stage },
     });
 
     const assigneeIds = watch("assigneeIds") ?? [];
@@ -47,7 +47,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
     const handleFormSubmit = (data: TaskFormData) => {
         const newTask: CreateTaskInput = {
             projectId,
-            stageId: data.stageId,
+            stageId: data.stage,
             name: data.name,
             description: data.description,
             assigneeIds: data.assigneeIds,
@@ -95,7 +95,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId }: TaskCreateFormPr
                 {/* Pill row: stage, assignee, due date, type, tags */}
                 <div className="flex flex-wrap items-center gap-2">
                     <select
-                        {...register("stageId")}
+                        {...register("stage")}
                         className="rounded-md border border-lines-hairline bg-surface px-2.5 py-1 text-type-caption text-ink-2"
                     >
                         <option value="">Stage</option>

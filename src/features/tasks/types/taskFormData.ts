@@ -7,7 +7,7 @@ export const taskFormSchema = z.object({
 		.min(10, "Description should be more than 10 characters")
 		.max(250, "Description should not exceed 250 characters")
 		.optional(),
-	stageId: z.string().min(1, "Stage is required"),
+	stage: z.string().min(1, "Stage is required"),
 	assigneeIds: z.array(z.string()).optional(),
 	dueDate: z.string().nullable().optional(),
 	type: z.string().min(1, "Type is required"),
@@ -19,7 +19,7 @@ export type TaskFormData = z.infer<typeof taskFormSchema>;
 export const defaultValues: TaskFormData = {
 	name: "",
 	description: "",
-	stageId: "",
+	stage: "",
 	assigneeIds: [],
 	dueDate: null,
 	type: "task",
