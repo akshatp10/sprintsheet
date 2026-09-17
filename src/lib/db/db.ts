@@ -82,8 +82,8 @@ interface CycleRow {
 	id: string;
 	projectId: string;
 	name: string;
-	startDate: Date;
-	endDate: Date;
+	startDate: string;
+	endDate: string;
 	createdAt: number;
 	updatedAt: number;
 }
