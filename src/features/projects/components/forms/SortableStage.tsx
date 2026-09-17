@@ -7,7 +7,7 @@ import type { FieldArrayWithId } from "react-hook-form";
 import type { ProjectFormData } from "../../types/projectFormData";
 
 import ProjectStage from "./ProjectStage";
-import { stageConfig } from "@/lib/stageConfig";
+import { stageConfig, StageName } from "@/lib/stageConfig";
 
 type StageField = FieldArrayWithId<
     ProjectFormData,
@@ -21,14 +21,13 @@ interface SortableStageProps {
     total: number;
 }
 
-
 const SortableStage = ({
     stage,
     index,
     total,
 }: SortableStageProps) => {
     const [element, setElement] = useState<HTMLDivElement | null>(null);
-    const { dot } = stageConfig[stage.name];
+    const { dot } = stageConfig[stage.name as StageName];
 
     const sortable = useSortable({
         id: stage.id,
