@@ -7,6 +7,7 @@ import TaskViewFooter from "@/features/tasks/components/TaskViewFooter";
 import { useState } from "react";
 import BacklogDrawer from "@/features/tasks/components/BacklogDrawer";
 import { isFeatureEnabled } from "@/config/features";
+import { useBacklogTasks } from "@/lib/services/tasks/hooks";
 
 const TaskViewPage = () => {
     const [isDragging, setIsDragging] = useState(false)
@@ -25,7 +26,7 @@ const TaskViewPage = () => {
     const sortedStages = [...stages].sort((a, b) => a.order - b.order);
 
     // const backlogStage = sortedStages.find((stage) => stage.name === "Backlog");
-    const backlogTasks = [];
+    const { data: backlogTasks = [] } = useBacklogTasks(projectid ?? "");
 
     // if (isError) return <div>Error: {error.message}</div>;
 

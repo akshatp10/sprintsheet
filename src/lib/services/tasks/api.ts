@@ -1,6 +1,7 @@
 import {
 	createTask,
 	getAllTasksByProject,
+	getBacklogTasksByProject,
 	updateTask,
 } from "@/lib/db/dbFunctions/taskFunctions";
 
@@ -34,6 +35,27 @@ export const getAllProjectTasks = async (
 ): Promise<ApiResponse<Task[]>> => {
 	try {
 		const tasks = await getAllTasksByProject(projectId);
+
+		return {
+			status: 200,
+			success: true,
+			message: "Successfully fetched tasks",
+			data: tasks,
+		};
+	} catch {
+		return {
+			status: 500,
+			success: false,
+			message: "Internal Server Error",
+			data: null,
+		};
+	}
+};
+export const getAllProjectBacklogTasks = async (
+	projectId: string,
+): Promise<ApiResponse<Task[]>> => {
+	try {
+		const tasks = await getBacklogTasksByProject(projectId);
 
 		return {
 			status: 200,
