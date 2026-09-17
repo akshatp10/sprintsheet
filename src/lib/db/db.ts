@@ -125,7 +125,7 @@ db.version(1).stores({
 		"id, projectId, stageId, [projectId+stageId], [projectId+order]",
 	types: "id, &name, createdAt",
 	projectTypes: "id, projectId, typeId, [projectId+typeId]",
-	tasks: "id, projectId, stageId, typeId, createdAt, updatedAt",
+	tasks: "id, projectId, stageId, typeId,isBacklog, createdAt, updatedAt",
 });
 
 /**
