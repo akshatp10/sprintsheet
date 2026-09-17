@@ -74,6 +74,7 @@ interface TaskRow {
 	assigneeIds: string[];
 	dueDate: string | null;
 	tags: string[];
+	isBacklog: 0 | 1;
 	createdAt: number;
 	updatedAt: number;
 }
@@ -119,7 +120,7 @@ db.version(1).stores({
 		"id, projectId, stageId, [projectId+stageId], [projectId+order]",
 	types: "id, &name, createdAt",
 	projectTypes: "id, projectId, typeId, [projectId+typeId]",
-	tasks: "id, projectId, typeId, createdAt, updatedAt",
+	tasks: "id, projectId, typeId, [projectId+isBacklog], createdAt, updatedAt",
 	cycles: "id, projectId, startDate, endDate, createdAt",
 	taskCycles: "id, taskId, cycleId, [cycleId+taskId]",
 });
