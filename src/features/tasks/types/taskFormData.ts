@@ -4,6 +4,7 @@ export const taskFormSchema = z.object({
 	name: z.string().min(1, "Task name is required"),
 	description: z
 		.string()
+		.min(10, "Description should be more than 10 characters")
 		.max(250, "Description should not exceed 250 characters")
 		.optional(),
 	stageId: z.string().min(1, "Stage is required"),
