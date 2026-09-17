@@ -4,8 +4,8 @@ import type { CycleRow } from "../db";
 interface CreateCycleInput {
 	projectId: string;
 	name: string;
-	startDate: Date;
-	endDate: Date;
+	startDate: string;
+	endDate: string;
 }
 
 type UpdateCycleInput = Partial<
