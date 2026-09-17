@@ -1,7 +1,7 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import TableTaskPage from "./tasks/TableTaskPage";
 import CardTaskPage from "./tasks/CardTaskPage";
-import { useTasksByStage } from "@/lib/services/tasks/hooks";
+// import { useTasksByStage } from "@/lib/services/tasks/hooks";
 import { useProjectStages } from "@/lib/services/stages/hooks";
 import TaskViewFooter from "@/features/tasks/components/TaskViewFooter";
 import { useState } from "react";
@@ -13,19 +13,21 @@ const TaskViewPage = () => {
 
     const [searchParams] = useSearchParams();
     const [openBacklog, setOpenBacklog] = useState(false);
+    const [curretnCycleId, setCurrentCycleId] = useState("");
 
     const view = searchParams.get("view") === "table" ? "table" : "cards";
     const { projectid } = useParams<{ projectid: string }>();
 
-    const { data: tasksByStage = {}, isLoading, isError, error } = useTasksByStage(projectid ?? "");
+    // const { data: tasksByStage = {}, isLoading, isError, error } = useTasksByStage(projectid ?? "");
+    const tasksByStage = [];
     const { data: stages = [] } = useProjectStages(projectid ?? "");
 
     const sortedStages = [...stages].sort((a, b) => a.order - b.order);
 
-    const backlogStage = sortedStages.find((stage) => stage.name === "Backlog");
-    const backlogTasks = tasksByStage[backlogStage?.stageId ?? ""] ?? [];
+    // const backlogStage = sortedStages.find((stage) => stage.name === "Backlog");
+    const backlogTasks = [];
 
-    if (isError) return <div>Error: {error.message}</div>;
+    // if (isError) return <div>Error: {error.message}</div>;
 
     return (
         <>
@@ -35,20 +37,20 @@ const TaskViewPage = () => {
                     <CardTaskPage
                         stages={sortedStages}
                         tasksByStage={tasksByStage}
-                        isLoading={isLoading}
+                        isLoading={false}
                         projectId={projectid ?? ""}
                         onDraggingChange={setIsDragging}
                     />
                 )}
                 <TaskViewFooter
-                    taskLength={backlogTasks.length}
+                    projectId={projectid ?? ""} taskLength={backlogTasks.length}
                     isCardHeld={isDragging}
                     onClick={() => {
                         if (isFeatureEnabled("SHOW_BACKLOG")) {
                             setOpenBacklog((prev) => !prev);
                         }
                     }}
-                />
+                    currentCycleId={curretnCycleId} setCurrentCycleId={setCurrentCycleId} />
             </div>
 
             {openBacklog && <BacklogDrawer handleClose={() => setOpenBacklog(false)} />}
