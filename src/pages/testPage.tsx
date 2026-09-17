@@ -10,7 +10,7 @@ export const TestPage = () => {
 
     const [radioButtonOption, setradioButtonOption] = useState("table")
 
-    const testClick = () => { console.log("Button clicked") }
+    const testClick = () => { }
     return (
         <div className="text-type-body">
             <Button variant="primary" onClick={testClick} className="bg-accent-deep text-accent-tint text-type-micro">
