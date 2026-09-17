@@ -171,7 +171,14 @@ const TaskCreateForm = ({
                             </select>
                         </FormInputBox>
                     </div>
-
+                    {/* <TagInput
+                        value={tags}
+                        onChange={(next) =>
+                            setValue("tags", next, {
+                                shouldDirty: true,
+                            })
+                        }
+                    /> */}
                     <Button
                         type="submit"
                         variant="primary"
