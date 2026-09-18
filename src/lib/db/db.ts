@@ -93,7 +93,7 @@ interface TaskCycleRow {
 	id: string;
 	taskId: string;
 	cycleId: string;
-	stageId: string; //This one will belong to the ID of project<>stage rows inorder to fetch the name of the stage
+	stageId: string;
 	createdAt: number;
 	updatedAt: number;
 }
@@ -111,6 +111,11 @@ const db = new Dexie("SprintsheetDB") as Dexie & {
 	taskCycles: EntityTable<TaskCycleRow, "id">;
 };
 
+/**
+ * Version 1
+ *
+ * Original Sprintsheet database schema.
+ */
 db.version(1).stores({
 	projects: "id, name, createdAt",
 	users: "id, email",
@@ -120,10 +125,43 @@ db.version(1).stores({
 		"id, projectId, stageId, [projectId+stageId], [projectId+order]",
 	types: "id, &name, createdAt",
 	projectTypes: "id, projectId, typeId, [projectId+typeId]",
-	tasks: "id, projectId, typeId,isBacklog, [projectId+isBacklog], createdAt, updatedAt",
-	cycles: "id, projectId, startDate, endDate, createdAt",
-	taskCycles: "id, taskId, cycleId, [cycleId+taskId]",
+	tasks: "id, projectId, stageId, typeId, createdAt, updatedAt",
 });
+
+/**
+ * Version 2
+ *
+ * Tasks are now independent of stages/cycles.
+ * Cycle-specific stage information is stored in taskCycles.
+ */
+db.version(2)
+	.stores({
+		projects: "id, name, createdAt",
+		users: "id, email",
+		projectMembers: "id, projectId, userId, [projectId+userId]",
+		stages: "id, &name, createdAt",
+		projectStages:
+			"id, projectId, stageId, [projectId+stageId], [projectId+order]",
+		types: "id, &name, createdAt",
+		projectTypes: "id, projectId, typeId, [projectId+typeId]",
+		tasks: "id, projectId, typeId, isBacklog, [projectId+isBacklog], createdAt, updatedAt",
+		cycles: "id, projectId, startDate, endDate, createdAt",
+		taskCycles: "id, taskId, cycleId, [cycleId+taskId]",
+	})
+	.upgrade((tx) => {
+		return tx
+			.table("tasks")
+			.toCollection()
+			.modify((task) => {
+				// Existing v1 tasks were not associated with cycles.
+				// Under the v2 model, those tasks belong to backlog.
+				task.isBacklog = 1;
+
+				// Stage is now cycle-specific and therefore belongs
+				// to TaskCycleRow instead of TaskRow.
+				delete task.stageId;
+			});
+	});
 
 export default db;
 
