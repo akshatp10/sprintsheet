@@ -28,7 +28,7 @@ const TaskViewFooter = ({ projectId,
 
     const [createCycle, setCreateCycle] = useState(false)
 
-    const { data: cycles } = useCycles(projectId);
+    // if (cycles && cycles.length > 0) setCurrentCycleId(cycles[0]?.id)
 
     const [createCycle, setCreateCycle] = useState(false);
 
