@@ -20,7 +20,7 @@ import ToggleButton from "@/components/inputs/ToggleButton";
 
 interface CreateCycleFormProps {
     projectId: string;
-    onClose: () => void;
+    onClose: (cycleId?: string) => void;
 }
 
 const CreateCycleForm = ({ projectId, onClose }: CreateCycleFormProps) => {
@@ -48,10 +48,12 @@ const CreateCycleForm = ({ projectId, onClose }: CreateCycleFormProps) => {
             endDate: data.endDate,
         };
 
-        mutate(newCycle);
-
-        reset();
-        onClose();
+        mutate(newCycle, {
+            onSuccess: (cycle) => {
+                reset();
+                onClose(cycle?.id);
+            },
+        });
     };
 
     return (
