@@ -11,7 +11,6 @@ import {
 import type {
 	CreateTaskInput,
 	CycleTaskWithUsers,
-	Task,
 	UpdateTaskVariables,
 } from "./types";
 import { getUsers } from "../users/api";
@@ -161,59 +160,11 @@ export const useUpdateTask = () => {
 			return response.data;
 		},
 
-		onMutate: async ({ id, projectId, updates }) => {
-			const queryKey = taskQueryKeys.project(projectId);
-
-			await queryClient.cancelQueries({
-				queryKey,
-			});
-
-			const previousTasks = queryClient.getQueryData<Task[]>(queryKey);
-
-			queryClient.setQueryData<Task[]>(queryKey, (tasks) => {
-				if (!tasks) {
-					return tasks;
-				}
-
-				return tasks.map((task) =>
-					task.id === id ? { ...task, ...updates } : task,
-				);
-			});
-
-			return {
-				previousTasks,
-				queryKey,
-			};
-		},
-
-		onError: (_, __, context) => {
-			if (!context) {
-				return;
-			}
-
-			queryClient.setQueryData(context.queryKey, context.previousTasks);
-		},
-
-		onSettled: (_, __, ___, context) => {
-			if (!context) {
-				return;
-			}
+		onSuccess: (_, variables) => {
+			const { projectId } = variables;
 
 			queryClient.invalidateQueries({
-				queryKey: context.queryKey,
-			});
-		},
-
-		onSuccess: (_, variables) => {
-			const { id } = variables;
-
-			requestAnimationFrame(() => {
-				const element = document.getElementById(`task-${id}`);
-
-				element?.scrollIntoView({
-					behavior: "smooth",
-					block: "nearest",
-				});
+				queryKey: taskQueryKeys.project(projectId),
 			});
 		},
 	});
