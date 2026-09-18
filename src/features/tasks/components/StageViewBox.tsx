@@ -25,7 +25,7 @@ const StageViewBox = ({
 
 }: StageViewBoxProps) => {
     const { ref, isDropTarget } = useDroppable({
-        id: stage.stageId,
+        id: stage.id,
     });
 
     const { container, chip } = stageConfig[stage?.name as StageName];
