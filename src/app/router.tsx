@@ -41,8 +41,8 @@ export const router = createBrowserRouter(
                     usersPanel={<SidebarBottom />}
                 />}
             >
-                <Route path="/project/:projectid" element={<TaskViewPage />} />
-                <Route path="/project/:projectid/board" element={<TestPage />} />
+                <Route path="/project/:projectid" element={<TestPage />} />
+                <Route path="/project/:projectid/board" element={<TaskViewPage />} />
                 <Route path="/project/:projectid/tasks" element={<TestPage />} />
                 <Route path="/project/:projectid/cycles" element={<TestPage />} />
             </Route>
