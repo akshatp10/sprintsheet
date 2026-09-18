@@ -5,6 +5,7 @@ import Chip from "../chips/Chip";
 import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useState } from "react";
+import { isFeatureEnabled } from "@/config/features";
 
 const ProjectsTopbar = () => {
     const [openTaskForm, setOpenTaskForm] = useState(false);
@@ -30,11 +31,13 @@ const ProjectsTopbar = () => {
         <>
             <div className="flex w-full items-center justify-between gap-3">
                 <div className="flex w-full items-center gap-3">
-                    <Tabs
-                        onChange={handleViewChange}
-                        activeTab={currentView}
-                        tabs={tabs}
-                    />
+                    {isFeatureEnabled("taskViewToggle") &&
+                        <Tabs
+                            onChange={handleViewChange}
+                            activeTab={currentView}
+                            tabs={tabs}
+                        />
+                    }
 
                     <Chip
                         text="Aug 17-21 · 5 days"
