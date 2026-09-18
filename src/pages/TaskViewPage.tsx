@@ -40,11 +40,15 @@ const TaskViewPage = () => {
                         onDraggingChange={setIsDragging}
                     />
                 )}
-                <TaskViewFooter taskLength={backlogTasks.length} isCardHeld={isDragging}
-                    onClick={() =>
-                        isFeatureEnabled("showBacklog") &&
-                        setOpenBacklog((prev) => !prev)
-                    } />
+                <TaskViewFooter
+                    taskLength={backlogTasks.length}
+                    isCardHeld={isDragging}
+                    onClick={() => {
+                        if (isFeatureEnabled("showBacklog")) {
+                            setOpenBacklog((prev) => !prev);
+                        }
+                    }}
+                />
             </div>
 
             {openBacklog && <BacklogDrawer handleClose={() => setOpenBacklog(false)} />}
