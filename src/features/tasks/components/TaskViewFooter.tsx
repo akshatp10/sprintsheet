@@ -84,8 +84,10 @@ const TaskViewFooter = ({
             {createCycle && (
                 <CreateCycleForm
                     projectId={projectId}
-                    onClose={() => {
+                    onClose={(cycleId?: string) => {
                         setCreateCycle(false);
+                        if (cycleId)
+                            setCurrentCycleId(cycleId)
                     }}
                 />
             )}
