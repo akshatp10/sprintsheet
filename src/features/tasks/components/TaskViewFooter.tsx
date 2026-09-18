@@ -2,7 +2,7 @@ import Button from "@/components/button/Button";
 import Text from "@/components/common/Text";
 import CycleFooterTab from "@/features/cycles/components/CycleFooterTab";
 import CreateCycleForm from "@/features/cycles/forms/CreateCycleForm";
-import { useCycles } from "@/lib/services/cycles/hooks";
+import type { Cycle } from "@/lib/services/cycles/types";
 import { Inbox, Menu, Plus } from "lucide-react";
 import { useState } from "react";
 
@@ -13,6 +13,7 @@ interface TaskViewFooterProps {
     projectId: string;
     setCurrentCycleId: (cycleId: string) => void;
     currentCycleId: string;
+    cycles: Cycle[]
 }
 
 const TaskViewFooter = ({
@@ -22,10 +23,11 @@ const TaskViewFooter = ({
     taskLength = 0,
     currentCycleId,
     setCurrentCycleId,
+    cycles
 }: TaskViewFooterProps) => {
     const [createCycle, setCreateCycle] = useState(false);
 
-    const { data: cycles } = useCycles(projectId);
+    // if (cycles && cycles.length > 0) setCurrentCycleId(cycles[0]?.id)
 
     return (
         <>
