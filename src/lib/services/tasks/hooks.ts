@@ -68,6 +68,26 @@ export const useBacklogTasks = (projectId: string) => {
 	});
 };
 
+export const useTasksByCycle = (cycleId: string) => {
+	return useQuery({
+		queryKey: taskQueryKeys.cycle(cycleId),
+
+		queryFn: async () => {
+			const response = await getAllCycleTasks(cycleId);
+
+			if (!response.success) {
+				throw new Error(response.message);
+			}
+
+			const tasks = response.data ?? [];
+
+			return tasks;
+		},
+
+		enabled: !!cycleId,
+	});
+};
+
 export const useTasksByStage = (cycleId: string) => {
 	return useQuery({
 		queryKey: taskQueryKeys.cycleByStage(cycleId),

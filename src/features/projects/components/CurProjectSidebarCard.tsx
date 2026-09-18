@@ -4,9 +4,10 @@ import { ChevronsUpDown } from 'lucide-react'
 
 interface CurProjectSidebarCardProps {
     project: Project
+    cycleName: string;
 }
 
-const CurProjectSidebarCard = ({ project }: CurProjectSidebarCardProps) => {
+const CurProjectSidebarCard = ({ project, cycleName }: CurProjectSidebarCardProps) => {
 
     const initials = project.name
         .split(' ')
@@ -16,7 +17,7 @@ const CurProjectSidebarCard = ({ project }: CurProjectSidebarCardProps) => {
         .toUpperCase()
 
     return (
-        <div className='bg-surface border border-lines-hairline rounded-lg flex items-center justify-between px-4 py-2 w-full h-fit'>
+        <div className='bg-surface border border-lines-hairline rounded-lg flex items-center justify-between px-4 py-2 w-full h-15'>
             <div className='flex items-center gap-2'>
                 <span className='bg-accent-tint px-2 rounded-md text-accent'>
                     {initials}
@@ -28,7 +29,7 @@ const CurProjectSidebarCard = ({ project }: CurProjectSidebarCardProps) => {
                     </Text>
 
                     <Text className='text-ink-3'>
-                        Cycle 12 · Aug 17-21
+                        {cycleName}
                     </Text>
                 </div>
             </div>
