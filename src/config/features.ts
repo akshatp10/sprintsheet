@@ -15,8 +15,8 @@ export const features = {
 	),
 	taskViewToggle: isEnabled(import.meta.env.VITE_FEATURE_TASK_VIEW_TOGGLE),
 
-	// Sidebar User
-	viewSetting: isEnabled(import.meta.env.VITE_FEATURE_VIEW_USER),
+	// Sidebar Setting
+	viewSetting: isEnabled(import.meta.env.VITE_FEATURE_VIEW_SETTINGS),
 } as const;
 
 export type Feature = keyof typeof features;
