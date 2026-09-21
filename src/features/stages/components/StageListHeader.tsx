@@ -10,6 +10,7 @@ interface StageListHeaderProps {
     taskCount: number;
     isCollapsed: boolean;
     onToggle: () => void;
+    onCreateTask: (stageId: string) => void;
 }
 
 const StageListHeader = ({
@@ -17,6 +18,7 @@ const StageListHeader = ({
     taskCount,
     isCollapsed,
     onToggle,
+    onCreateTask,
 }: StageListHeaderProps) => {
     const { container } = stageConfig[stage.name as StageName];
     const { dot } = stageConfig[stage.name as StageName];
@@ -75,9 +77,9 @@ const StageListHeader = ({
                 </Text>
 
                 {/* Add task */}
-                <span className="ml-auto text-ink-3">
+                <Button variant="tertiary" onClick={() => { onCreateTask(stage.id) }} className="ml-auto text-ink-3 border-none">
                     +
-                </span>
+                </Button>
             </div>
         </div>
     );

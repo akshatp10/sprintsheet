@@ -1,7 +1,9 @@
 import Text from "@/components/common/Text";
 import StageListBox from "@/features/stages/components/StageListBox";
+import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
 import type { Stage } from "@/lib/services/stages/type";
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
+import { useState } from "react";
 
 interface TableTaskPageProps {
     stages: Stage[];
@@ -59,50 +61,79 @@ const TableTaskPage = ({
     stages,
     tasksByStage,
     isLoading,
+    projectId,
+    cycleId,
 }: TableTaskPageProps) => {
+
+    const [newTask, setNewTask] = useState(false);
+    const [clickedStageId, setClickedStageId] = useState("");
 
     const visibleStages = stages.filter(
         (stage) => stage.name !== "Backlog",
     );
+
+    const handleCreateTask = (stageId: string) => {
+        setClickedStageId(stageId);
+        setNewTask(true);
+    };
+
+    const handleCloseTaskForm = () => {
+        setNewTask(false);
+        setClickedStageId("");
+    };
 
     if (isLoading) {
         return <div>Loading...</div>;
     }
 
     return (
-        <div className="w-full overflow-hidden rounded-md">
-            {/* Table Header */}
-            <div
-                className="grid h-10 border-b border-lines-control bg-surface-desk text-xs font-medium"
-                style={{ gridTemplateColumns }}
-            >
-                <div className="flex items-center border-r border-lines-control px-3" />
+        <>
+            <div className="w-full overflow-hidden rounded-md">
+                {/* Table Header */}
+                <div
+                    className="grid h-10 border-b border-lines-control bg-surface-desk text-xs font-medium"
+                    style={{ gridTemplateColumns }}
+                >
+                    <div className="flex items-center border-r border-lines-control px-3" />
 
-                {columns.map((column) => (
-                    <Text
-                        key={column.key}
-                        className="flex items-center border-r border-lines-control px-3 last:border-r-0 text-ink-3"
-                    >
-                        {column.label}
-                    </Text>
-                ))}
+                    {columns.map((column) => (
+                        <Text
+                            key={column.key}
+                            className="flex items-center border-r border-lines-control px-3 last:border-r-0 text-ink-3"
+                        >
+                            {column.label}
+                        </Text>
+                    ))}
+                </div>
+
+                {/* Stages */}
+                {visibleStages.map((stage) => {
+                    const tasks = tasksByStage[stage.id] ?? [];
+
+                    return (
+                        <StageListBox
+                            key={stage.id}
+                            stage={stage}
+                            tasks={tasks}
+                            isLoading={isLoading}
+                            isCurrentStage={false}
+                            onCreateTask={handleCreateTask}
+                        />
+                    );
+                })}
             </div>
 
-            {/* Stages */}
-            {visibleStages.map((stage) => {
-                const tasks = tasksByStage[stage.id] ?? [];
-
-                return (
-                    <StageListBox
-                        key={stage.id}
-                        stage={stage}
-                        tasks={tasks}
-                        isLoading={isLoading}
-                        isCurrentStage={false}
+            {
+                newTask && (
+                    <TaskCreateForm
+                        projectId={projectId}
+                        defaultStageId={clickedStageId}
+                        onClose={handleCloseTaskForm}
+                        cycleId={cycleId}
                     />
-                );
-            })}
-        </div>
+                )
+            }
+        </>
     );
 };
 
