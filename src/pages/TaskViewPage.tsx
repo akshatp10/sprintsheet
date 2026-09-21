@@ -30,6 +30,8 @@ const TaskViewPage = () => {
     const sortedStages = [...stages].sort((a, b) => a.order - b.order);
 
     useEffect(() => {
+        searchParams.set("view", "table")
+
         if (currentCycleId) return;
 
         if (cycles.length === 0) return;
