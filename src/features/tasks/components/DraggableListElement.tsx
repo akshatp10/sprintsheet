@@ -31,7 +31,7 @@ const DraggableTaskListElement = ({
         >
             <div
                 ref={ref}
-                className="absolute left-0 top-0 z-10 flex h-full w-10 items-center justify-center cursor-grab opacity-0 hover:opacity-100"
+                className="absolute left-0 top-0 z-10 flex h-full w-10 items-center justify-center cursor-grab opacity-0 group-hover:opacity-100"
             >
                 <GripVertical
                     strokeWidth={1.5}
