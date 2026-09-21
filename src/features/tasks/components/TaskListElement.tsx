@@ -2,6 +2,7 @@ import Avatar from "@/components/avatar/Avatar";
 import AvatarGroup from "@/components/avatar/AvatarGroups";
 import Chip from "@/components/chips/Chip";
 import Text from "@/components/common/Text";
+
 import { formatDate } from "@/lib/formatDate";
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useTypeById } from "@/lib/services/types/hooks";
@@ -13,12 +14,14 @@ interface TaskListElementProps {
     task: CycleTaskWithUsers;
     taskNumber: number;
     isDone: boolean;
+    isOverlay?: boolean;
 }
 
 const TaskListElement = ({
     task,
     taskNumber,
     isDone,
+    isOverlay = false,
 }: TaskListElementProps) => {
     const { data: curType } = useTypeById(task.typeId);
 
@@ -35,6 +38,7 @@ const TaskListElement = ({
 				text-sm
 				hover:bg-surface-2
 				${isDone ? "opacity-50" : ""}
+				${isOverlay ? "opacity-75" : ""}
 			`}
             style={{
                 gridTemplateColumns: TASK_LIST_GRID,
@@ -57,22 +61,11 @@ const TaskListElement = ({
                 />
             </div>
 
-            {/* Platform */}
-            {/* <div className="flex items-center border-r border-lines-hairline px-3">
-                <Chip
-                    variant="secondary"
-                    text="WEB"
-                    textType="text-type-caption"
-                    className="px-1 py-0"
-                />
-            </div> */}
-
             {/* Title */}
             <div className="flex min-w-0 items-center border-r border-lines-hairline px-3">
                 <Text
                     variant="body"
-                    className={`truncate ${isDone ? "line-through" : ""
-                        }`}
+                    className={`truncate ${isDone ? "line-through" : ""}`}
                 >
                     {task.name}
                 </Text>
@@ -133,10 +126,7 @@ const TaskListElement = ({
                         {formatDate(task.dueDate)}
                     </Text>
                 ) : (
-                    <Text
-                        variant="mono"
-                        className="text-ink-3"
-                    >
+                    <Text variant="mono" className="text-ink-3">
                         —
                     </Text>
                 )}
@@ -155,10 +145,7 @@ const TaskListElement = ({
                         />
                     ))
                 ) : (
-                    <Text
-                        variant="caption"
-                        className="text-ink-3"
-                    >
+                    <Text variant="caption" className="text-ink-3">
                         —
                     </Text>
                 )}
