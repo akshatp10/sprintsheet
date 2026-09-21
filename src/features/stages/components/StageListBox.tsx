@@ -5,8 +5,8 @@ import type { Stage } from "@/lib/services/stages/type";
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useDroppable } from "@dnd-kit/react";
 import { useState } from "react";
-import TaskListElement from "../../tasks/components/TaskListElement";
 import StageListHeader from "./StageListHeader";
+import DraggableTaskListElement from "@/features/tasks/components/DraggableListElement";
 
 interface StageListBoxProps {
     stage: Stage;
@@ -37,7 +37,7 @@ const StageListBox = ({
     };
 
     return (
-        <div className="relative w-full">
+        <div className="relative w-full" ref={ref}>
             {/* Drop target */}
             {isDropTarget && !isCurrentStage && (
                 <div
@@ -66,12 +66,12 @@ const StageListBox = ({
 
             {/* Tasks */}
             {!isCollapsed && (
-                <div ref={ref}>
+                <div>
                     {isLoading ? (
                         <div className="h-12 border-b border-lines-hairline" />
                     ) : (
                         tasks.map((task, index) => (
-                            <TaskListElement
+                            <DraggableTaskListElement
                                 key={task.id}
                                 task={task}
                                 taskNumber={
