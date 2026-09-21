@@ -2,21 +2,21 @@ const isEnabled = (value: string | undefined) => value === "true";
 
 export const features = {
 	// Project views
-	projectHome: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_DASHBOARD),
-	projectBoard: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_BOARD),
-	projectTasks: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_TASKS),
-	projectCycles: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_CYCLES),
-	homePeople: isEnabled(import.meta.env.VITE_FEATURE_HOME_PEOPLE),
-	showBacklog: isEnabled(import.meta.env.VITE_FEATURE_SHOW_BACKLOG),
+	PROJECT_HOME: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_DASHBOARD),
+	PROJECT_BOARD: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_BOARD),
+	PROJECT_TASKS: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_TASKS),
+	PROJECT_CYCLES: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_CYCLES),
+	HOME_PEOPLE: isEnabled(import.meta.env.VITE_FEATURE_HOME_PEOPLE),
+	SHOW_BACKLOG: isEnabled(import.meta.env.VITE_FEATURE_SHOW_BACKLOG),
 
 	// View toggles
-	projectViewToggle: isEnabled(
+	PROJECT_VIEW_TOGGLE: isEnabled(
 		import.meta.env.VITE_FEATURE_PROJECT_VIEW_TOGGLE,
 	),
-	taskViewToggle: isEnabled(import.meta.env.VITE_FEATURE_TASK_VIEW_TOGGLE),
+	TASK_VIEW_TOGGLE: isEnabled(import.meta.env.VITE_FEATURE_TASK_VIEW_TOGGLE),
 
 	// Sidebar Setting
-	viewSetting: isEnabled(import.meta.env.VITE_FEATURE_VIEW_SETTINGS),
+	VIEW_SETTING: isEnabled(import.meta.env.VITE_FEATURE_VIEW_SETTINGS),
 } as const;
 
 export type Feature = keyof typeof features;

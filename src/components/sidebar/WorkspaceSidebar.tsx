@@ -15,7 +15,7 @@ const WorkspaceSidebar = () => {
             label: "People",
             to: "/test",
             icon: <UsersRound size={20} strokeWidth={1.5} />,
-            feature: "homePeople" as const,
+            feature: "HOME_PEOPLE" as const,
         },
     ];
 

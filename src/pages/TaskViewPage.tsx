@@ -44,7 +44,7 @@ const TaskViewPage = () => {
                     taskLength={backlogTasks.length}
                     isCardHeld={isDragging}
                     onClick={() => {
-                        if (isFeatureEnabled("showBacklog")) {
+                        if (isFeatureEnabled("SHOW_BACKLOG")) {
                             setOpenBacklog((prev) => !prev);
                         }
                     }}

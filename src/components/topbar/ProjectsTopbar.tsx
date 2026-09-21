@@ -31,7 +31,7 @@ const ProjectsTopbar = () => {
         <>
             <div className="flex w-full items-center justify-between gap-3">
                 <div className="flex w-full items-center gap-3">
-                    {isFeatureEnabled("taskViewToggle") &&
+                    {isFeatureEnabled("TASK_VIEW_TOGGLE") &&
                         <Tabs
                             onChange={handleViewChange}
                             activeTab={currentView}

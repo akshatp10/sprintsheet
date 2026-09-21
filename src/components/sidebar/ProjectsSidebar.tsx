@@ -29,25 +29,25 @@ const ProjectsSidebar = () => {
             label: "Dashboard",
             to: `/project/${projectid}`,
             icon: <ChartPie size={20} strokeWidth={1.5} />,
-            feature: "projectHome" as const,
+            feature: "PROJECT_HOME" as const,
         },
         {
             label: "Board",
             to: `/project/${projectid}/board`,
             icon: <Table2 size={20} strokeWidth={1.5} />,
-            feature: "projectBoard" as const,
+            feature: "PROJECT_BOARD" as const,
         },
         {
             label: "All tasks",
             to: `/project/${projectid}/tasks`,
             icon: <ListChecks size={20} strokeWidth={1.5} />,
-            feature: "projectTasks" as const,
+            feature: "PROJECT_TASKS" as const,
         },
         {
             label: "Cycles",
             to: `/project/${projectid}/cycles`,
             icon: <RefreshCcw size={20} strokeWidth={1.5} />,
-            feature: "projectCycles" as const,
+            feature: "PROJECT_CYCLES" as const,
         },
     ];
 

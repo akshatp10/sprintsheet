@@ -76,7 +76,7 @@ const AllProjectsPage = () => {
                         {activeCount} active · {archivedCount} archived
                     </Text>
                 </div>
-                {isFeatureEnabled("projectViewToggle") &&
+                {isFeatureEnabled("PROJECT_VIEW_TOGGLE") &&
                     <Tabs
                         onChange={setProjectsView}
                         activeTab={projectsView}

@@ -6,7 +6,7 @@ import UserPanel from "./UserPanel"
 const SidebarBottom = () => {
     return (
         <div className="flex flex-col justify-center gap-3">
-            {isFeatureEnabled("viewSetting") &&
+            {isFeatureEnabled("VIEW_SETTING") &&
                 <SettingsButton isAdmin />
             }
             <hr className="text-lines-hairline" />
