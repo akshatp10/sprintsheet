@@ -28,7 +28,7 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
             className={`rounded-md border-2 border-lines-hairline w-full min-h-fit bg-surface px-4 py-2 flex flex-col gap-2 justify-center ${isDone ? "opacity-50" : ""} ${isOverlay ? "opacity-75" : ""}`}
         >
             <div className="flex w-full items-start justify-between gap-2">
-                <Text variant="mono" className="shrink-0">
+                <Text variant="mono" className="shrink-0 text-ink-3">
                     {task.key}
                 </Text>
 
@@ -55,7 +55,7 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
             </div>
 
             <Text
-                variant="h2"
+                variant="h1"
                 className={isDone ? "line-through" : ""}
             >
                 {task.name}
@@ -65,10 +65,10 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
                 variant="secondary"
                 text={curType?.name ?? ""}
                 textType="text-type-caption"
-                className="px-2 py-0.5"
+                className="px-1 py-0"
             />
 
-            <div className="flex items-center justify-start gap-4">
+            <div className="flex items-center justify-start gap-2">
                 {task.assigneeIds.length > 0 ? (
                     <AvatarGroup>
                         {visibleUsers.map((assignee) => (
@@ -83,15 +83,15 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
                     <div className="flex items-center gap-1">
                         <Avatar />
                         <Text
-                            variant="label"
-                            className="text-ink-2"
+                            variant="caption"
+                            className="text-ink-2 leading-none"
                         >
                             Unassigned
                         </Text>
                     </div>
                 )}
 
-                {task.dueDate && <Text variant="mono">{formatDate(task.dueDate)}</Text>}
+                {task.dueDate && <Text variant="mono" className="leading-none">{formatDate(task.dueDate)}</Text>}
             </div>
         </div>
     );
