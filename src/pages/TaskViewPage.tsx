@@ -9,6 +9,7 @@ import BacklogDrawer from "@/features/tasks/components/BacklogDrawer";
 import { isFeatureEnabled } from "@/config/features";
 import { useBacklogTasks, useTasksByStage } from "@/lib/services/tasks/hooks";
 import { useCycles } from "@/lib/services/cycles/hooks";
+import { useUpdateTaskCycle } from "@/lib/services/taskCycles/hooks";
 
 const TaskViewPage = () => {
     const [isDragging, setIsDragging] = useState(false)
@@ -80,6 +81,7 @@ const TaskViewPage = () => {
                         isLoading={isLoading}
                         projectId={projectid ?? ""}
                         onDraggingChange={setIsDragging}
+                        onUpdateTaskStage={handleUpdateTaskStage}
                     />
                 )}
                 {view === "cards" && (
@@ -90,6 +92,7 @@ const TaskViewPage = () => {
                         isLoading={isLoading}
                         projectId={projectid ?? ""}
                         onDraggingChange={setIsDragging}
+                        onUpdateTaskStage={handleUpdateTaskStage}
                     />
                 )}
                 <TaskViewFooter
