@@ -6,6 +6,7 @@ import Text from "@/components/common/Text";
 import { formatDate } from "@/lib/formatDate";
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useTypeById } from "@/lib/services/types/hooks";
+import { GripVertical } from "lucide-react";
 
 export const TASK_LIST_GRID =
     "40px 100px minmax(250px, 1fr) 160px 120px 100px 140px";
@@ -46,9 +47,15 @@ const TaskListElement = ({
         >
             {/* Number */}
             <div className="flex items-center border-r border-lines-hairline px-3 bg-surface-desk">
-                <Text variant="mono" className="text-ink-3">
-                    {taskNumber}
-                </Text>
+                {isOverlay ? <GripVertical
+                    strokeWidth={1.5}
+                    size={15}
+                    className="text-ink-3"
+                /> :
+                    <Text variant="mono" className="text-ink-3 group-hover:opacity-0 mx-auto">
+                        {taskNumber}
+                    </Text>
+                }
             </div>
 
             {/* Type */}
