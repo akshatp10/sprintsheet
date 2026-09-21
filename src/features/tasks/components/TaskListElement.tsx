@@ -36,7 +36,7 @@ const TaskListElement = ({
 				border-b
 				border-lines-hairline
 				text-sm
-				hover:bg-surface-2
+				bg-surface-page
 				${isDone ? "opacity-50" : ""}
 				${isOverlay ? "opacity-75" : ""}
 			`}
