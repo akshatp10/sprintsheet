@@ -64,7 +64,16 @@ const TaskViewPage = () => {
     return (
         <>
             <div className="grid h-full min-h-0 min-w-fit grid-rows-[1fr_5dvh]">
-                {view === "table" && <TableTaskPage />}
+                {view === "table" && (
+                    <TableTaskPage
+                        stages={sortedStages}
+                        tasksByStage={tasksByStage}
+                        cycleId={currentCycleId}
+                        isLoading={isLoading}
+                        projectId={projectid ?? ""}
+                        onDraggingChange={setIsDragging}
+                    />
+                )}
                 {view === "cards" && (
                     <CardTaskPage
                         stages={sortedStages}
