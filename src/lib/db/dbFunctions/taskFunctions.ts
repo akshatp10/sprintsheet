@@ -161,22 +161,24 @@ export const getTasksByCycle = async (
 			.map((stage) => [stage.id, stage]),
 	);
 
-	return taskCycles.flatMap((taskCycle) => {
-		const task = tasksById.get(taskCycle.taskId);
-		const stage = stagesById.get(taskCycle.stageId);
+	return taskCycles
+		.flatMap((taskCycle) => {
+			const task = tasksById.get(taskCycle.taskId);
+			const stage = stagesById.get(taskCycle.stageId);
 
-		if (!task || !stage) {
-			return [];
-		}
+			if (!task || !stage) {
+				return [];
+			}
 
-		return [
-			{
-				...task,
-				taskCycleId: taskCycle.id,
-				stage,
-			},
-		];
-	});
+			return [
+				{
+					...task,
+					taskCycleId: taskCycle.id,
+					stage,
+				},
+			];
+		})
+		.sort((a, b) => a.key.localeCompare(b.key));
 };
 
 export const updateTask = async (
