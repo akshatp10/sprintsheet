@@ -13,6 +13,7 @@ interface StageListBoxProps {
     tasks: CycleTaskWithUsers[];
     isLoading: boolean;
     isCurrentStage: boolean;
+    onCreateTask: (stageId: string) => void;
 }
 
 const StageListBox = ({
@@ -20,6 +21,7 @@ const StageListBox = ({
     tasks,
     isLoading,
     isCurrentStage,
+    onCreateTask,
 }: StageListBoxProps) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -58,6 +60,8 @@ const StageListBox = ({
                 taskCount={tasks.length}
                 isCollapsed={isCollapsed}
                 onToggle={handleToggle}
+                onCreateTask={onCreateTask}
+
             />
 
             {/* Tasks */}
