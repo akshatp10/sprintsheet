@@ -2,7 +2,6 @@ import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
 import StageViewBox from "@/features/tasks/components/StageViewBox";
 import TaskCard from "@/features/tasks/components/TaskCard";
 import type { Stage } from "@/lib/services/stages/type";
-import { useUpdateTaskCycle } from "@/lib/services/taskCycles/hooks";
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import { useState } from "react";
@@ -14,6 +13,7 @@ interface CardTaskPageProps {
     projectId: string;
     cycleId: string;
     onDraggingChange: (isDragging: boolean) => void;
+    onUpdateTaskStage: (taskId: string, stageId: string) => void;
 }
 
 const CardTaskPage = ({
@@ -22,7 +22,8 @@ const CardTaskPage = ({
     projectId,
     tasksByStage,
     onDraggingChange,
-    cycleId
+    cycleId,
+    onUpdateTaskStage
 }: CardTaskPageProps) => {
     const [newTask, setNewTask] = useState(false);
     const [clickedStageId, setClickedStageId] = useState("");
@@ -41,21 +42,6 @@ const CardTaskPage = ({
     const handleCloseTaskForm = () => {
         setNewTask(false);
         setClickedStageId("");
-    };
-
-    const { mutate: updateTaskCycleData } = useUpdateTaskCycle();
-
-    const handleUpdateTaskStage = (taskId: string, stageId: string) => {
-        const task = Object.values(tasksByStage).flat().find((task) => task.id === taskId);
-
-        if (!task || task.stage.stageId === stageId) return;
-
-        updateTaskCycleData({
-            id: task.taskCycleId,
-            cycleId: cycleId,
-            stageId: stageId,
-            taskId: taskId
-        });
     };
 
     return (
@@ -92,7 +78,7 @@ const CardTaskPage = ({
 
                         if (!taskId || !destinationStageId) return;
 
-                        handleUpdateTaskStage(
+                        onUpdateTaskStage(
                             String(taskId),
                             String(destinationStageId),
                         );

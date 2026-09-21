@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import BacklogDrawer from "@/features/tasks/components/BacklogDrawer";
 import { useBacklogTasks, useTasksByStage } from "@/lib/services/tasks/hooks";
 import { useCycles } from "@/lib/services/cycles/hooks";
+import { useUpdateTaskCycle } from "@/lib/services/taskCycles/hooks";
 
 const TaskViewPage = () => {
     const [isDragging, setIsDragging] = useState(false)
@@ -60,6 +61,23 @@ const TaskViewPage = () => {
         });
     };
 
+    const { mutate: updateTaskCycle } = useUpdateTaskCycle();
+
+    const handleUpdateTaskStage = (taskId: string, stageId: string) => {
+        const task = Object.values(tasksByStage)
+            .flat()
+            .find((task) => task.id === taskId);
+
+        if (!task || task.stage.stageId === stageId) return;
+
+        updateTaskCycle({
+            id: task.taskCycleId,
+            cycleId: currentCycleId,
+            stageId,
+            taskId,
+        });
+    };
+
     if (isError) return <div>Error: {error.message}</div>;
     return (
         <>
@@ -72,6 +90,7 @@ const TaskViewPage = () => {
                         isLoading={isLoading}
                         projectId={projectid ?? ""}
                         onDraggingChange={setIsDragging}
+                        onUpdateTaskStage={handleUpdateTaskStage}
                     />
                 )}
                 {view === "cards" && (
@@ -82,6 +101,7 @@ const TaskViewPage = () => {
                         isLoading={isLoading}
                         projectId={projectid ?? ""}
                         onDraggingChange={setIsDragging}
+                        onUpdateTaskStage={handleUpdateTaskStage}
                     />
                 )}
                 <TaskViewFooter projectId={projectid ?? ""} taskLength={backlogTasks.length} isCardHeld={isDragging} onClick={() => setOpenBacklog((prev) => !prev)} cycles={cycles} currentCycleId={currentCycleId} setCurrentCycleId={handleCycleChange} />
