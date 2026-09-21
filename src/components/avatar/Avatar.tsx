@@ -1,6 +1,7 @@
 import React from 'react';
 import { UserRound } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import Text from '../common/Text';
 
 type AvatarVariant = 'purple' | 'blue' | 'amber' | 'rose' | 'chip' | 'default';
 
@@ -54,20 +55,23 @@ const Avatar = ({
     return (
         <div
             className={cn(
-                'rounded-full flex shrink-0 items-center justify-center tabular-nums',
+                'rounded-full flex shrink-0 items-center justify-center leading-none',
                 variantClasses[resolvedVariant],
                 isSideBar
-                    ? 'w-8 h-8 text-type-body'
-                    : 'w-6 h-6 text-type-caption',
+                    ? 'w-8 h-8'
+                    : 'w-5.5 h-5.5',
+                isChip ? "tabular-nums" : "",
             )}
             {...props}
         >
             {isChip ? (
                 `+${extraUsers}`
             ) : userName ? (
-                userName.slice(0, 2).toUpperCase()
+                <Text variant={isSideBar ? "body" : "caption"} className='leading-1'>
+                    {userName.slice(0, 2).toUpperCase()}
+                </Text>
             ) : (
-                <UserRound size={15} strokeWidth={1.5} className='text-ink-2' />
+                <UserRound size={12} strokeWidth={1.5} className='text-ink-2' />
             )}
         </div>
     );
