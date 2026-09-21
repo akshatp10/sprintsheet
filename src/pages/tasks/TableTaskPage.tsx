@@ -5,6 +5,7 @@ import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
 import TaskListElement from "@/features/tasks/components/TaskListElement";
 import type { Stage } from "@/lib/services/stages/type";
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
+import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import { useState } from "react";
 
 interface TableTaskPageProps {
@@ -71,6 +72,8 @@ const TableTaskPage = ({
 }: TableTaskPageProps) => {
     const [newTask, setNewTask] = useState(false);
     const [clickedStageId, setClickedStageId] = useState("");
+    const [dragging, setDragging] = useState(false)
+    const [draggedTask, setDraggedTask] = useState<CycleTaskWithUsers | null>()
 
     const visibleStages = stages.filter(
         (stage) => stage.name !== "Backlog",
