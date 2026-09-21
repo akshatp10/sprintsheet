@@ -68,13 +68,31 @@ interface TaskRow {
 	id: string;
 	projectId: string;
 	key: string;
-	stageId: string;
 	typeId: string;
 	name: string;
 	description: string;
 	assigneeIds: string[];
 	dueDate: string | null;
 	tags: string[];
+	createdAt: number;
+	updatedAt: number;
+}
+
+interface CycleRow {
+	id: string;
+	projectId: string;
+	name: string;
+	startDate: Date;
+	endDate: Date;
+	createdAt: number;
+	updatedAt: number;
+}
+
+interface TaskCycleRow {
+	id: string;
+	taskId: string;
+	cycleId: string;
+	stageId: string; //This one will belong to the ID of project<>stage rows inorder to fetch the name of the stage
 	createdAt: number;
 	updatedAt: number;
 }
@@ -88,6 +106,8 @@ const db = new Dexie("SprintsheetDB") as Dexie & {
 	types: EntityTable<TypeRow, "id">;
 	projectTypes: EntityTable<ProjectTypeRow, "id">;
 	tasks: EntityTable<TaskRow, "id">;
+	cycles: EntityTable<CycleRow, "id">;
+	taskCycles: EntityTable<TaskCycleRow, "id">;
 };
 
 db.version(1).stores({
@@ -99,7 +119,9 @@ db.version(1).stores({
 		"id, projectId, stageId, [projectId+stageId], [projectId+order]",
 	types: "id, &name, createdAt",
 	projectTypes: "id, projectId, typeId, [projectId+typeId]",
-	tasks: "id, projectId, stageId, typeId, createdAt, updatedAt",
+	tasks: "id, projectId, typeId, createdAt, updatedAt",
+	cycles: "id, projectId, startDate, endDate, createdAt",
+	taskCycles: "id, taskId, cycleId, [cycleId+taskId]",
 });
 
 export default db;
@@ -113,4 +135,6 @@ export type {
 	TypeRow,
 	ProjectTypeRow,
 	TaskRow,
+	CycleRow,
+	TaskCycleRow,
 };
