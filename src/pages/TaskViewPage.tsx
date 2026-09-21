@@ -19,7 +19,7 @@ const TaskViewPage = () => {
 
     const currentCycleId = searchParams.get("cycle") ?? "";
 
-    const view = searchParams.get("view") === "table" ? "table" : "cards";
+    const view = searchParams.get("view") === "cards" ? "cards" : "table";
     const { projectid } = useParams<{ projectid: string }>();
 
     const { data: tasksByStage = {}, isLoading, isError, error } = useTasksByStage(currentCycleId ?? "");
@@ -30,8 +30,6 @@ const TaskViewPage = () => {
     const sortedStages = [...stages].sort((a, b) => a.order - b.order);
 
     useEffect(() => {
-        searchParams.set("view", "table")
-
         if (currentCycleId) return;
 
         if (cycles.length === 0) return;
