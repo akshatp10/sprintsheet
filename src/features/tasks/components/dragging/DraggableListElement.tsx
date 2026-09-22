@@ -1,8 +1,7 @@
-import TaskListElement from "./TaskListElement";
-
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useDraggable } from "@dnd-kit/react";
 import { GripVertical } from "lucide-react";
+import TaskListElement from "../TaskListElement";
 
 interface DraggableTaskListElementProps {
     task: CycleTaskWithUsers;

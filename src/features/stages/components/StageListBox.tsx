@@ -6,7 +6,7 @@ import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useDroppable } from "@dnd-kit/react";
 import { useState } from "react";
 import StageListHeader from "./StageListHeader";
-import DraggableTaskListElement from "@/features/tasks/components/DraggableListElement";
+import DraggableTaskListElement from "@/features/tasks/components/dragging/DraggableListElement";
 
 interface StageListBoxProps {
     stage: Stage;
