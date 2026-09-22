@@ -6,6 +6,7 @@ import { useProjectStages } from "@/lib/services/stages/hooks";
 import TaskViewFooter from "@/features/tasks/components/TaskViewFooter";
 import { useState } from "react";
 import BacklogDrawer from "@/features/tasks/components/BacklogDrawer";
+import { isFeatureEnabled } from "@/config/features";
 
 const TaskViewPage = () => {
     const [isDragging, setIsDragging] = useState(false)
@@ -39,7 +40,15 @@ const TaskViewPage = () => {
                         onDraggingChange={setIsDragging}
                     />
                 )}
-                <TaskViewFooter taskLength={backlogTasks.length} isCardHeld={isDragging} onClick={() => setOpenBacklog((prev) => !prev)} />
+                <TaskViewFooter
+                    taskLength={backlogTasks.length}
+                    isCardHeld={isDragging}
+                    onClick={() => {
+                        if (isFeatureEnabled("SHOW_BACKLOG")) {
+                            setOpenBacklog((prev) => !prev);
+                        }
+                    }}
+                />
             </div>
 
             {openBacklog && <BacklogDrawer handleClose={() => setOpenBacklog(false)} />}

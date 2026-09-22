@@ -7,13 +7,14 @@ interface ToggleButtonBox {
     checked: boolean;
     onChange: (value: boolean) => void;
     classname?: string
+    isDisabled?: boolean
 }
 
-const ToggleButtonBox = ({ children, checked, onChange, classname }: ToggleButtonBox) => {
+const ToggleButtonBox = ({ children, checked, onChange, classname, isDisabled = false }: ToggleButtonBox) => {
     return (
         <div className={cn("w-full bg-accent-wash-selected border border-dashed border-accent rounded-md p-4", classname)}>
             <div className="flex items-start gap-3">
-                <ToggleButton checked={checked} onChange={onChange} />
+                <ToggleButton checked={checked} onChange={onChange} disabled={isDisabled} />
                 <div className="flex flex-col gap-1 w-full">
                     {children}
                 </div>

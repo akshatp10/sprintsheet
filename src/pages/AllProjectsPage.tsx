@@ -1,5 +1,6 @@
 import Text from "@/components/common/Text";
 import Tabs, { type TabsOption } from "@/components/inputs/Tabs";
+import { isFeatureEnabled } from "@/config/features";
 import EmptyTaskCard from "@/features/projects/components/EmptyTaskCard";
 import ProjectCardGrid from "@/features/projects/components/ProjectCardGrid";
 import ProjectCardGridSkeleton from "@/features/projects/components/skeletons/ProjectCardGridSkeleton";
@@ -75,12 +76,13 @@ const AllProjectsPage = () => {
                         {activeCount} active · {archivedCount} archived
                     </Text>
                 </div>
-
-                <Tabs
-                    onChange={setProjectsView}
-                    activeTab={projectsView}
-                    tabs={tabs}
-                />
+                {isFeatureEnabled("PROJECT_VIEW_TOGGLE") &&
+                    <Tabs
+                        onChange={setProjectsView}
+                        activeTab={projectsView}
+                        tabs={tabs}
+                    />
+                }
             </div>
 
             {projectsView === "grid" ?

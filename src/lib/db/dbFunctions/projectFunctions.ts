@@ -8,7 +8,7 @@ import {
 } from "./typeFunctions";
 import { findOrCreateUser } from "./userFunctions";
 
-const CURRENT_USER_EMAIL = "akshat@company.com";
+const CURRENT_USER_EMAIL = import.meta.env.VITE_CURRENT_USER_EMAIL;
 
 interface CreateProjectRow {
 	name: string;

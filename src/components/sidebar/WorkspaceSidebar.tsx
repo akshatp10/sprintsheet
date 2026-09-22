@@ -1,5 +1,6 @@
 import { Grid2X2, UsersRound } from "lucide-react";
 import SidebarNavigations from "./SidebarNavigations";
+import { isFeatureEnabled } from "@/config/features";
 
 const WorkspaceSidebar = () => {
 
@@ -8,11 +9,13 @@ const WorkspaceSidebar = () => {
             label: "All projects",
             to: "/",
             icon: <Grid2X2 size={20} strokeWidth={1.5} />,
+            feature: null,
         },
         {
             label: "People",
             to: "/test",
             icon: <UsersRound size={20} strokeWidth={1.5} />,
+            feature: "HOME_PEOPLE" as const,
         },
     ];
 
@@ -29,12 +32,18 @@ const WorkspaceSidebar = () => {
 
             {/* Options */}
             <div className="mt-6 flex flex-col gap-1">
-                {options.map((option) => (
-                    <SidebarNavigations
-                        key={option.to}
-                        {...option}
-                    />
-                ))}
+                {options
+                    .filter(
+                        (option) =>
+                            option.feature === null ||
+                            isFeatureEnabled(option.feature),
+                    )
+                    .map((option) => (
+                        <SidebarNavigations
+                            key={option.to}
+                            {...option}
+                        />
+                    ))}
             </div>
         </div>
     );

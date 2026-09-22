@@ -59,13 +59,13 @@ const BasicsStep = ({
     };
 
     return (
-        <section className="flex flex-col gap-2">
+        <section className="flex flex-col gap-2.5">
             {/* Project name & key */}
             <div className="flex gap-4">
                 <FormInputBox
                     label="Project name"
                     error={errors.name?.message}
-                    className="flex-1"
+                    className="flex-1 h-full"
                 >
                     <Input
                         value={formValues.name}
@@ -77,7 +77,7 @@ const BasicsStep = ({
                 <FormInputBox
                     label="Key"
                     error={errors.key?.message}
-                    className="shrink-0"
+                    className="shrink-0 h-full"
                 >
                     <Input
                         value={formValues.key}
@@ -101,6 +101,7 @@ const BasicsStep = ({
                         })
                     }
                     rows={2}
+                    className="resize-none"
                 />
             </FormInputBox>
 
@@ -182,6 +183,8 @@ const BasicsStep = ({
                         shouldDirty: true,
                     })
                 }
+                classname="opacity-30"
+                isDisabled
             >
                 <Text variant="body-sm" className="text-ink-2 font-medium">
                     Open the next cycle automatically

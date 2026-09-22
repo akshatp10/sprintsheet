@@ -9,6 +9,7 @@ import ToggleButtonBox from "@/components/common/ToggleButtonBox";
 import UserPanel from "@/components/sidebar/UserPanel";
 import Chip from "@/components/chips/Chip";
 import FormInputBox from "@/components/inputs/FormInputBox";
+import { currentUserEmail } from "@/config/features";
 
 interface PeopleStepProps {
     register: UseFormRegister<ProjectFormData>;
@@ -17,10 +18,6 @@ interface PeopleStepProps {
     setValue: UseFormSetValue<ProjectFormData>;
     errors: FieldErrors<ProjectFormData>;
 }
-
-const currentUser = {
-    name: "Akshat",
-};
 
 const PeopleStep = ({ register, control, watch, setValue }: PeopleStepProps) => {
     const { fields, append, remove } = useFieldArray({ control, name: "people" });
@@ -74,7 +71,7 @@ const PeopleStep = ({ register, control, watch, setValue }: PeopleStepProps) => 
                 {/* Owner — fixed, not part of the field array */}
                 <div className="flex items-center justify-between rounded-md border border-lines-hairline px-3 py-2">
                     <div className="flex items-center gap-2">
-                        <UserPanel userName={currentUser.name} textVariant="body-sm" textColor="text-ink" />
+                        <UserPanel userName={currentUserEmail} textVariant="body-sm" textColor="text-ink" />
                         <Text variant="body-sm" className="text-ink-3">· you</Text>
                     </div>
                     <div className="flex items-center gap-2">

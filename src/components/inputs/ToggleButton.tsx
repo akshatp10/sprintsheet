@@ -4,9 +4,10 @@ interface ToggleButtonProps {
     checked: boolean;
     onChange: (value: boolean) => void;
     classname?: string
+    disabled?: boolean
 }
 
-const ToggleButton = ({ checked, onChange, classname }: ToggleButtonProps) => (
+const ToggleButton = ({ checked, onChange, classname, disabled = false }: ToggleButtonProps) => (
     <button
         type="button"
         role="switch"
@@ -15,8 +16,10 @@ const ToggleButton = ({ checked, onChange, classname }: ToggleButtonProps) => (
         className={cn(
             "relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors duration-200 cursor-pointer",
             checked ? "bg-accent" : "bg-lines-control",
+            disabled && "cursor-not-allowed",
             classname
         )}
+        disabled={disabled}
     >
         <span
             className={cn(

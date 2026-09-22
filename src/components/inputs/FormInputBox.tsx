@@ -1,8 +1,10 @@
 import { cn } from "@/lib/cn";
+
 import Text from "../common/Text";
 
-interface FormInputBoxProps extends React.HTMLAttributes<HTMLDivElement> {
-    label: string;
+interface FormInputBoxProps
+    extends React.HTMLAttributes<HTMLDivElement> {
+    label?: string;
     error?: string;
     children: React.ReactNode;
     className?: string;
@@ -16,20 +18,25 @@ const FormInputBox = ({
     ...props
 }: FormInputBoxProps) => {
     return (
-        <div className={cn("flex flex-col gap-0.5 relative pb-3.5 -mb-3", className)} {...props}>
-            <Text
-                variant="body-sm"
-                className="text-ink-2"
-            >
-                {label}
-            </Text>
+        <div
+            className={cn(
+                "relative flex flex-col gap-0.5",
+                className,
+            )}
+            {...props}
+        >
+            {label && (
+                <Text variant="body-sm" className="text-ink-2">
+                    {label}
+                </Text>
+            )}
 
             {children}
 
             {error && (
                 <Text
                     variant="caption"
-                    className="absolute bottom-0 text-stage-blocked-text"
+                    className="absolute left-0 top-full whitespace-nowrap text-stage-blocked-text"
                 >
                     {error}
                 </Text>
