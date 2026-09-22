@@ -130,3 +130,4 @@ These are separate domain operations.
 - [Task](./TASK.md)
 - [Stages](./STAGES.md)
 - [Card View](./CARD_VIEW.md)
+- [Table View](./TABLE_VIEW.md)
