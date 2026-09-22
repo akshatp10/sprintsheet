@@ -34,6 +34,10 @@ const CardTaskPage = ({
     );
 
     const handleCreateTask = (stageId: string) => {
+        console.log(
+            "All tasks:",
+            Object.values(tasksByStage).flat()
+        );
         setClickedStageId(stageId);
         setNewTask(true);
     };

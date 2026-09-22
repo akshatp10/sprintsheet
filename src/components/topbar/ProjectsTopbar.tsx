@@ -6,6 +6,9 @@ import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { isFeatureEnabled } from "@/config/features";
+import { useTasksByCycle } from "@/lib/services/tasks/hooks";
+import { useCycle } from "@/lib/services/cycles/hooks";
+import { formatCycleDate } from "@/lib/formatCycleDate";
 
 const ProjectsTopbar = () => {
     const [openTaskForm, setOpenTaskForm] = useState(false);
@@ -14,6 +17,8 @@ const ProjectsTopbar = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const currentCycleId = searchParams.get("cycle") ?? "";
+    const { data: cycle } = useCycle(currentCycleId ?? "");
+    const { data: allTasks } = useTasksByCycle(cycle?.id ?? "");
 
     const currentView = searchParams.get("view") === "cards" ? "cards" : "table";
 
@@ -40,18 +45,21 @@ const ProjectsTopbar = () => {
                             tabs={tabs}
                         />
                     }
+                    {!!currentCycleId &&
+                        <>
+                            <Chip
+                                text={`${formatCycleDate(cycle?.startDate ?? "")} - ${formatCycleDate(cycle?.endDate ?? "")}`}
+                                variant="primary"
+                                bgColor="bg-accent-tint"
+                                borderColor=""
+                                textColor="text-accent-deep"
+                            />
 
-                    <Chip
-                        text="Aug 17-21 · 5 days"
-                        variant="primary"
-                        bgColor="bg-accent-tint"
-                        borderColor=""
-                        textColor="text-accent-deep"
-                    />
-
-                    <Text className="text-ink-3">
-                        9 tasks · 3 done
-                    </Text>
+                            <Text className="text-ink-3">
+                                {allTasks?.length} tasks
+                            </Text>
+                        </>
+                    }
                 </div>
 
                 <div className="min-w-0 shrink-0">
