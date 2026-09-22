@@ -6,29 +6,19 @@ import CreateCycleForm from "@/features/cycles/forms/CreateCycleForm";
 import Text from "../common/Text";
 import { Copy } from "lucide-react";
 import { useCycles } from "@/lib/services/cycles/hooks";
+import { useCycleStatus } from "@/hooks/useCycleStatus";
 
 const CyclesTopbar = () => {
     const [openCycleForm, setOpenCycleForm] = useState(false);
 
     const { projectid } = useParams<{ projectid: string }>();
-
     const { data: allCycles = [] } = useCycles(projectid ?? "");
 
-    const today = new Date().toISOString().split("T")[0];
-
-    const activeCycles = allCycles.filter(
-        (cycle) =>
-            cycle.startDate <= today &&
-            today <= cycle.endDate
-    );
-
-    const closedCycles = allCycles.filter(
-        (cycle) => cycle.endDate < today
-    );
-
-    const plannedCycles = allCycles.filter(
-        (cycle) => cycle.startDate > today
-    );
+    const {
+        active: activeCycles,
+        closed: closedCycles,
+        planned: plannedCycles,
+    } = useCycleStatus(allCycles);
 
     const handleCycleFormClose = () => {
         setOpenCycleForm(false);
