@@ -8,9 +8,11 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import NoActiveCycle from "@/features/cycles/components/NoActiveCycle";
+import Button from "@/components/button/Button";
 
 const CyclesDetailsPage = () => {
     const [automaticCycle, setAutomaticCycle] = useState(false);
+    const [defaultCycleLength, setDefaultCycleLength] = useState(5);
 
     const { projectid } = useParams<{ projectid: string }>();
     const { data: allCycles = [] } = useCycles(projectid ?? "");
@@ -82,8 +84,43 @@ const CyclesDetailsPage = () => {
                                 3 days
                             </Text>
                         </div>
+                        <div className="flex items-center gap-3">
+                            <Text className="text-ink-3">Default length</Text>
 
-                        <div>Button</div>
+                            <div className="flex items-center h-7 border border-lines rounded-md overflow-hidden bg-surface">
+                                <Button
+                                    variant="tertiary"
+                                    className="h-full w-7 p-0 rounded-none border-0 border-r border-lines flex items-center justify-center"
+                                    onClick={() =>
+                                        setDefaultCycleLength((prev) => Math.max(1, prev - 1))
+                                    }
+                                >
+                                    -
+                                </Button>
+
+                                <Text variant="mono" className="h-full min-w-10 px-2 flex items-center justify-center text-sm border-r border-lines">
+                                    {defaultCycleLength}d
+                                </Text>
+
+                                <Button
+                                    variant="tertiary"
+                                    className="h-full w-7 p-0 rounded-none flex items-center justify-center border-0"
+                                    onClick={() => setDefaultCycleLength((prev) => prev + 1)}
+                                >
+                                    +
+                                </Button>
+                            </div>
+
+                            <Button
+                                variant="tertiary"
+                                className="text-accent-deep font-medium border-none"
+                                onClick={() => {
+                                    // skip next cycle
+                                }}
+                            >
+                                Skip next
+                            </Button>
+                        </div>
                     </div>
                 </ToggleButtonBox>
 
