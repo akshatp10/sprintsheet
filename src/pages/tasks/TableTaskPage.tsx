@@ -1,10 +1,10 @@
 import Text from "@/components/common/Text";
 import StageListBox from "@/features/stages/components/StageListBox";
+import TaskDragDrop from "@/features/tasks/components/dragging/TaskDragDrop";
 import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
 import TaskListElement from "@/features/tasks/components/TaskListElement";
 import type { Stage } from "@/lib/services/stages/type";
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
-import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import { useState } from "react";
 
 interface TableTaskPageProps {
@@ -69,11 +69,8 @@ const TableTaskPage = ({
     onUpdateTaskStage,
     onDraggingChange,
 }: TableTaskPageProps) => {
-
     const [newTask, setNewTask] = useState(false);
     const [clickedStageId, setClickedStageId] = useState("");
-    const [dragging, setDragging] = useState(false)
-    const [draggedTask, setDraggedTask] = useState<CycleTaskWithUsers | null>()
 
     const visibleStages = stages.filter(
         (stage) => stage.name !== "Backlog",
@@ -99,7 +96,9 @@ const TableTaskPage = ({
                 {/* Table Header */}
                 <div
                     className="grid h-10 border-b border-lines-control bg-surface-desk text-xs font-medium"
-                    style={{ gridTemplateColumns }}
+                    style={{
+                        gridTemplateColumns,
+                    }}
                 >
                     <div className="flex items-center border-r border-lines-control px-3" />
 
@@ -113,73 +112,36 @@ const TableTaskPage = ({
                     ))}
                 </div>
 
-                <DragDropProvider
-                    onDragStart={(event) => {
-                        onDraggingChange(true);
-                        setDragging(true)
-
-                        const taskId = event.operation.source?.id;
-
-                        if (!taskId) return;
-
-                        const task = Object.values(tasksByStage)
-                            .flat()
-                            .find((task) => task.id === taskId);
-
-                        setDraggedTask(task ?? null);
-                    }}
-                    onDragEnd={(event) => {
-                        onDraggingChange(false);
-                        setDragging(false)
-
-                        if (event.canceled) return;
-
-                        const taskId = event.operation.source?.id;
-                        const destinationStageId = event.operation.target?.id;
-
-                        if (!taskId || !destinationStageId) return;
-
-                        onUpdateTaskStage(
-                            String(taskId),
-                            String(destinationStageId),
-                        );
-                    }}
+                <TaskDragDrop
+                    tasksByStage={tasksByStage}
+                    onDraggingChange={onDraggingChange}
+                    onUpdateTaskStage={onUpdateTaskStage}
+                    renderOverlay={(task) => (
+                        <TaskListElement
+                            task={task}
+                            isDone={false}
+                            isOverlay
+                            taskNumber={0}
+                        />
+                    )}
                 >
-                    {/* Stages */}
-                    {visibleStages.map((stage) => {
-                        const tasks = tasksByStage[stage.id] ?? [];
-
-                        return (
-                            <StageListBox
-                                key={stage.id}
-                                stage={stage}
-                                tasks={tasks}
-                                isLoading={isLoading}
-                                onCreateTask={handleCreateTask}
-                                isCurrentStage={draggedTask?.stage.stageId === stage.stageId}
-                            />
-                        );
-                    })}
-
-                    <DragOverlay dropAnimation={null} className={dragging ? "" : "hidden"}>
-                        {(source) => {
-                            const task = Object.values(tasksByStage)
-                                .flat()
-                                .find((task) => task.id === source.id);
-
-                            if (!task) return null;
+                    {({ draggedTask }) =>
+                        visibleStages.map((stage) => {
+                            const tasks = tasksByStage[stage.id] ?? [];
 
                             return (
-                                <TaskListElement
-                                    task={task}
-                                    isDone={false}
-                                    isOverlay
-                                    taskNumber={0}
+                                <StageListBox
+                                    key={stage.id}
+                                    stage={stage}
+                                    tasks={tasks}
+                                    isLoading={isLoading}
+                                    onCreateTask={handleCreateTask}
+                                    isCurrentStage={draggedTask?.stage.stageId === stage.stageId}
                                 />
                             );
-                        }}
-                    </DragOverlay>
-                </DragDropProvider >
+                        })
+                    }
+                </TaskDragDrop>
             </div>
 
             {
