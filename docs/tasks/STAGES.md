@@ -96,3 +96,4 @@ Do not combine these operations.
 - [Task](./TASK.md)
 - [Drag and Drop](./DRAG_AND_DROP.md)
 - [Card View](./CARD_VIEW.md)
+- [Table View](./TABLE_VIEW.md)

@@ -36,7 +36,6 @@ The project stages determine the columns. Each task is rendered in the column ma
 
 <img width="1763" height="844" alt="image" src="https://github.com/user-attachments/assets/2e597236-67d1-459d-a153-00cc530aec62" />
 
-
 ## Task card
 
 A `TaskCard` is responsible for presenting task information and exposing task interactions.
@@ -121,3 +120,4 @@ This is a core Sprintsheet invariant.
 - [Task](./TASK.md)
 - [Stages](./STAGES.md)
 - [Drag and Drop](./DRAG_AND_DROP.md)
+- [Table View](./TABLE_VIEW.md)
