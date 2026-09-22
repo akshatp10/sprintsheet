@@ -14,6 +14,7 @@ import CurProjectSidebarCard from "@/features/projects/components/CurProjectSide
 import { useSingleProject } from "@/lib/services/projects/hooks";
 import SidebarProjectCardSkeleton from "@/features/projects/components/skeletons/SidebarProjectCardSkeleton";
 import { useCycle } from "@/lib/services/cycles/hooks";
+import { isFeatureEnabled } from "@/config/features";
 
 const ProjectsSidebar = () => {
     const navigate = useNavigate();
