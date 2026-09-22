@@ -1,6 +1,6 @@
-import TaskCard from "./TaskCard";
 import type { TaskWithUsers } from "@/lib/services/tasks/types";
 import { useDraggable } from "@dnd-kit/react";
+import TaskCard from "../TaskCard";
 
 interface DraggableTaskCardProps {
     task: TaskWithUsers;
