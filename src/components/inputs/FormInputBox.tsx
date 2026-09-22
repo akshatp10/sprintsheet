@@ -16,11 +16,11 @@ const FormInputBox = ({
     ...props
 }: FormInputBoxProps) => {
     return (
-        <div className={cn("flex flex-col gap-0.5 relative pb-3.5 -mb-3", className)} {...props}>
-            <Text
-                variant="body-sm"
-                className="text-ink-2"
-            >
+        <div
+            className={cn("relative flex flex-col gap-0.5", className)}
+            {...props}
+        >
+            <Text variant="body-sm" className="text-ink-2">
                 {label}
             </Text>
 
@@ -29,7 +29,7 @@ const FormInputBox = ({
             {error && (
                 <Text
                     variant="caption"
-                    className="absolute bottom-0 text-stage-blocked-text"
+                    className="absolute left-0 top-full mt-0 text-stage-blocked-text"
                 >
                     {error}
                 </Text>
