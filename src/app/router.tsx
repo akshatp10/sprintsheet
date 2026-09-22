@@ -16,6 +16,8 @@ import { TestPage } from "@/pages/testPage";
 import SidebarBottom from "@/components/sidebar/SidebarBottom";
 import AllProjectsPage from "@/pages/AllProjectsPage";
 import TaskViewPage from "@/pages/TaskViewPage";
+import CyclesDetailsPage from "@/pages/CyclesDetailsPage";
+import CyclesTopbar from "@/components/topbar/CyclesTopbar";
 
 
 export const router = createBrowserRouter(
@@ -44,7 +46,17 @@ export const router = createBrowserRouter(
                 <Route path="/project/:projectid" element={<TestPage />} />
                 <Route path="/project/:projectid/board" element={<TaskViewPage />} />
                 <Route path="/project/:projectid/tasks" element={<TestPage />} />
-                <Route path="/project/:projectid/cycles" element={<TestPage />} />
+            </Route>
+
+            {/* Cycle Routes */}
+            <Route
+                element={<AppLayout
+                    dynamicSidebar={<ProjectsSidebar />}
+                    dynamicTopBar={<CyclesTopbar />}
+                    usersPanel={<SidebarBottom />}
+                />}
+            >
+                <Route path="/project/:projectid/cycles" element={<CyclesDetailsPage />} />
             </Route>
         </>
     )
