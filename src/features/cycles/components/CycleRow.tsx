@@ -3,6 +3,7 @@ import Text from "@/components/common/Text";
 import ProgressBar from "@/components/progressBar/ProgressBar";
 import { cn } from "@/lib/cn";
 import type { Cycle } from "@/lib/services/cycles/types";
+import { useTasksByCycle } from "@/lib/services/tasks/hooks";
 
 interface CycleRowProps {
     cycle: Cycle;
@@ -13,6 +14,8 @@ interface CycleRowProps {
 const CycleRow = ({ cycle, status, gridTemplateColumns }: CycleRowProps) => {
 
     const cycleLength = (new Date(cycle.endDate).getTime() - new Date(cycle.startDate).getTime()) / (1000 * 60 * 60 * 24);
+
+    const { data: allTasks } = useTasksByCycle(cycle.id)
 
     return (
         <div
@@ -53,7 +56,7 @@ const CycleRow = ({ cycle, status, gridTemplateColumns }: CycleRowProps) => {
             {/* Tasks */}
             <div>
                 <Text variant="body-sm">
-                    0 tasks
+                    {allTasks && allTasks.length} tasks
                 </Text>
             </div>
 
