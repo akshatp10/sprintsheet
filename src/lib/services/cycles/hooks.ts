@@ -84,10 +84,12 @@ export const useCreateCycle = () => {
 			return response.data;
 		},
 
-		onSuccess: (_, variables) => {
+		onSuccess: (cycle, variables) => {
 			queryClient.invalidateQueries({
 				queryKey: cycleQueryKeys.project(variables.projectId),
 			});
+
+			return cycle;
 		},
 	});
 };
