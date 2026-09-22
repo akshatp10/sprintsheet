@@ -39,6 +39,11 @@ const ActiveCycle = ({ activeCycle, projectId }: ActiveCycleProps) => {
     const totalTasks = Object.values(tasks ?? {}).reduce((total, stageTasks) => total + stageTasks.length, 0);
     const terminalTasks = sortedStages[0] ? tasks?.[sortedStages[0].id]?.length ?? 0 : 0;
 
+    const cycleActions = [
+        { label: "Edit dates", icon: Pencil },
+        { label: "Duplicate", icon: Copy },
+        { label: "Close Cycle", icon: Lock },
+    ];
 
     if (isLoading) return ("wait");
 
@@ -53,9 +58,16 @@ const ActiveCycle = ({ activeCycle, projectId }: ActiveCycleProps) => {
                 </div>
 
                 <div className="flex gap-3 items-center">
-                    <Button variant="tertiary" className="flex items-center gap-1"> <Pencil strokeWidth={1.5} size={13} /> Edit dates</Button>
-                    <Button variant="tertiary" className="flex items-center gap-1"> <Copy strokeWidth={1.5} size={13} /> Duplicate</Button>
-                    <Button variant="tertiary" className="flex items-center gap-1"> <Lock strokeWidth={1.5} size={13} /> Close Cycle</Button>
+                    {cycleActions.map(({ label, icon: Icon }) => (
+                        <Button
+                            key={label}
+                            variant="tertiary"
+                            className="flex items-center gap-1 opacity-40 cursor-not-allowed"
+                        >
+                            <Icon strokeWidth={1.5} size={13} />
+                            {label}
+                        </Button>
+                    ))}
                 </div>
             </div>
 

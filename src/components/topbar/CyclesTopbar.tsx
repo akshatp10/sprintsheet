@@ -40,7 +40,7 @@ const CyclesTopbar = () => {
                 <div className="flex min-w-0 shrink-0 gap-3">
                     <Button
                         variant="tertiary"
-                        className="flex h-full items-center gap-1 bg-surface py-0.5 font-medium"
+                        className="flex h-full items-center gap-1 bg-surface py-0.5 font-medium opacity-40 cursor-not-allowed"
                         onClick={() => {
                             /* TODO: Implement duplicate cycle */
                         }}
