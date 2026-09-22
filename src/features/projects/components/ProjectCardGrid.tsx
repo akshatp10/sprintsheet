@@ -42,7 +42,7 @@ const ProjectCardGrid = ({
     const navigate = useNavigate();
 
     const clickingProjectCard = () => {
-        navigate(`/project/${id}`)
+        navigate(`/project/${id}/board`)
     }
 
     return (

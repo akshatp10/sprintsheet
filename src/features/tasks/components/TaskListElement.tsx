@@ -2,9 +2,13 @@ import Avatar from "@/components/avatar/Avatar";
 import AvatarGroup from "@/components/avatar/AvatarGroups";
 import Chip from "@/components/chips/Chip";
 import Text from "@/components/common/Text";
+import { cn } from "@/lib/cn";
+
 import { formatDate } from "@/lib/formatDate";
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useTypeById } from "@/lib/services/types/hooks";
+import { stageConfig, StageName } from "@/lib/stageConfig";
+import { GripVertical } from "lucide-react";
 
 export const TASK_LIST_GRID =
     "40px 100px minmax(250px, 1fr) 160px 120px 100px 140px";
@@ -13,17 +17,21 @@ interface TaskListElementProps {
     task: CycleTaskWithUsers;
     taskNumber: number;
     isDone: boolean;
+    isOverlay?: boolean;
 }
 
 const TaskListElement = ({
     task,
     taskNumber,
     isDone,
+    isOverlay = false,
 }: TaskListElementProps) => {
     const { data: curType } = useTypeById(task.typeId);
 
     const visibleUsers = task.assignees.slice(0, 3);
     const extraUsers = task.assignees.length - 3;
+
+    const { chip } = stageConfig[task.stage.name as StageName];
 
     return (
         <div
@@ -33,8 +41,9 @@ const TaskListElement = ({
 				border-b
 				border-lines-hairline
 				text-sm
-				hover:bg-surface-2
+				bg-surface-page
 				${isDone ? "opacity-50" : ""}
+				${isOverlay ? "opacity-75" : ""}
 			`}
             style={{
                 gridTemplateColumns: TASK_LIST_GRID,
@@ -42,9 +51,15 @@ const TaskListElement = ({
         >
             {/* Number */}
             <div className="flex items-center border-r border-lines-hairline px-3 bg-surface-desk">
-                <Text variant="mono" className="text-ink-3">
-                    {taskNumber}
-                </Text>
+                {isOverlay ? <GripVertical
+                    strokeWidth={1.5}
+                    size={15}
+                    className="text-ink-3"
+                /> :
+                    <Text variant="mono" className="text-ink-3 group-hover:opacity-0 mx-auto">
+                        {taskNumber}
+                    </Text>
+                }
             </div>
 
             {/* Type */}
@@ -57,22 +72,11 @@ const TaskListElement = ({
                 />
             </div>
 
-            {/* Platform */}
-            {/* <div className="flex items-center border-r border-lines-hairline px-3">
-                <Chip
-                    variant="secondary"
-                    text="WEB"
-                    textType="text-type-caption"
-                    className="px-1 py-0"
-                />
-            </div> */}
-
             {/* Title */}
             <div className="flex min-w-0 items-center border-r border-lines-hairline px-3">
                 <Text
                     variant="body"
-                    className={`truncate ${isDone ? "line-through" : ""
-                        }`}
+                    className={`truncate ${isDone ? "line-through" : ""}`}
                 >
                     {task.name}
                 </Text>
@@ -122,7 +126,7 @@ const TaskListElement = ({
                     variant="secondary"
                     text={task.stage.name}
                     textType="text-type-caption"
-                    className="px-1 py-0"
+                    className={cn("px-1 py-0", chip)}
                 />
             </div>
 
@@ -133,10 +137,7 @@ const TaskListElement = ({
                         {formatDate(task.dueDate)}
                     </Text>
                 ) : (
-                    <Text
-                        variant="mono"
-                        className="text-ink-3"
-                    >
+                    <Text variant="mono" className="text-ink-3">
                         —
                     </Text>
                 )}
@@ -155,10 +156,7 @@ const TaskListElement = ({
                         />
                     ))
                 ) : (
-                    <Text
-                        variant="caption"
-                        className="text-ink-3"
-                    >
+                    <Text variant="caption" className="text-ink-3">
                         —
                     </Text>
                 )}
