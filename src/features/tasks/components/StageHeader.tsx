@@ -41,7 +41,7 @@ const StageHeader = ({
             <Button
                 variant="tertiary"
                 className="border-none p-0 text-ink-fades-ghost-rows"
-                onClick={() => onCreateTask(stage.stageId)}
+                onClick={() => onCreateTask(stage.id)}
             >
                 <Plus size={15} strokeWidth={1.5} />
             </Button>

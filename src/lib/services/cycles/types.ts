@@ -2,8 +2,8 @@ export interface Cycle {
 	id: string;
 	projectId: string;
 	name: string;
-	startDate: Date;
-	endDate: Date;
+	startDate: string;
+	endDate: string;
 	createdAt: number;
 	updatedAt: number;
 }
@@ -11,8 +11,8 @@ export interface Cycle {
 export interface CreateCycleInput {
 	projectId: string;
 	name: string;
-	startDate: Date;
-	endDate: Date;
+	startDate: string;
+	endDate: string;
 }
 
 export type UpdateCycleInput = Partial<

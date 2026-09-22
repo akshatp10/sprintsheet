@@ -17,6 +17,7 @@ import { AssigneeSelect } from "@/features/tasks/components/inputs/AssigneeSelec
 interface TaskCreateFormProps {
     projectId: string;
     onClose: () => void;
+    cycleId?: string;
     defaultStageId?: string;
 }
 
@@ -24,6 +25,7 @@ const TaskCreateForm = ({
     projectId,
     onClose,
     defaultStageId,
+    cycleId,
 }: TaskCreateFormProps) => {
     const {
         register,
@@ -50,15 +52,23 @@ const TaskCreateForm = ({
     const handleFormSubmit = (data: TaskFormData) => {
         const newTask: CreateTaskInput = {
             projectId,
-            stageId: data.stage,
             name: data.name,
             description: data.description,
             assigneeIds: data.assigneeIds,
             dueDate: data.dueDate,
             typeId: data.type,
             tags: data.tags,
+            ...(cycleId
+                ? {
+                    cycle: {
+                        id: cycleId,
+                        stageId: data.stage,
+                    },
+                }
+                : {}),
         };
-        createNewTask(newTask);
+
+        createNewTask(newTask)
         reset();
         onClose();
     };
@@ -117,10 +127,7 @@ const TaskCreateForm = ({
                                 <option value="">Stage</option>
 
                                 {stages.map((stage) => (
-                                    <option
-                                        key={stage.stageId}
-                                        value={stage.stageId}
-                                    >
+                                    <option key={stage.stageId} value={stage.id}>
                                         {stage.name}
                                     </option>
                                 ))}

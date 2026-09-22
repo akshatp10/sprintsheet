@@ -6,12 +6,14 @@ interface FormInputBoxProps
     extends React.HTMLAttributes<HTMLDivElement> {
     label?: string;
     error?: string;
+    optionalText?: string;
     children: React.ReactNode;
     className?: string;
 }
 
 const FormInputBox = ({
     label,
+    optionalText,
     error,
     children,
     className,
@@ -25,11 +27,21 @@ const FormInputBox = ({
             )}
             {...props}
         >
-            {label && (
-                <Text variant="body-sm" className="text-ink-2">
-                    {label}
-                </Text>
-            )}
+            <div className="flex items-baseline gap-1">
+                {label && (
+                    <Text variant="body-sm" className="text-ink-2">
+                        {label}
+                    </Text>
+                )}
+                {optionalText && (
+                    <Text
+                        variant="caption"
+                        className="text-ink-fades-placeholders"
+                    >
+                        {optionalText}
+                    </Text>
+                )}
+            </div>
 
             {children}
 
