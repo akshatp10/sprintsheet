@@ -1,31 +1,39 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import TableTaskPage from "./tasks/TableTaskPage";
 import CardTaskPage from "./tasks/CardTaskPage";
-import { useTasksByStage } from "@/lib/services/tasks/hooks";
+// import { useTasksByStage } from "@/lib/services/tasks/hooks";
 import { useProjectStages } from "@/lib/services/stages/hooks";
 import TaskViewFooter from "@/features/tasks/components/TaskViewFooter";
 import { useState } from "react";
 import BacklogDrawer from "@/features/tasks/components/BacklogDrawer";
+import { useBacklogTasks, useTasksByStage } from "@/lib/services/tasks/hooks";
 
 const TaskViewPage = () => {
     const [isDragging, setIsDragging] = useState(false)
 
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [openBacklog, setOpenBacklog] = useState(false);
+
+    const currentCycleId = searchParams.get("cycle") ?? "";
 
     const view = searchParams.get("view") === "table" ? "table" : "cards";
     const { projectid } = useParams<{ projectid: string }>();
 
-    const { data: tasksByStage = {}, isLoading, isError, error } = useTasksByStage(projectid ?? "");
+    const { data: tasksByStage = {}, isLoading, isError, error } = useTasksByStage(currentCycleId ?? "");
     const { data: stages = [] } = useProjectStages(projectid ?? "");
 
     const sortedStages = [...stages].sort((a, b) => a.order - b.order);
 
-    const backlogStage = sortedStages.find((stage) => stage.name === "Backlog");
-    const backlogTasks = tasksByStage[backlogStage?.stageId ?? ""] ?? [];
+    const { data: backlogTasks = [] } = useBacklogTasks(projectid ?? "");
+
+    const handleCycleChange = (cycleId: string) => {
+        setSearchParams((prev) => {
+            prev.set("cycle", cycleId);
+            return prev;
+        });
+    };
 
     if (isError) return <div>Error: {error.message}</div>;
-
     return (
         <>
             <div className="grid h-full min-h-0 min-w-fit grid-rows-[1fr_5dvh]">
@@ -34,12 +42,13 @@ const TaskViewPage = () => {
                     <CardTaskPage
                         stages={sortedStages}
                         tasksByStage={tasksByStage}
+                        cycleId={currentCycleId}
                         isLoading={isLoading}
                         projectId={projectid ?? ""}
                         onDraggingChange={setIsDragging}
                     />
                 )}
-                <TaskViewFooter taskLength={backlogTasks.length} isCardHeld={isDragging} onClick={() => setOpenBacklog((prev) => !prev)} />
+                <TaskViewFooter projectId={projectid ?? ""} taskLength={backlogTasks.length} isCardHeld={isDragging} onClick={() => setOpenBacklog((prev) => !prev)} currentCycleId={currentCycleId} setCurrentCycleId={handleCycleChange} />
             </div>
 
             {openBacklog && <BacklogDrawer handleClose={() => setOpenBacklog(false)} />}

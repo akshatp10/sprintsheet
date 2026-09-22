@@ -8,6 +8,8 @@ import {
 } from "./api";
 
 import type { CreateTaskCycleInput } from "./types";
+import { taskQueryKeys } from "../tasks/hooks";
+import type { CycleTaskWithUsers } from "../tasks/types";
 
 export interface UpdateTaskCycleVariables {
 	id: string;
@@ -106,17 +108,84 @@ export const useUpdateTaskCycle = () => {
 			return response.data;
 		},
 
-		onSuccess: (taskCycle) => {
-			if (!taskCycle) {
+		onMutate: async ({
+			taskId,
+			cycleId,
+			stageId,
+		}: UpdateTaskCycleVariables) => {
+			const queryKey = taskQueryKeys.cycleByStage(cycleId);
+
+			await queryClient.cancelQueries({
+				queryKey,
+			});
+
+			const previousTasks =
+				queryClient.getQueryData<CycleTaskWithUsers[]>(queryKey);
+
+			queryClient.setQueryData<CycleTaskWithUsers[]>(
+				queryKey,
+				(tasks) => {
+					if (!tasks) {
+						return tasks;
+					}
+
+					return tasks.map((task) =>
+						task.id === taskId
+							? {
+									...task,
+									stage: {
+										...task.stage,
+										id: stageId,
+										stageId,
+									},
+								}
+							: task,
+					);
+				},
+			);
+
+			return {
+				previousTasks,
+				queryKey,
+			};
+		},
+
+		onError: (_, __, context) => {
+			if (!context) {
+				return;
+			}
+
+			queryClient.setQueryData(context.queryKey, context.previousTasks);
+		},
+
+		onSettled: (_, __, variables, context) => {
+			if (!context) {
 				return;
 			}
 
 			queryClient.invalidateQueries({
-				queryKey: taskCycleQueryKeys.cycle(taskCycle.cycleId),
+				queryKey: context.queryKey,
 			});
 
 			queryClient.invalidateQueries({
-				queryKey: taskCycleQueryKeys.task(taskCycle.taskId),
+				queryKey: taskCycleQueryKeys.cycle(variables.cycleId),
+			});
+
+			queryClient.invalidateQueries({
+				queryKey: taskCycleQueryKeys.task(variables.taskId),
+			});
+		},
+
+		onSuccess: (_, variables) => {
+			const { taskId } = variables;
+
+			requestAnimationFrame(() => {
+				const element = document.getElementById(`task-${taskId}`);
+
+				element?.scrollIntoView({
+					behavior: "smooth",
+					block: "nearest",
+				});
 			});
 		},
 	});

@@ -2,16 +2,17 @@ import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
 import StageViewBox from "@/features/tasks/components/StageViewBox";
 import TaskCard from "@/features/tasks/components/TaskCard";
 import type { Stage } from "@/lib/services/stages/type";
-import { useUpdateTask } from "@/lib/services/tasks/hooks";
-import type { TaskWithUsers } from "@/lib/services/tasks/types";
+import { useUpdateTaskCycle } from "@/lib/services/taskCycles/hooks";
+import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import { useState } from "react";
 
 interface CardTaskPageProps {
     stages: Stage[];
-    tasksByStage: Record<string, TaskWithUsers[]>;
+    tasksByStage: Record<string, CycleTaskWithUsers[]>;
     isLoading: boolean;
     projectId: string;
+    cycleId: string;
     onDraggingChange: (isDragging: boolean) => void;
 }
 
@@ -21,11 +22,12 @@ const CardTaskPage = ({
     projectId,
     tasksByStage,
     onDraggingChange,
+    cycleId
 }: CardTaskPageProps) => {
     const [newTask, setNewTask] = useState(false);
     const [clickedStageId, setClickedStageId] = useState("");
     const [dragging, setDragging] = useState(false)
-    const [draggedTask, setDraggedTask] = useState<TaskWithUsers | null>()
+    const [draggedTask, setDraggedTask] = useState<CycleTaskWithUsers | null>()
 
     const visibleStages = stages.filter(
         (stage) => stage.name !== "Backlog",
@@ -41,17 +43,18 @@ const CardTaskPage = ({
         setClickedStageId("");
     };
 
-    const { mutate } = useUpdateTask();
+    const { mutate: updateTaskCycleData } = useUpdateTaskCycle();
 
     const handleUpdateTaskStage = (taskId: string, stageId: string) => {
         const task = Object.values(tasksByStage).flat().find((task) => task.id === taskId);
 
-        if (!task || task.stageId === stageId) return;
+        if (!task || task.stage.stageId === stageId) return;
 
-        mutate({
-            id: taskId,
-            projectId,
-            updates: { stageId },
+        updateTaskCycleData({
+            id: task.taskCycleId,
+            cycleId: cycleId,
+            stageId: stageId,
+            taskId: taskId
         });
     };
 
@@ -99,10 +102,10 @@ const CardTaskPage = ({
                         <StageViewBox
                             key={stage.id}
                             stage={stage}
-                            tasks={tasksByStage[stage.stageId] ?? []}
+                            tasks={tasksByStage[stage.id] ?? []}
                             isLoading={isLoading}
                             onCreateTask={handleCreateTask}
-                            isCurrentStage={draggedTask?.stageId === stage.stageId}
+                            isCurrentStage={draggedTask?.stage.stageId === stage.stageId}
                         />
                     ))}
 
@@ -131,6 +134,7 @@ const CardTaskPage = ({
                     projectId={projectId}
                     defaultStageId={clickedStageId}
                     onClose={handleCloseTaskForm}
+                    cycleId={cycleId}
                 />
             )}
         </>
