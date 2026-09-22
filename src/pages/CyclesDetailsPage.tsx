@@ -67,7 +67,7 @@ const CyclesDetailsPage = () => {
     return (
         <div className="w-full flex flex-col px-8 py-6 gap-8">
             {/* Top section containing toggle */}
-            <div className="w-full flex gap-3 items-center">
+            <div className="w-full flex gap-3 items-stretch">
                 <ToggleButtonBox
                     checked={automaticCycle}
                     onChange={(value) => setAutomaticCycle(value)}
