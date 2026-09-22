@@ -71,7 +71,7 @@ const TaskCreateForm = ({
         >
             <form
                 onSubmit={handleSubmit(handleFormSubmit)}
-                className="flex min-h-0 flex-1 flex-col px-4 pb-4"
+                className="flex min-h-0 flex-1 flex-col px-4 pb-5"
             >
                 {/* Main content */}
                 <div className="flex flex-col gap-4">
@@ -107,24 +107,25 @@ const TaskCreateForm = ({
 
                 {/* Bottom toolbar */}
                 <div className="mt-auto flex items-center justify-between gap-3 pt-4">
-                    {/* Task properties */}
                     <div className="flex min-w-0 items-center gap-2">
                         {/* Stage */}
-                        <select
-                            {...register("stage")}
-                            className="h-8 rounded-md border border-lines-hairline bg-surface px-2.5 text-type-caption text-ink-2 outline-none transition-colors hover:border-lines focus:border-lines-strong"
-                        >
-                            <option value="">Stage</option>
+                        <FormInputBox error={errors.stage?.message}>
+                            <select
+                                {...register("stage")}
+                                className="h-8 rounded-md border border-lines-hairline bg-surface px-2.5 text-type-caption text-ink-2 outline-none transition-colors hover:border-lines focus:border-lines-strong"
+                            >
+                                <option value="">Stage</option>
 
-                            {stages.map((stage) => (
-                                <option
-                                    key={stage.stageId}
-                                    value={stage.stageId}
-                                >
-                                    {stage.name}
-                                </option>
-                            ))}
-                        </select>
+                                {stages.map((stage) => (
+                                    <option
+                                        key={stage.stageId}
+                                        value={stage.stageId}
+                                    >
+                                        {stage.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </FormInputBox>
 
                         {/* Assignee */}
                         <AssigneeSelect
@@ -146,42 +147,28 @@ const TaskCreateForm = ({
                         />
 
                         {/* Type */}
-                        <select
-                            {...register("type")}
-                            className="h-8 rounded-md border border-lines-hairline bg-surface px-2.5 text-type-caption text-ink-2 outline-none transition-colors hover:border-lines focus:border-lines-strong"
-                        >
-                            <option value="">Type</option>
+                        <FormInputBox error={errors.type?.message}>
+                            <select
+                                {...register("type")}
+                                className="h-8 rounded-md border border-lines-hairline bg-surface px-2.5 text-type-caption text-ink-2 outline-none transition-colors hover:border-lines focus:border-lines-strong"
+                            >
+                                <option value="">Type</option>
 
-                            {projectTypes.map((type) => (
-                                <option key={type.id} value={type.id}>
-                                    {type.name}
-                                </option>
-                            ))}
-                        </select>
-
-                        {/*
-                        <TagInput
-                            value={tags}
-                            onChange={(next) =>
-                                setValue("tags", next, {
-                                    shouldDirty: true,
-                                    shouldValidate: true,
-                                })
-                            }
-                        />
-                        */}
+                                {projectTypes.map((type) => (
+                                    <option key={type.id} value={type.id}>
+                                        {type.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </FormInputBox>
                     </div>
 
-                    {/* Submit */}
                     <Button
                         type="submit"
                         variant="primary"
                         className="shrink-0"
                     >
-                        <Text
-                            variant="body-sm"
-                            className="font-medium"
-                        >
+                        <Text variant="body-sm" className="font-medium">
                             Create Task
                         </Text>
                     </Button>
