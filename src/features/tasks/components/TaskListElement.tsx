@@ -2,10 +2,12 @@ import Avatar from "@/components/avatar/Avatar";
 import AvatarGroup from "@/components/avatar/AvatarGroups";
 import Chip from "@/components/chips/Chip";
 import Text from "@/components/common/Text";
+import { cn } from "@/lib/cn";
 
 import { formatDate } from "@/lib/formatDate";
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useTypeById } from "@/lib/services/types/hooks";
+import { stageConfig, StageName } from "@/lib/stageConfig";
 import { GripVertical } from "lucide-react";
 
 export const TASK_LIST_GRID =
@@ -28,6 +30,8 @@ const TaskListElement = ({
 
     const visibleUsers = task.assignees.slice(0, 3);
     const extraUsers = task.assignees.length - 3;
+
+    const { chip } = stageConfig[task.stage.name as StageName];
 
     return (
         <div
@@ -122,7 +126,7 @@ const TaskListElement = ({
                     variant="secondary"
                     text={task.stage.name}
                     textType="text-type-caption"
-                    className="px-1 py-0"
+                    className={cn("px-1 py-0", chip)}
                 />
             </div>
 
