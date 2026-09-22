@@ -43,14 +43,14 @@ const CardTaskPage = ({
         setClickedStageId("");
     };
 
-    const { mutate } = useUpdateTaskCycle();
+    const { mutate: updateTaskCycleData } = useUpdateTaskCycle();
 
     const handleUpdateTaskStage = (taskId: string, stageId: string) => {
         const task = Object.values(tasksByStage).flat().find((task) => task.id === taskId);
 
         if (!task || task.stage.stageId === stageId) return;
 
-        mutate({
+        updateTaskCycleData({
             id: task.taskCycleId,
             cycleId: cycleId,
             stageId: stageId,
