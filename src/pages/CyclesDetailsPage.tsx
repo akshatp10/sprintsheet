@@ -7,6 +7,8 @@ import { useCycles } from "@/lib/services/cycles/hooks";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
+import NoActiveCycle from "@/features/cycles/components/NoActiveCycle";
+
 const CyclesDetailsPage = () => {
     const [automaticCycle, setAutomaticCycle] = useState(false);
 
@@ -23,10 +25,6 @@ const CyclesDetailsPage = () => {
         ...plannedCycles.map((cycle) => ({
             cycle,
             status: "planned" as const,
-        })),
-        ...activeCycles.map((cycle) => ({
-            cycle,
-            status: "active" as const,
         })),
         ...closedCycles.map((cycle) => ({
             cycle,
@@ -101,9 +99,7 @@ const CyclesDetailsPage = () => {
 
             {/* Active Cycle */}
             {activeCycles.length === 0 ?
-                <div className="w-full border border-accent rounded-md p-4 bg-surface min-h-30 flex flex-col justify-evenly">
-                    No Active Cycle Present
-                </div>
+                <NoActiveCycle />
                 :
                 <ActiveCycle activeCycle={activeCycles} projectId={projectid ?? ""} />
             }
