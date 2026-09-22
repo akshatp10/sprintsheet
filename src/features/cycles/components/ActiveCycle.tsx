@@ -79,7 +79,7 @@ const ActiveCycle = ({ activeCycle, projectId }: ActiveCycleProps) => {
                     const taskCount = tasks[stage.id].length
 
                     return (
-                        <Text className="text-ink-3">{taskCount} {stage.name}</Text>
+                        <Text className="text-ink-3" key={stage.id}>{taskCount} {stage.name}</Text>
                     )
                 }
                 )}
