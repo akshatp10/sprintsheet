@@ -1,7 +1,6 @@
-import Chip from "@/components/chips/Chip";
 import Text from "@/components/common/Text";
 import ToggleButtonBox from "@/components/common/ToggleButtonBox";
-import ProgressBar from "@/components/progressBar/ProgressBar";
+import ActiveCycle from "@/features/cycles/components/ActiveCycle";
 import CycleRow from "@/features/cycles/components/CycleRow";
 import { useCycleStatus } from "@/hooks/useCycleStatus";
 import { useCycles } from "@/lib/services/cycles/hooks";
@@ -101,14 +100,13 @@ const CyclesDetailsPage = () => {
             </div>
 
             {/* Active Cycle */}
-            <div className="w-full border border-accent rounded-md p-4 bg-surface min-h-30">
-                <div>
-                    <Chip text="Active" variant="primary" bgColor="bg-accent-tint" textColor="text-accent-deep" className="font-medium" />
-                    <Text variant="h1">Aug 17 - 21</Text>
+            {activeCycles.length === 0 ?
+                <div className="w-full border border-accent rounded-md p-4 bg-surface min-h-30 flex flex-col justify-evenly">
+                    No Active Cycle Present
                 </div>
-                <ProgressBar label={{ cur: 3, total: 9 }} progress={33} />
-                <div></div>
-            </div>
+                :
+                <ActiveCycle activeCycle={activeCycles} projectId={projectid ?? ""} />
+            }
 
             {/* All Cycles */}
             <div className="w-full">
