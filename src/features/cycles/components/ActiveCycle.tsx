@@ -2,13 +2,13 @@ import Button from '@/components/button/Button'
 import Chip from '@/components/chips/Chip'
 import Text from '@/components/common/Text'
 import ProgressBar from '@/components/progressBar/ProgressBar'
+import { getToday } from '@/hooks/useCycleStatus'
 import { formatCycleDate } from '@/lib/formatCycleDate'
 import { getPercentage } from '@/lib/getPercentage'
 import type { Cycle } from '@/lib/services/cycles/types'
 import { useProjectStages } from '@/lib/services/stages/hooks'
 import { useTasksByStage } from '@/lib/services/tasks/hooks'
 import { Copy, Lock, Pencil } from 'lucide-react'
-import { useEffect, useState } from 'react'
 
 interface ActiveCycleProps {
     activeCycle: Cycle[]
@@ -20,22 +20,12 @@ const ActiveCycle = ({ activeCycle, projectId }: ActiveCycleProps) => {
     const curCycle = activeCycle[0];
     const cycleLength = (new Date(curCycle.endDate).getTime() - new Date(curCycle.startDate).getTime()) / (1000 * 60 * 60 * 24);
 
-    const [now, setNow] = useState(() => new Date());
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setNow(new Date());
-        }, 60 * 1000);
-
-        return () => clearInterval(interval);
-    }, []);
-
     const currentDay = Math.min(
         cycleLength,
         Math.max(
             1,
             Math.floor(
-                (now.getTime() - new Date(curCycle.startDate).getTime()) /
+                (new Date(getToday()).getTime() - new Date(curCycle.startDate).getTime()) /
                 (1000 * 60 * 60 * 24)
             ) + 1
         )

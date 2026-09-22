@@ -1,7 +1,7 @@
 import type { Cycle } from "@/lib/services/cycles/types";
 import { useMemo } from "react";
 
-const getToday = () => {
+export const getToday = () => {
     const date = new Date();
 
     const year = date.getFullYear();
