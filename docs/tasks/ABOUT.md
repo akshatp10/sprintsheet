@@ -47,3 +47,4 @@ Both views use the **same task dataset**.
 - [Stages](./STAGES.md) — task stages and stage relationships.
 - [Drag and Drop](./DRAG_AND_DROP.md) — task drag-and-drop behavior.
 - [Card View](./CARD_VIEW.md) — how tasks are grouped and displayed as cards.
+- [Table View](./TABLE_VIEW.md) — how tasks are grouped and displayed in tabular form like excel.

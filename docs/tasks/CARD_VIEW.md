@@ -120,3 +120,4 @@ This is a core Sprintsheet invariant.
 - [Task](./TASK.md)
 - [Stages](./STAGES.md)
 - [Drag and Drop](./DRAG_AND_DROP.md)
+- [Table View](./TABLE_VIEW.md)

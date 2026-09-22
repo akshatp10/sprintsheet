@@ -115,3 +115,4 @@ Do not create separate task datasets for the two views.
 - [Stages](./STAGES.md)
 - [Drag and Drop](./DRAG_AND_DROP.md)
 - [Card View](./CARD_VIEW.md)
+- [Table View](./TABLE_VIEW.md)
