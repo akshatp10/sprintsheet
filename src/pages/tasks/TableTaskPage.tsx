@@ -2,7 +2,7 @@ import Text from "@/components/common/Text";
 import StageListBox from "@/features/stages/components/StageListBox";
 import TaskDragDrop from "@/features/tasks/components/dragging/TaskDragDrop";
 import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
-import TaskListElement from "@/features/tasks/components/TaskListElement";
+import TaskListElement from "@/features/tasks/components/listView/TaskListElement";
 import type { Stage } from "@/lib/services/stages/type";
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useState } from "react";

@@ -1,7 +1,8 @@
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useDraggable } from "@dnd-kit/react";
 import { GripVertical } from "lucide-react";
-import TaskListElement from "../TaskListElement";
+import TaskListElement from "../listView/TaskListElement";
+import TaskListPlaceholder from "../listView/TaskListPlaceholder";
 
 interface DraggableTaskListElementProps {
     task: CycleTaskWithUsers;
@@ -20,12 +21,13 @@ const DraggableTaskListElement = ({
         id: task.id,
     });
 
+    if (isDragging) return (<TaskListPlaceholder />);
+
     return (
         <div
             className={`
 				relative
 				group
-				${isDragging ? "opacity-50" : ""}
 			`}
         >
             <div
