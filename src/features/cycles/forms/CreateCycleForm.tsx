@@ -60,7 +60,7 @@ const CreateCycleForm = ({ projectId, onClose }: CreateCycleFormProps) => {
         <PopupModal label="New cycle" onClose={onClose} alert={isDirty}>
             <form
                 onSubmit={handleSubmit(handleFormSubmit)}
-                className="flex min-h-0 flex-1 flex-col gap-4 px-4 pb-4"
+                className="flex min-h-0 flex-1 flex-col gap-5 px-4 pb-4"
             >
                 {/* Name */}
                 <FormInputBox label="Name" optionalText="optional - dates are used if blank" error={errors.name?.message}>

@@ -55,7 +55,7 @@ const BasicsStep = ({
     };
 
     return (
-        <section className="flex flex-col gap-2.5">
+        <section className="flex flex-col gap-3.5">
             {/* Project name & key */}
             <div className="flex gap-4">
                 <FormInputBox
