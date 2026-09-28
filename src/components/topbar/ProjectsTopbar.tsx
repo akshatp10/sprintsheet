@@ -7,7 +7,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { isFeatureEnabled } from "@/config/features";
 import { useTasksByCycle } from "@/lib/services/tasks/hooks";
-import { useCycle } from "@/lib/services/cycles/hooks";
+import { useGetCycle } from "@/lib/services/cycles/hooks";
 import { formatCycleDate } from "@/lib/formatCycleDate";
 
 const ProjectsTopbar = () => {
@@ -17,7 +17,7 @@ const ProjectsTopbar = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const currentCycleId = searchParams.get("cycle") ?? "";
-    const { data: cycle } = useCycle(currentCycleId ?? "");
+    const { data: cycle } = useGetCycle(currentCycleId ?? "");
     const { data: allTasks } = useTasksByCycle(cycle?.id ?? "");
 
     const currentView = searchParams.get("view") === "cards" ? "cards" : "table";

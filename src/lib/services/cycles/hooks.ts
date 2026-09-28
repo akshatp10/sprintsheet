@@ -32,7 +32,7 @@ export const cycleQueryKeys = {
 };
 
 //Getting all the cycles of projects
-export const useCycles = (projectId: string) => {
+export const useProjectCycles = (projectId: string) => {
 	return useQuery({
 		queryKey: cycleQueryKeys.project(projectId),
 
@@ -51,7 +51,7 @@ export const useCycles = (projectId: string) => {
 };
 
 //Getting single cycle
-export const useCycle = (cycleId: string) => {
+export const useGetCycle = (cycleId: string) => {
 	return useQuery({
 		queryKey: cycleQueryKeys.detail(cycleId),
 

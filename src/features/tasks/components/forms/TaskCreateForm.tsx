@@ -7,7 +7,7 @@ import Input from "@/components/inputs/Input";
 import TextArea from "@/components/inputs/TextArea";
 import PopupModal from "@/components/popupModals/PopupModal";
 import type { CreateTaskInput } from "@/lib/services/tasks/types";
-import { useProjectStages } from "@/lib/services/stages/hooks";
+import { useGetStagesPerProject } from "@/lib/services/stages/hooks";
 import { useCreateTask } from "@/lib/services/tasks/hooks";
 import { useProjectTypes } from "@/lib/services/types/hooks";
 import { defaultValues, taskFormSchema, type TaskFormData } from "@/features/tasks/types/taskFormData";
@@ -46,7 +46,6 @@ const TaskCreateForm = ({
     const assigneeIds = watch("assigneeIds") ?? [];
     // const tags = watch("tags") ?? [];
     const { data: stages = [] } = useProjectStages(projectId);
-    console.log(stages)
     const { data: projectTypes = [] } = useProjectTypes(projectId);
     const { mutate: createNewTask } = useCreateTask();
 

@@ -34,7 +34,7 @@ The standard flow is:
 ```text
 Task View
    ↓
-useTasks(projectId)
+useGetAllTasksByProject(projectId)
    ↓
 getAllProjectTasks(projectId)
    ↓

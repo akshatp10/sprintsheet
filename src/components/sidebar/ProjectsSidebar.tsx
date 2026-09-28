@@ -11,9 +11,9 @@ import Text from "../common/Text";
 import Button from "../button/Button";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import CurProjectSidebarCard from "@/features/projects/components/CurProjectSidebarCard";
-import { useSingleProject } from "@/lib/services/projects/hooks";
+import { useGetProjectById } from "@/lib/services/projects/hooks";
 import SidebarProjectCardSkeleton from "@/features/projects/components/skeletons/SidebarProjectCardSkeleton";
-import { useCycle } from "@/lib/services/cycles/hooks";
+import { useGetCycle } from "@/lib/services/cycles/hooks";
 import { isFeatureEnabled } from "@/config/features";
 
 const ProjectsSidebar = () => {
@@ -22,8 +22,8 @@ const ProjectsSidebar = () => {
     const [searchParams] = useSearchParams();
     const cycleId = searchParams.get("cycle")
 
-    const { data: project } = useSingleProject(projectid ?? "");
-    const { data: cycle } = useCycle(cycleId ?? "");
+    const { data: project } = useGetProjectById(projectid ?? "");
+    const { data: cycle } = useGetCycle(cycleId ?? "");
 
 
     const options = [

@@ -1,6 +1,6 @@
 import {
 	createProject,
-	getAllProjectsByUser,
+	getAllProjects,
 	getProjectById,
 } from "@/lib/db/dbFunctions/projectFunctions";
 import type { ApiResponse } from "../types";
@@ -61,11 +61,11 @@ export const getProject = async (id: string): Promise<ApiResponse<Project>> => {
 	}
 };
 
-export const getAllUserProjects = async (
+export const getProjects = async (
 	includeArchived = false,
 ): Promise<ApiResponse<Project[]>> => {
 	try {
-		const projects = await getAllProjectsByUser(includeArchived);
+		const projects = await getAllProjects(includeArchived);
 
 		return {
 			status: 200,

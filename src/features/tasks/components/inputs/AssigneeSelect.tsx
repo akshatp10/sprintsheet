@@ -7,7 +7,7 @@ import Button from "@/components/button/Button";
 import Text from "@/components/common/Text";
 import UserPanel from "@/components/sidebar/UserPanel";
 import { cn } from "@/lib/cn";
-import { useProjectMembers } from "@/lib/services/projects/hooks";
+import { useGetProjectMembers } from "@/lib/services/projects/hooks";
 
 interface AssigneeSelectProps {
     projectId: string;
@@ -20,7 +20,7 @@ export function AssigneeSelect({
     value,
     onChange,
 }: AssigneeSelectProps) {
-    const { data: members = [], isLoading } = useProjectMembers(projectId);
+    const { data: members = [], isLoading } = useGetProjectMembers(projectId);
     const [open, setOpen] = useState(false);
 
     const toggleAssignee = (userId: string) => {

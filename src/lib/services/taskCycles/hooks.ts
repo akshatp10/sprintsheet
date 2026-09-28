@@ -28,7 +28,7 @@ export const taskCycleQueryKeys = {
 		[...taskCycleQueryKeys.all, "task", taskId] as const,
 };
 
-export const useTaskCyclesByCycle = (cycleId: string) => {
+export const useGetTaskCyclesByCycle = (cycleId: string) => {
 	return useQuery({
 		queryKey: taskCycleQueryKeys.cycle(cycleId),
 
@@ -46,7 +46,7 @@ export const useTaskCyclesByCycle = (cycleId: string) => {
 	});
 };
 
-export const useTaskCyclesByTask = (taskId: string) => {
+export const useGetTaskCyclesByTask = (taskId: string) => {
 	return useQuery({
 		queryKey: taskCycleQueryKeys.task(taskId),
 

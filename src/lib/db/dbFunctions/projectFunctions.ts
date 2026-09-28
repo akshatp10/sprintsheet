@@ -112,7 +112,7 @@ export const createProject = async (
 
 export const getProjectById = (id: string) => db.projects.get(id);
 
-export const getAllProjectsByUser = async (
+export const getAllProjects = async (
 	includeArchived = false,
 ): Promise<ProjectRow[]> => {
 	const all = await db.projects.orderBy("createdAt").reverse().toArray();

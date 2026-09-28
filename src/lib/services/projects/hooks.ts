@@ -2,9 +2,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
 	createNewProject,
-	getAllUserProjects,
 	getProject,
 	getProjectMembers,
+	getProjects,
 } from "./api";
 import type { CreateProjectInput } from "./types";
 
@@ -21,11 +21,11 @@ export const projectQueryKeys = {
 		[...projectQueryKeys.all, "members", projectId] as const,
 };
 
-export const useProjects = (includeArchived: boolean = false) => {
+export const useGetAllProjects = (includeArchived: boolean = false) => {
 	return useQuery({
 		queryKey: projectQueryKeys.list(includeArchived),
 		queryFn: async () => {
-			const response = await getAllUserProjects(includeArchived);
+			const response = await getProjects(includeArchived);
 
 			if (!response.success) {
 				throw new Error(response.message);
@@ -36,7 +36,7 @@ export const useProjects = (includeArchived: boolean = false) => {
 	});
 };
 
-export const useSingleProject = (projectId: string) => {
+export const useGetProjectById = (projectId: string) => {
 	return useQuery({
 		queryKey: projectQueryKeys.detail(projectId),
 		queryFn: async () => {
@@ -65,7 +65,7 @@ export const projectMembersQuery = (projectId: string) => ({
 	enabled: !!projectId,
 });
 
-export const useProjectMembers = (projectId: string) => {
+export const useGetProjectMembers = (projectId: string) => {
 	return useQuery(projectMembersQuery(projectId));
 };
 

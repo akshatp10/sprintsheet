@@ -32,7 +32,7 @@ export const taskQueryKeys = {
 		[...taskQueryKeys.cycle(cycleId), "by-stage"] as const,
 };
 
-export const useTasks = (projectId: string) => {
+export const useGetAllTasksByProject = (projectId: string) => {
 	return useQuery({
 		queryKey: taskQueryKeys.project(projectId),
 
