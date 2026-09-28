@@ -1,15 +1,11 @@
-import emptyState from "@/assets/gif/empty_state.gif"
+import Mascot from "@/components/common/Mascot"
 import Text from "@/components/common/Text"
 
 const NoActiveCycle = () => {
     return (
-        <div className="w-full border border-accent rounded-md p-6 bg-surface flex items-center justify-between">
+        <div className="w-full border border-accent rounded-md p-6 bg-surface flex min-h-30 items-center justify-between">
             <div className="flex items-center gap-5">
-                <img
-                    src={emptyState}
-                    alt="No active cycle"
-                    className="w-20 h-20 object-contain"
-                />
+                <Mascot expression="sleeping" size={75} renderAnimation />
 
                 <div className="flex flex-col gap-1">
                     <Text variant="h1">No active cycle</Text>
