@@ -8,7 +8,7 @@ import { useState } from "react";
 import { isFeatureEnabled } from "@/config/features";
 import { useTasksByCycle } from "@/lib/services/tasks/hooks";
 import { useGetCycle } from "@/lib/services/cycles/hooks";
-import { formatCycleDate } from "@/lib/formatCycleDate";
+import { formatCycleDate } from "@/lib/utils";
 
 const ProjectsTopbar = () => {
     const [openTaskForm, setOpenTaskForm] = useState(false);
