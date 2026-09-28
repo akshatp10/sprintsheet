@@ -4,10 +4,10 @@ import Chip from "@/components/chips/Chip";
 import Text from "@/components/common/Text";
 import { cn } from "@/lib/cn";
 
-import { formatDate } from "@/lib/formatDate";
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useTypeById } from "@/lib/services/types/hooks";
 import { stageConfig, StageName } from "@/lib/stageConfig";
+import { formatDate } from "@/lib/utils";
 import { GripVertical } from "lucide-react";
 
 export const TASK_LIST_GRID =

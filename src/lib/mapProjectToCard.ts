@@ -1,4 +1,5 @@
 import type { Project, ProjectMember } from "./services/projects/types";
+import { getExtractedLetterFromString } from "./utils";
 
 interface ProjectUser {
 	userName: string;
@@ -11,14 +12,6 @@ const avatarVariants: ProjectUser["variant"][] = [
 	"purple",
 	"rose",
 ];
-
-const getInitials = (name: string) =>
-	name
-		.split(" ")
-		.filter(Boolean)
-		.slice(0, 2)
-		.map((word) => word[0]?.toUpperCase())
-		.join("");
 
 const formatDate = (timestamp: number) =>
 	new Date(timestamp).toLocaleDateString("en-US", {
@@ -37,7 +30,7 @@ export const mapProjectToCard = (
 
 	return {
 		id: project.id,
-		initials: getInitials(project.name),
+		initials: getExtractedLetterFromString(project.name, 2),
 		title: project.name,
 		description: project.description,
 		date: formatDate(project.createdAt),

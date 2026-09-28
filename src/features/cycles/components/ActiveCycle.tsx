@@ -3,11 +3,10 @@ import Chip from '@/components/chips/Chip'
 import Text from '@/components/common/Text'
 import ProgressBar from '@/components/progressBar/ProgressBar'
 import { getToday } from '@/hooks/useCycleStatus'
-import { formatCycleDate } from '@/lib/formatCycleDate'
-import { getPercentage } from '@/lib/getPercentage'
 import type { Cycle } from '@/lib/services/cycles/types'
 import { useGetStagesPerProject } from '@/lib/services/stages/hooks'
 import { useTasksByStage } from '@/lib/services/tasks/hooks'
+import { formatCycleDate, getPercentage } from '@/lib/utils'
 import { Copy, Lock, Pencil } from 'lucide-react'
 
 interface ActiveCycleProps {

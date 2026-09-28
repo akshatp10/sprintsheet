@@ -5,7 +5,7 @@ import { useCallback, useState } from "react"
 import SearchInput from "../inputs/SearchInput"
 import NewProjectForm from "@/features/projects/components/forms/NewProjectForm"
 import useShortcutSearch from "@/hooks/useShortcutSearch"
-import { isMac } from "@/lib/isMac"
+import { isMac } from "@/lib/utils"
 
 const WorkspaceTopbar = () => {
     const [searchProject, setSearchProject] = useState("")
