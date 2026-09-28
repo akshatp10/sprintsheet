@@ -25,7 +25,7 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
 
     return (
         <div
-            className={`rounded-md border-2 border-lines-hairline w-full min-h-fit bg-surface px-4 py-2 flex flex-col gap-2 justify-center ${isDone ? "opacity-50" : ""} ${isOverlay ? "opacity-75" : ""}`}
+            className={`rounded-md border border-lines-hairline w-full min-h-fit bg-surface px-4 py-2 flex flex-col gap-2 justify-center ${isDone ? "opacity-50" : ""} ${isOverlay ? "opacity-75" : ""}`}
         >
             <div className="flex w-full items-start justify-between gap-2">
                 <Text variant="mono" className="shrink-0 text-ink-3">
@@ -55,7 +55,7 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
             </div>
 
             <Text
-                variant="h1"
+                variant="h2"
                 className={isDone ? "line-through" : ""}
             >
                 {task.name}
