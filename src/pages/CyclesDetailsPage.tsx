@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 
 import NoActiveCycle from "@/features/cycles/components/NoActiveCycle";
 import Button from "@/components/button/Button";
+import Mascot from "@/components/common/Mascot";
 
 const CyclesDetailsPage = () => {
     const [automaticCycle, setAutomaticCycle] = useState(false);
@@ -172,12 +173,9 @@ const CyclesDetailsPage = () => {
 
             {/* Footer */}
             <div className="w-full border border-lines-hairline rounded-md p-4 flex gap-2 text-ink-2 sticky">
-                <svg viewBox="0 0 44 40" width={50}>
-                    <rect x="8" y="6" width="28" height="24" rx="7" fill="#ffffff" stroke="#5a4fb0" strokeWidth="2"></rect>
-                    <circle cx="17" cy="17" r="3" fill="#5a4fb0"></circle><circle cx="27" cy="17" r="3" fill="#5a4fb0"></circle>
-                    <path d="M18 24 q4 3.5 8 0" stroke="#2f8f5b" strokeWidth="2" fill="none" strokeLinecap="round"></path>
-                    <path d="M16 33 h12 M19 33 v4 M25 33 v4" stroke="#b3781f" strokeWidth="2" strokeLinecap="round"></path>
-                </svg>
+
+                <Mascot expression="info" size={50} renderAnimation />
+
                 <Text>Unfinished tasks stay attached to the cycle they were in. Closing a cycle — by hand or by rollover — never moves work: carry it forward yourself with Duplicate, ⋯ → Move to cycle, or the backlog drawer.</Text>
             </div>
         </div>
