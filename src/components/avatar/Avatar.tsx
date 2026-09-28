@@ -2,6 +2,7 @@ import React from 'react';
 import { UserRound } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import Text from '../common/Text';
+import { getExtractedLetterFromString } from '@/lib/utils';
 
 type AvatarVariant = 'purple' | 'blue' | 'amber' | 'rose' | 'chip' | 'default';
 
@@ -52,6 +53,8 @@ const Avatar = ({
             ? getAvatarVariant(userName)
             : 'default';
 
+    const name = getExtractedLetterFromString(userName ?? "", 2);
+
     return (
         <div
             className={cn(
@@ -68,7 +71,7 @@ const Avatar = ({
                 `+${extraUsers}`
             ) : userName ? (
                 <Text variant={isSideBar ? "body" : "caption"} className='leading-1'>
-                    {userName.slice(0, 2).toUpperCase()}
+                    {name.slice(0, 2).toUpperCase()}
                 </Text>
             ) : (
                 <UserRound size={12} strokeWidth={1.5} className='text-ink-2' />
