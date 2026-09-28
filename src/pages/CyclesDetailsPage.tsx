@@ -70,12 +70,13 @@ const CyclesDetailsPage = () => {
     return (
         <div className="w-full flex flex-col px-8 py-6 gap-8">
             {/* Top section containing toggle */}
-            <div className="w-full flex gap-3 items-stretch">
+            <div className="w-full flex gap-3 items-stretch opacity-50">
                 <ToggleButtonBox
                     checked={automaticCycle}
                     onChange={(value) => setAutomaticCycle(value)}
                     classname="flex flex-1 items-center"
                     contentClassName="gap-0 w-full justify-between"
+                    isDisabled
                 >
                     <div className="flex w-full items-center justify-between">
                         <div className="flex flex-col">
@@ -95,6 +96,7 @@ const CyclesDetailsPage = () => {
                                     onClick={() =>
                                         setDefaultCycleLength((prev) => Math.max(1, prev - 1))
                                     }
+                                    disabled
                                 >
                                     -
                                 </Button>
@@ -107,6 +109,7 @@ const CyclesDetailsPage = () => {
                                     variant="tertiary"
                                     className="h-full w-7 p-0 rounded-none flex items-center justify-center border-0"
                                     onClick={() => setDefaultCycleLength((prev) => prev + 1)}
+                                    disabled
                                 >
                                     +
                                 </Button>
