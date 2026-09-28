@@ -15,7 +15,7 @@ import {
     defaultValues,
     type CycleFormData,
 } from "../types/cycleFormData";
-import { formatCycleDate } from "@/lib/formatCycleDate";
+import { formatCycleDate } from "@/lib/utils";
 import ToggleButton from "@/components/inputs/ToggleButton";
 
 interface CreateCycleFormProps {
