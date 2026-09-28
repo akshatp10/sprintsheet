@@ -2,10 +2,10 @@ import Avatar from "@/components/avatar/Avatar";
 import AvatarGroup from "@/components/avatar/AvatarGroups";
 import Chip from "@/components/chips/Chip";
 import Text from "@/components/common/Text";
-import { formatDate } from "@/lib/formatDate";
 
 import type { TaskWithUsers } from "@/lib/services/tasks/types";
 import { useTypeById } from "@/lib/services/types/hooks";
+import { formatDate } from "@/lib/utils";
 
 interface TaskCardProps {
     task: TaskWithUsers;
