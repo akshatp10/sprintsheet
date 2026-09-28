@@ -40,7 +40,7 @@ The table receives the same project task data used by the other task views.
 
 > **Screenshot:** Complete Table View showing task rows, columns, stages and assignees.
 >
-> `screenshots/table-view.png`
+> <img alt="taskTableView" src="https://github.com/user-attachments/assets/dc8ed9d6-a40c-4379-bd60-69a2cb222a3f" />
 
 ## Task rows
 
