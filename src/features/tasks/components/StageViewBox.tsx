@@ -28,13 +28,15 @@ const StageViewBox = ({
         id: stage.id,
     });
 
-    const { container, chip } = stageConfig[stage?.name as StageName];
+    const { container, chip, gradient } = stageConfig[stage?.name as StageName];
 
     return (
         <div
             className={cn(
                 "relative flex h-full min-h-0 flex-col rounded-md border",
                 container,
+                "bg-surface",
+                gradient,
             )}
         >
             {isDropTarget && !isCurrentStage && (
@@ -44,7 +46,7 @@ const StageViewBox = ({
                     </Text>
                 </div>
             )}
-            <div className="sticky top-0">
+            <div className={cn("sticky top-0", "")}>
                 <StageHeader
                     stage={stage}
                     taskCount={tasks?.length}
