@@ -13,6 +13,7 @@ import ToggleButtonBox from "@/components/common/ToggleButtonBox";
 import FormInputBox from "@/components/inputs/FormInputBox";
 
 import { cycleTabsOptions, layoutTabsOptions, type ProjectFormData } from "../../types/projectFormData";
+import { getExtractedLetterFromString } from "@/lib/utils";
 
 interface BasicsStepProps {
     watch: UseFormWatch<ProjectFormData>;
@@ -28,22 +29,14 @@ const BasicsStep = ({
     const formValues = watch();
     const [isKeyManuallyEdited, setIsKeyManuallyEdited] = useState(false);
 
-    const generateKeyName = (value: string) => {
-        return value
-            .trim()
-            .split(/\s+/)
-            .filter(Boolean)
-            .map((word) => word[0]?.toUpperCase())
-            .join("");
-    };
-
     const handleProjectNameChange = (value: string) => {
         setValue("name", value, {
             shouldDirty: true,
             shouldValidate: true,
         });
+
         if (!isKeyManuallyEdited) {
-            setValue("key", generateKeyName(value), {
+            setValue("key", getExtractedLetterFromString(value, 3), {
                 shouldDirty: true,
                 shouldValidate: true,
             });
