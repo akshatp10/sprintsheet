@@ -7,6 +7,7 @@ import { useDroppable } from "@dnd-kit/react";
 import { useState } from "react";
 import StageListHeader from "./StageListHeader";
 import DraggableTaskListElement from "@/features/tasks/components/dragging/DraggableListElement";
+import TaskListEmpty from "@/features/tasks/components/listView/TaskListEmpty";
 
 interface StageListBoxProps {
     stage: Stage;
@@ -69,7 +70,7 @@ const StageListBox = ({
                 <div>
                     {isLoading ? (
                         <div className="h-12 border-b border-lines-hairline" />
-                    ) : (
+                    ) : (tasks.length > 0 ?
                         tasks.map((task, index) => (
                             <DraggableTaskListElement
                                 key={task.id}
@@ -80,6 +81,8 @@ const StageListBox = ({
                                 isDone={stage.isTerminal}
                             />
                         ))
+
+                        : <TaskListEmpty />
                     )}
                 </div>
             )}
