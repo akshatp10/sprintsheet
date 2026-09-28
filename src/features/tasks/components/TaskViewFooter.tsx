@@ -16,7 +16,7 @@ interface TaskViewFooterProps {
     cycles: Cycle[]
 }
 
-const TaskViewFooter = ({ projectId,
+const TaskViewFooter = ({
     projectId,
     onClick,
     isCardHeld = true,
@@ -27,10 +27,6 @@ const TaskViewFooter = ({ projectId,
 }: TaskViewFooterProps) => {
 
     const [createCycle, setCreateCycle] = useState(false)
-
-    // if (cycles && cycles.length > 0) setCurrentCycleId(cycles[0]?.id)
-
-    const [createCycle, setCreateCycle] = useState(false);
 
     // if (cycles && cycles.length > 0) setCurrentCycleId(cycles[0]?.id)
 

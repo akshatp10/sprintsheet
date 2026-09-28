@@ -12,6 +12,7 @@ interface TableTaskPageProps {
     projectId: string;
     cycleId: string;
     onDraggingChange: (isDragging: boolean) => void;
+    onUpdateTaskStage: (taskId: string, stageId: string) => void;
 }
 
 const columns = [
