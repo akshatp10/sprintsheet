@@ -81,7 +81,7 @@ const TaskCreateForm = ({
         >
             <form
                 onSubmit={handleSubmit(handleFormSubmit)}
-                className="flex min-h-0 flex-1 flex-col px-4 pb-5 gap-1"
+                className="flex min-h-0 flex-1 flex-col px-4 pb-6 gap-1"
             >
                 {/* Main content */}
                 <div className="flex flex-col gap-5">
