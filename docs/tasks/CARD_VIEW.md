@@ -19,7 +19,7 @@ It does not maintain its own task data.
 ## Reading data
 
 ```text
-useTasks(projectId)
+useGetAllTasksByProject(projectId)
       ↓
 Task[]
       ↓
@@ -35,7 +35,6 @@ The project stages determine the columns. Each task is rendered in the column ma
 ### Screenshot
 
 <img width="1763" height="844" alt="image" src="https://github.com/user-attachments/assets/2e597236-67d1-459d-a153-00cc530aec62" />
-
 
 ## Task card
 

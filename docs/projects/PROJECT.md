@@ -30,7 +30,6 @@ Project-scoped data uses the project ID to avoid mixing data between projects.
 
 <img width="1763" height="844" alt="image" src="https://github.com/user-attachments/assets/c5e7bfd9-6749-480e-b212-5c922e1d3e38" />
 
-
 ## Reading project data
 
 The main pattern is:
@@ -52,7 +51,7 @@ React Query owns the query lifecycle and cache. Components consume query results
 For example, project tasks follow the same project-scoped pattern:
 
 ```text
-useTasks(projectId)
+useGetAllTasksByProject(projectId)
       ↓
 getAllProjectTasks(projectId)
       ↓

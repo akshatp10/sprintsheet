@@ -2,13 +2,13 @@ import { useParams, useSearchParams } from "react-router-dom";
 import TableTaskPage from "./tasks/TableTaskPage";
 import CardTaskPage from "./tasks/CardTaskPage";
 // import { useTasksByStage } from "@/lib/services/tasks/hooks";
-import { useProjectStages } from "@/lib/services/stages/hooks";
+import { useGetStagesPerProject } from "@/lib/services/stages/hooks";
 import TaskViewFooter from "@/features/tasks/components/TaskViewFooter";
 import { useEffect, useState } from "react";
 import BacklogDrawer from "@/features/tasks/components/BacklogDrawer";
 import { isFeatureEnabled } from "@/config/features";
 import { useBacklogTasks, useTasksByStage } from "@/lib/services/tasks/hooks";
-import { useCycles } from "@/lib/services/cycles/hooks";
+import { useProjectCycles } from "@/lib/services/cycles/hooks";
 import { useUpdateTaskCycle } from "@/lib/services/taskCycles/hooks";
 
 const TaskViewPage = () => {
@@ -23,8 +23,8 @@ const TaskViewPage = () => {
     const { projectid } = useParams<{ projectid: string }>();
 
     const { data: tasksByStage = {}, isLoading, isError, error } = useTasksByStage(currentCycleId ?? "");
-    const { data: stages = [] } = useProjectStages(projectid ?? "");
-    const { data: cycles = [] } = useCycles(projectid ?? "");
+    const { data: stages = [] } = useGetStagesPerProject(projectid ?? "");
+    const { data: cycles = [] } = useProjectCycles(projectid ?? "");
     const { data: backlogTasks = [] } = useBacklogTasks(projectid ?? "");
 
     const sortedStages = [...stages].sort((a, b) => a.order - b.order);

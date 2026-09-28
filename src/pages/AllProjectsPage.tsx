@@ -7,7 +7,7 @@ import ProjectCardGridSkeleton from "@/features/projects/components/skeletons/Pr
 import { mapProjectToCard } from "@/lib/mapProjectToCard";
 import {
     projectMembersQuery,
-    useProjects,
+    useGetAllProjects,
 } from "@/lib/services/projects/hooks";
 import { useQueries } from "@tanstack/react-query";
 import { useState } from "react";
@@ -24,7 +24,7 @@ const AllProjectsPage = () => {
         isLoading,
         isError,
         error
-    } = useProjects(false);
+    } = useGetAllProjects(false);
 
     const memberQueries = useQueries({
         queries: projects.map((project) =>

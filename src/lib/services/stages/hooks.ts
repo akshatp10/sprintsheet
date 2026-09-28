@@ -6,7 +6,7 @@ export const stageQueryKeys = {
 	project: (projectId: string) => [...stageQueryKeys.all, projectId] as const,
 };
 
-export const useProjectStages = (projectId: string) => {
+export const useGetStagesPerProject = (projectId: string) => {
 	return useQuery({
 		queryKey: stageQueryKeys.project(projectId),
 		queryFn: async () => {
