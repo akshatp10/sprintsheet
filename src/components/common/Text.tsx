@@ -25,7 +25,23 @@ const variantClasses: Record<TextVariant, string> = {
 };
 
 interface TextProps extends HTMLAttributes<HTMLParagraphElement> {
+    /**
+     * Typography variant:
+     *
+     * - `display` — 1.375rem (22px) / 1.2 (26.4px) / 500 / -0.01em
+     * - `h1` — 1.125rem (18px) / 1.25 (22.5px) / 500 / -0.01em
+     * - `h2` — 0.9375rem (15px) / 1.3 (19.5px) / 500
+     * - `body` — 0.8125rem (13px) / 1.45 (18.85px) / 400
+     * - `body-sm` — 0.78125rem (12.5px) / 1.6 (20px) / 400
+     * - `label` — 0.75rem (12px) / 1.4 (16.8px) / 400
+     * - `caption` — 0.6875rem (11px) / 1.35 (14.85px) / 400
+     * - `micro` — 0.625rem (10px) / 1.2 (12px) / 500 / 0.06em
+     * - `mono` — 0.8125rem (13px) / 1.4 (18.2px) / 400 / monospace
+     *
+     * Format: size / line-height / weight / letter-spacing
+     */
     variant?: TextVariant;
+
     as?: "p" | "span";
     truncate?: boolean;
 }
