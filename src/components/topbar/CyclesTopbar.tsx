@@ -5,14 +5,14 @@ import { useParams } from "react-router-dom";
 import CreateCycleForm from "@/features/cycles/forms/CreateCycleForm";
 import Text from "../common/Text";
 import { Copy } from "lucide-react";
-import { useCycles } from "@/lib/services/cycles/hooks";
+import { useGetAllCyclesByProject } from "@/lib/services/cycles/hooks";
 import { useCycleStatus } from "@/hooks/useCycleStatus";
 
 const CyclesTopbar = () => {
     const [openCycleForm, setOpenCycleForm] = useState(false);
 
     const { projectid } = useParams<{ projectid: string }>();
-    const { data: allCycles = [] } = useCycles(projectid ?? "");
+    const { data: allCycles = [] } = useGetAllCyclesByProject(projectid ?? "");
 
     const {
         active: activeCycles,

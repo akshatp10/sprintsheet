@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import BacklogDrawer from "@/features/tasks/components/BacklogDrawer";
 import { isFeatureEnabled } from "@/config/features";
 import { useBacklogTasks, useTasksByStage } from "@/lib/services/tasks/hooks";
-import { useProjectCycles } from "@/lib/services/cycles/hooks";
+import { useGetAllCyclesByProject } from "@/lib/services/cycles/hooks";
 import { useUpdateTaskCycle } from "@/lib/services/taskCycles/hooks";
 
 const TaskViewPage = () => {
@@ -24,7 +24,7 @@ const TaskViewPage = () => {
 
     const { data: tasksByStage = {}, isLoading, isError, error } = useTasksByStage(currentCycleId ?? "");
     const { data: stages = [] } = useGetStagesPerProject(projectid ?? "");
-    const { data: cycles = [] } = useProjectCycles(projectid ?? "");
+    const { data: cycles = [] } = useGetAllCyclesByProject(projectid ?? "");
     const { data: backlogTasks = [] } = useBacklogTasks(projectid ?? "");
 
     const sortedStages = [...stages].sort((a, b) => a.order - b.order);
