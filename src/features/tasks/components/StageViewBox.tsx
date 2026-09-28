@@ -12,8 +12,7 @@ interface StageViewBoxProps {
     tasks: TaskWithUsers[];
     isLoading: boolean;
     onCreateTask: (stageId: string) => void;
-    isCurrentStage: boolean
-
+    isCurrentStage: boolean;
 }
 
 const StageViewBox = ({
@@ -22,44 +21,60 @@ const StageViewBox = ({
     isLoading,
     onCreateTask,
     isCurrentStage,
-
 }: StageViewBoxProps) => {
     const { ref, isDropTarget } = useDroppable({
         id: stage.id,
     });
 
-    const { border, chip, gradient } = stageConfig[stage?.name as StageName];
+    const { chip, gradient, borderGradient, container } =
+        stageConfig[stage?.name as StageName];
 
     return (
         <div
             className={cn(
-                "relative flex h-full min-h-0 flex-col rounded-md",
-                gradient,
-                border
+                "relative flex h-full min-h-0 flex-col rounded-md p-px bg-transparent",
+                borderGradient,
             )}
         >
-            {isDropTarget && !isCurrentStage && (
-                <div className={cn("absolute inset-0 z-40 flex items-center justify-center rounded-md", chip, "opacity-70")}>
-                    <Text className="" variant="h2">
-                        Drop task here
-                    </Text>
-                </div>
-            )}
-            <div className={cn("sticky top-0", "")}>
-                <StageHeader
-                    stage={stage}
-                    taskCount={tasks?.length}
-                    onCreateTask={onCreateTask}
-                />
-            </div>
+            <div className="h-full bg-surface-page rounded-md">
+                <div
+                    className={cn(
+                        "relative flex h-full min-h-0 flex-col rounded-md",
+                        container,
+                        gradient,
+                    )}
+                >
+                    {isDropTarget && !isCurrentStage && (
+                        <div
+                            className={cn(
+                                "absolute inset-0 z-40 flex items-center justify-center rounded-[5px]",
+                                chip,
+                                "opacity-70",
+                            )}
+                        >
+                            <Text variant="h2">
+                                Drop task here
+                            </Text>
+                        </div>
+                    )}
 
-            <StageTaskList
-                tasks={tasks}
-                isLoading={isLoading}
-                isDropTarget={isDropTarget}
-                isTerminal={stage?.isTerminal}
-                containerRef={ref}
-            />
+                    <div className="sticky top-0">
+                        <StageHeader
+                            stage={stage}
+                            taskCount={tasks?.length}
+                            onCreateTask={onCreateTask}
+                        />
+                    </div>
+
+                    <StageTaskList
+                        tasks={tasks}
+                        isLoading={isLoading}
+                        isDropTarget={isDropTarget}
+                        isTerminal={stage?.isTerminal}
+                        containerRef={ref}
+                    />
+                </div>
+            </div>
         </div>
     );
 };
