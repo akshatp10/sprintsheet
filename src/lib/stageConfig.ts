@@ -3,6 +3,7 @@ interface StageStyle {
 	chip: string;
 	dot: string;
 	gradient: string;
+	border?: string;
 }
 
 export enum StageName {
@@ -24,6 +25,7 @@ export const stageConfig: Record<StageName, StageStyle> = {
 		chip: "bg-stage-backlog-chip border-stage-backlog-dot text-stage-backlog-text",
 		dot: "bg-stage-backlog-dot",
 		gradient: gradient("stage-backlog-bg"),
+		border: "border border-stage-backlog-border",
 	},
 
 	[StageName.TODO]: {
@@ -32,6 +34,7 @@ export const stageConfig: Record<StageName, StageStyle> = {
 		chip: "bg-stage-todo-chip border-stage-todo-dot text-stage-todo-text",
 		dot: "bg-stage-todo-dot",
 		gradient: gradient("stage-todo-bg"),
+		border: "before:from-stage-todo-border before:to-transparent",
 	},
 
 	[StageName.IN_PROGRESS]: {
@@ -40,6 +43,7 @@ export const stageConfig: Record<StageName, StageStyle> = {
 		chip: "bg-stage-progress-chip border-stage-progress-dot text-stage-progress-text",
 		dot: "bg-stage-progress-dot",
 		gradient: gradient("stage-progress-bg"),
+		border: "border border-stage-progress-border",
 	},
 
 	[StageName.IN_QA]: {
@@ -47,6 +51,7 @@ export const stageConfig: Record<StageName, StageStyle> = {
 		chip: "bg-stage-qa-chip border-stage-qa-dot text-stage-qa-text",
 		dot: "bg-stage-qa-dot",
 		gradient: gradient("stage-qa-bg"),
+		border: "border border-stage-qa-border",
 	},
 
 	[StageName.DONE]: {
@@ -55,6 +60,7 @@ export const stageConfig: Record<StageName, StageStyle> = {
 		chip: "bg-stage-done-chip border-stage-done-dot text-stage-done-text",
 		dot: "bg-stage-done-dot",
 		gradient: gradient("stage-done-bg"),
+		border: "border border-stage-done-border",
 	},
 
 	[StageName.BLOCKED]: {
@@ -63,5 +69,6 @@ export const stageConfig: Record<StageName, StageStyle> = {
 		chip: "bg-stage-blocked-bg border-stage-blocked-dot text-stage-blocked-text",
 		dot: "bg-stage-blocked-dot",
 		gradient: gradient("stage-blocked-bg"),
+		border: "border border-stage-blocked-border",
 	},
 };

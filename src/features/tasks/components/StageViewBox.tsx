@@ -28,15 +28,14 @@ const StageViewBox = ({
         id: stage.id,
     });
 
-    const { container, chip, gradient } = stageConfig[stage?.name as StageName];
+    const { border, chip, gradient } = stageConfig[stage?.name as StageName];
 
     return (
         <div
             className={cn(
-                "relative flex h-full min-h-0 flex-col rounded-md border",
-                container,
-                "bg-surface",
+                "relative flex h-full min-h-0 flex-col rounded-md",
                 gradient,
+                border
             )}
         >
             {isDropTarget && !isCurrentStage && (
