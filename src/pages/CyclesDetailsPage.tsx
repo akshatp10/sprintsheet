@@ -3,7 +3,7 @@ import ToggleButtonBox from "@/components/common/ToggleButtonBox";
 import ActiveCycle from "@/features/cycles/components/ActiveCycle";
 import CycleRow from "@/features/cycles/components/CycleRow";
 import { useCycleStatus } from "@/hooks/useCycleStatus";
-import { useCycles } from "@/lib/services/cycles/hooks";
+import { useGetAllCyclesByProject } from "@/lib/services/cycles/hooks";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -15,7 +15,7 @@ const CyclesDetailsPage = () => {
     const [defaultCycleLength, setDefaultCycleLength] = useState(5);
 
     const { projectid } = useParams<{ projectid: string }>();
-    const { data: allCycles = [] } = useCycles(projectid ?? "");
+    const { data: allCycles = [] } = useGetAllCyclesByProject(projectid ?? "");
 
     const {
         active: activeCycles,

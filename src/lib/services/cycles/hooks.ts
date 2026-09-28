@@ -32,7 +32,7 @@ export const cycleQueryKeys = {
 };
 
 //Getting all the cycles of projects
-export const useProjectCycles = (projectId: string) => {
+export const useGetAllCyclesByProject = (projectId: string) => {
 	return useQuery({
 		queryKey: cycleQueryKeys.project(projectId),
 

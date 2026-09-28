@@ -6,7 +6,7 @@ import { getToday } from '@/hooks/useCycleStatus'
 import { formatCycleDate } from '@/lib/formatCycleDate'
 import { getPercentage } from '@/lib/getPercentage'
 import type { Cycle } from '@/lib/services/cycles/types'
-import { useProjectStages } from '@/lib/services/stages/hooks'
+import { useGetStagesPerProject } from '@/lib/services/stages/hooks'
 import { useTasksByStage } from '@/lib/services/tasks/hooks'
 import { Copy, Lock, Pencil } from 'lucide-react'
 
@@ -32,7 +32,7 @@ const ActiveCycle = ({ activeCycle, projectId }: ActiveCycleProps) => {
     );
 
     const { data: tasks = {}, isLoading } = useTasksByStage(curCycle.id);
-    const { data: stages = [] } = useProjectStages(projectId);
+    const { data: stages = [] } = useGetStagesPerProject(projectId);
 
     const sortedStages = [...stages].sort((a, b) => a.order - b.order).reverse();
 
