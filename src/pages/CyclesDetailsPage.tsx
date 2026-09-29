@@ -175,7 +175,7 @@ const CyclesDetailsPage = () => {
             </div>
 
             {/* Footer */}
-            <div className="w-full border border-lines-hairline rounded-md p-4 flex gap-2 text-ink-2 sticky">
+            <div className="w-full border border-lines-hairline rounded-md p-4 flex gap-2 text-ink-2 sticky items-center">
 
                 <Mascot expression="info" size={50} renderAnimation />
 
