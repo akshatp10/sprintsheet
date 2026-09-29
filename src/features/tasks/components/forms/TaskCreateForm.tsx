@@ -45,7 +45,7 @@ const TaskCreateForm = ({
 
     const assigneeIds = watch("assigneeIds") ?? [];
     // const tags = watch("tags") ?? [];
-    const { data: stages = [] } = useProjectStages(projectId);
+    const { data: stages = [] } = useGetStagesPerProject(projectId);
     const { data: projectTypes = [] } = useProjectTypes(projectId);
     const { mutate: createNewTask } = useCreateTask();
 
