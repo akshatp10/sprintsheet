@@ -8,6 +8,7 @@ import type { Task } from "@/lib/services/tasks/types";
 import { Inbox } from "lucide-react";
 import Text from "@/components/common/Text";
 import BacklogTaskCard from "./BacklogTaskCard";
+import Mascot from "@/components/common/Mascot";
 
 interface BacklogDrawerProps {
     handleClose: () => void;
@@ -64,7 +65,15 @@ const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
                 <div className="w-full px-4 flex flex-col gap-2">
                     {backlogTasks?.length > 0
                         ? backlogTasks.map(backlogTask => (<BacklogTaskCard key={backlogTask.id} />))
-                        : <div>Hi</div>}
+                        : <div className="flex min-h-16 items-center justify-center gap-2 rounded-lg border border-lines-control bg-surface">
+                            <Mascot renderAnimation expression="sleeping" />
+                            <Text
+                                variant="body-sm"
+                                className="text-ink-3"
+                            >
+                                No backlog tasks
+                            </Text>
+                        </div>}
                 </div>
             </Drawer>
 
