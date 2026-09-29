@@ -4,7 +4,7 @@ import Text from "@/components/common/Text";
 const TaskListEmpty = () => {
     return (
         <div
-            className="grid min-h-12 border-b border-lines-hairline bg-surface-page"
+            className="grid min-h-10 border-b border-lines-hairline bg-surface-page"
             style={{
                 gridTemplateColumns: TASK_LIST_GRID,
             }}
