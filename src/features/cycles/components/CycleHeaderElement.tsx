@@ -1,0 +1,64 @@
+import Text from "@/components/common/Text";
+import { cn } from "@/lib/cn";
+import type { Cycle } from "@/lib/services/cycles/types";
+import { formatCycleDate } from "@/lib/utils";
+import { Inbox, RefreshCcw } from "lucide-react";
+
+interface CycleHeaderElementProps {
+    /**
+     * Defines the visual variant of the cycle header.
+     * - `backlog` — represents tasks that are not part of a cycle.
+     * - `active` — represents the currently active cycle.
+     * - `other` — represents completed, closed, or other inactive cycles.
+     */
+    variant: "backlog" | "active" | "other";
+
+    cycle?: Cycle;
+}
+
+const CycleHeaderElement = ({ variant, cycle }: CycleHeaderElementProps) => {
+    const isBacklog = variant === "backlog";
+    const isActive = variant === "active";
+
+    return (
+        <div
+            className={cn(
+                "flex min-h-10 items-center border border-lines-control px-3",
+                isBacklog && "bg-surface-raised/50",
+                isActive && "bg-accent-wash-active border-accent",
+                variant === "other" && "bg-surface-sunken",
+            )}
+        >
+            {/* Left section */}
+            <div className="flex min-w-0 items-center gap-2">
+                <Text className="shrink-0">{isBacklog ? <Inbox strokeWidth={1.5} size={10} /> : <RefreshCcw strokeWidth={1.5} size={10} />}</Text>
+
+                <Text className="truncate">
+                    {isBacklog ? "BACKLOG — NO CYCLE" : `${formatCycleDate(cycle?.startDate ?? "")} - ${formatCycleDate(cycle?.endDate ?? "")}`}
+                </Text>
+
+                {!isBacklog && (
+                    <Text className="shrink-0 uppercase">
+                        {isActive ? "· ACTIVE" : "· CLOSED"}
+                    </Text>
+                )}
+
+                <Text className="shrink-0 text-ink-3">
+                    {isBacklog ? "18" : isActive ? "9" : "11"}
+                </Text>
+            </div>
+
+            <div className="ml-auto flex items-center">
+                <Text className="text-ink-3" variant="body-sm">
+                    {isBacklog
+                        ? "a task with no cycle lives here"
+                        : isActive
+                            ? "day 4 of 5"
+                            : "9 of 11 done"}
+                </Text>
+            </div>
+        </div>
+    );
+};
+
+export default CycleHeaderElement;

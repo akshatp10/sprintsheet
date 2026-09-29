@@ -1,5 +1,10 @@
 import Text from "@/components/common/Text"
+import CycleHeaderElement from "@/features/cycles/components/CycleHeaderElement";
 import AllTaskListItem from "@/features/tasks/components/listView/AllTaskListItem";
+import { useCycleStatus } from "@/hooks/useCycleStatus";
+import { useGetAllCyclesByProject } from "@/lib/services/cycles/hooks";
+import { useBacklogTasks } from "@/lib/services/tasks/hooks";
+import { useParams } from "react-router-dom";
 
 const AllTaskPage = () => {
 
@@ -41,6 +46,37 @@ const AllTaskPage = () => {
         ...columns.map((column) => column.width),
     ].join(" ");
 
+    const { projectid } = useParams<{ projectid: string }>();
+
+    const { data: allCycles = [] } = useGetAllCyclesByProject(projectid ?? "");
+
+    const {
+        active: activeCycles,
+        closed: closedCycles,
+        planned: plannedCycles,
+    } = useCycleStatus(allCycles);
+
+    const cyclesWithStatus = [
+        ...plannedCycles.map((cycle) => ({
+            cycle,
+            status: "planned" as const,
+        })),
+        ...activeCycles.map((cycle) => ({
+            cycle,
+            status: "active" as const,
+        })),
+        ...closedCycles.map((cycle) => ({
+            cycle,
+            status: "closed" as const,
+        })),
+    ];
+
+    const { data: backlogTasks = [] } = useBacklogTasks(projectid ?? "");
+
+    console.log('====================================');
+    console.log(backlogTasks);
+    console.log('====================================');
+
     return (
         <>
             <div
@@ -60,6 +96,11 @@ const AllTaskPage = () => {
                     </Text>
                 ))}
             </div>
+
+            <CycleHeaderElement variant="backlog" />
+            {cyclesWithStatus.map((cycle) => (
+                <CycleHeaderElement variant={cycle?.status === "active" ? "active" : "other"} cycle={cycle?.cycle} />
+            ))}
 
             <AllTaskListItem gridTemplateColumns={gridTemplateColumns} isDone={false} />
 
