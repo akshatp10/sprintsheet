@@ -62,10 +62,20 @@ const TaskViewPage = () => {
         });
     };
 
-    const handleCycleChange = (cycleId: string) => {
-        setSearchParams((prev) => {
-            prev.set("cycle", cycleId);
-            return prev;
+    const { mutate: updateTaskCycle } = useUpdateTaskCycle();
+
+    const handleUpdateTaskStage = (taskId: string, stageId: string) => {
+        const task = Object.values(tasksByStage)
+            .flat()
+            .find((task) => task.id === taskId);
+
+        if (!task || task.stage.stageId === stageId) return;
+
+        updateTaskCycle({
+            id: task.taskCycleId,
+            cycleId: currentCycleId,
+            stageId,
+            taskId,
         });
     };
 
