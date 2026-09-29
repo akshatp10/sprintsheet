@@ -36,7 +36,7 @@ const columns = [
     {
         key: "assignee",
         label: "ASSIGNEE",
-        width: "160px",
+        width: "120px",
     },
     {
         key: "status",

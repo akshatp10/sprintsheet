@@ -11,7 +11,7 @@ import { formatDate } from "@/lib/utils";
 import { GripVertical } from "lucide-react";
 
 export const TASK_LIST_GRID =
-    "40px 100px minmax(250px, 1fr) 160px 120px 100px 140px";
+    "40px 100px minmax(250px, 1fr) 120px 120px 100px 140px";
 
 interface TaskListElementProps {
     task: CycleTaskWithUsers;
@@ -98,13 +98,6 @@ const TaskListElement = ({
                                 <Avatar extraUsers={extraUsers} />
                             )}
                         </AvatarGroup>
-
-                        <Text
-                            variant="caption"
-                            className="truncate text-ink-2"
-                        >
-                            {task.assignees[0]?.name}
-                        </Text>
                     </div>
                 ) : (
                     <div className="flex items-center gap-1">
