@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import useShortcutSearch from "@/hooks/useShortcutSearch";
 import SearchInput from "../inputs/SearchInput";
 import { isMac } from "@/lib/utils";
+import { useBacklogTasks, useGetAllTasksByProject } from "@/lib/services/tasks/hooks";
 
 const AllTaskTopbar = () => {
 
@@ -19,6 +20,9 @@ const AllTaskTopbar = () => {
 
     useShortcutSearch("k", focusSearch)
 
+    const { data: allTasksInProject } = useGetAllTasksByProject(projectid ?? "");
+    const { data: allBacklogTasks } = useBacklogTasks(projectid ?? "");
+
     return (
         <>
             <div className="flex w-full items-center justify-between gap-3">
@@ -27,7 +31,7 @@ const AllTaskTopbar = () => {
                     <Text variant="h1">All tasks</Text>
 
                     <Text className="text-ink-3">
-                        {62} tasks · {18} in the backlog
+                        {allTasksInProject?.length} tasks · {allBacklogTasks?.length} in the backlog
                     </Text>
                 </div>
 
