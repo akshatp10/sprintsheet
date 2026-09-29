@@ -37,7 +37,7 @@ const TaskListElement = ({
         <div
             className={`
 				grid
-				min-h-12
+				min-h-10
 				border-b
 				border-lines-hairline
 				text-sm
