@@ -1,9 +1,9 @@
-import type { TaskWithUsers } from "@/lib/services/tasks/types";
+import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useDraggable } from "@dnd-kit/react";
 import TaskCard from "../TaskCard";
 
 interface DraggableTaskCardProps {
-    task: TaskWithUsers;
+    task: CycleTaskWithUsers;
     isDone: boolean;
 }
 
@@ -24,6 +24,7 @@ const DraggableTaskCard = ({
                     task={task}
                     isDone={isDone}
                 />}
+
         </div>
 
     );
