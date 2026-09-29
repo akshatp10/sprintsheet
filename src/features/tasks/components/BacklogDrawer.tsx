@@ -85,8 +85,8 @@ const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
                         </Text>
                         and leaves the backlog. Stage, status, assignee and history are unchanged.
                     </Text>
-                    <div className="flex gap-2 w-full items-center justify-center">
-                        <Button variant="primary" className="bg-surface text-ink border-lines-control" onClick={handleClose}>
+                    <div className="flex gap-2 w-full">
+                        <Button variant="secondary" className="bg-surface text-ink border-lines-control shadow-lines-control" onClick={handleClose}>
                             <Text variant="body" className="font-medium">
                                 Close
                             </Text>
