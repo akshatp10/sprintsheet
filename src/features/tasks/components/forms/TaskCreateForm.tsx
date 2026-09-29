@@ -132,41 +132,43 @@ const TaskCreateForm = ({
                                     </option>
                                 ))}
                             </select>
+                        </FormInputBox>
 
-                            {/* Assignee */}
-                            <AssigneeSelect
-                                projectId={projectId}
-                                value={assigneeIds}
-                                onChange={(ids) =>
-                                    setValue("assigneeIds", ids, {
-                                        shouldDirty: true,
-                                        shouldValidate: true,
-                                    })
-                                }
-                            />
 
-                            {/* Due date */}
-                            <Input
-                                register={register("dueDate")}
-                                type="date"
-                                className="h-8 rounded-md px-2.5 text-type-caption"
-                            />
+                        {/* Assignee */}
+                        <AssigneeSelect
+                            projectId={projectId}
+                            value={assigneeIds}
+                            onChange={(ids) =>
+                                setValue("assigneeIds", ids, {
+                                    shouldDirty: true,
+                                    shouldValidate: true,
+                                })
+                            }
+                        />
 
-                            {/* Type */}
-                            <FormInputBox error={errors.type?.message}>
-                                <select
-                                    {...register("type")}
-                                    className="h-8 rounded-md border border-lines-hairline bg-surface px-2.5 text-type-caption text-ink-2 outline-none transition-colors hover:border-lines focus:border-lines-strong"
-                                >
-                                    <option value="">Type</option>
+                        {/* Due date */}
+                        <Input
+                            register={register("dueDate")}
+                            type="date"
+                            className="h-8 rounded-md px-2.5 text-type-caption"
+                        />
 
-                                    {projectTypes.map((type) => (
-                                        <option key={type.id} value={type.id}>
-                                            {type.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </FormInputBox>
+                        {/* Type */}
+                        <FormInputBox error={errors.type?.message}>
+                            <select
+                                {...register("type")}
+                                className="h-8 rounded-md border border-lines-hairline bg-surface px-2.5 text-type-caption text-ink-2 outline-none transition-colors hover:border-lines focus:border-lines-strong"
+                            >
+                                <option value="">Type</option>
+
+                                {projectTypes.map((type) => (
+                                    <option key={type.id} value={type.id}>
+                                        {type.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </FormInputBox>
                     </div>
 
                     <Button
