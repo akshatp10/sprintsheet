@@ -113,10 +113,10 @@ const TaskViewPage = () => {
                             setOpenBacklog((prev) => !prev);
                         }
                     }}
-                    cycles={cycles} currentCycleId={currentCycleId} setCurrentCycleId={handleCycleChange} />
+                    cycles={cycles} currentCycleId={currentCycleId} setCurrentCycleId={handleCycleChange} openBacklog={openBacklog} />
             </div>
 
-            {openBacklog && <BacklogDrawer handleClose={() => setOpenBacklog(false)} />}
+            {openBacklog && <BacklogDrawer handleClose={() => setOpenBacklog(false)} backlogTasks={backlogTasks} />}
         </>
     );
 };

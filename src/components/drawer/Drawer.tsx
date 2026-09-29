@@ -14,7 +14,7 @@ interface DrawerProps {
     onClose: () => void;
 
     /** Text displayed in the drawer header to identify the drawer's current content or purpose. Defaults to an empty string. */
-    label?: string;
+    label?: React.ReactNode;
 
     /**
      * Controls which side of the viewport the drawer slides in from:

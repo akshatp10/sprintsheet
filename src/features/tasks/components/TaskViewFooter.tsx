@@ -14,6 +14,7 @@ interface TaskViewFooterProps {
     setCurrentCycleId: (cycleId: string) => void;
     currentCycleId: string;
     cycles: Cycle[]
+    openBacklog: boolean
 }
 
 const TaskViewFooter = ({
@@ -23,7 +24,8 @@ const TaskViewFooter = ({
     taskLength = 0,
     currentCycleId,
     setCurrentCycleId,
-    cycles
+    cycles,
+    openBacklog
 }: TaskViewFooterProps) => {
 
     const [createCycle, setCreateCycle] = useState(false)
@@ -69,14 +71,14 @@ const TaskViewFooter = ({
                     )}
                     <Button
                         variant="tertiary"
-                        className="flex gap-1 items-center justify-center"
+                        className={`flex gap-1 items-center justify-center ${openBacklog ? "text-accent-deep border-accent-deep bg-accent-wash-selected" : "text-ink-2"}`}
                         onClick={onClick}
                     >
                         <Inbox strokeWidth={1.5} size={13} />
-                        <Text className="text-ink-2">Backlog</Text>
+                        <Text className="">Backlog</Text>
                         <Text
                             variant="body-sm"
-                            className="font-normal text-ink-3"
+                            className={`font-normal`}
                         >
                             {taskLength}
                         </Text>

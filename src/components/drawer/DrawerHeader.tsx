@@ -7,7 +7,7 @@ interface DrawerHeaderProps {
     onClose: () => void;
 
     /** Text displayed as the drawer header title, identifying the content or purpose of the drawer. Defaults to an empty string. */
-    label?: string;
+    label?: React.ReactNode;
 }
 
 const DrawerHeader = ({

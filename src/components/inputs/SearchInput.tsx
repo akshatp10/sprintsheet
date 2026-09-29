@@ -26,20 +26,22 @@ const SearchInput = ({
     placeholder = "Search",
     autoFocus = false,
 }: SearchInputProps) => {
-
     return (
-        <div className={cn("relative", className)}>
+        <div className="relative">
             <Search
                 size={14}
                 strokeWidth={1.5}
-                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-fades-placeholders pointer-events-none"
+                className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-fades-placeholders"
             />
 
             <Input
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
-                className="pl-8 w-64 py-1 placeholder:font-medium"
+                className={cn(
+                    "w-64 py-1 pl-8 placeholder:font-medium",
+                    className,
+                )}
                 autoFocus={autoFocus}
                 id="search"
             />
