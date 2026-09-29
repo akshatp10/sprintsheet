@@ -72,12 +72,17 @@ const Drawer = ({
 
             {/* Slide-over */}
             <div
-                className={cn(`absolute top-0 ${sideClass} h-dvh bg-surface-sunken`, className)}
+                className={cn(
+                    `absolute top-0 ${sideClass} h-dvh bg-surface-sunken flex flex-col min-h-0 shadow-2xl`,
+                    className
+                )}
                 style={{ width }}
             >
                 <DrawerHeader label={label} onClose={handleClose} />
 
-                <div className="flex flex-1 flex-col">{children}</div>
+                <div className="flex flex-1 min-h-0 flex-col">
+                    {children}
+                </div>
 
                 {showExitAlert && (
                     <ExitAlert

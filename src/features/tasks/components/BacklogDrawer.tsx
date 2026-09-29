@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import TaskCreateForm from "./forms/TaskCreateForm";
 import type { Task } from "@/lib/services/tasks/types";
-import { Inbox } from "lucide-react";
+import { ArrowUpToLine, Inbox } from "lucide-react";
 import Text from "@/components/common/Text";
 import BacklogTaskCard from "./BacklogTaskCard";
 import Mascot from "@/components/common/Mascot";
@@ -62,7 +62,7 @@ const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
                         + New Task - Stays in the backlog
                     </Button>
                 </div>
-                <div className="w-full px-4 flex flex-col gap-2">
+                <div className="w-full px-4 flex flex-col flex-1 gap-2 min-h-0 overflow-y-auto">
                     {backlogTasks?.length > 0
                         ? backlogTasks.map(backlogTask => (<BacklogTaskCard key={backlogTask.id} />))
                         : <div className="flex min-h-16 items-center justify-center gap-2 rounded-lg border border-lines-control bg-surface">
@@ -75,7 +75,32 @@ const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
                             </Text>
                         </div>}
                 </div>
-            </Drawer>
+
+                {/* Footer */}
+                <div className="shrink-0 p-4 bg-surface-sunken border-t border-lines-hairline flex flex-col gap-2">
+                    <Text className="text-ink-3">
+                        Adds to
+                        <Text as="span" className="font-medium mx-1 text-ink">
+                            Aug 17-21
+                        </Text>
+                        and leaves the backlog. Stage, status, assignee and history are unchanged.
+                    </Text>
+                    <div className="flex gap-2 w-full items-center justify-center">
+                        <Button variant="primary" className="bg-surface text-ink border-lines-control" onClick={handleClose}>
+                            <Text variant="body" className="font-medium">
+                                Close
+                            </Text>
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            className="text-ink border flex items-center gap-1 flex-1 justify-center"
+                        >
+                            <ArrowUpToLine strokeWidth={1.5} size={15} /> Add to{" "}
+                            {"Sep 18 - Sep 20"}
+                        </Button>
+                    </div>
+                </div>
+            </Drawer >
 
             {openTaskForm && (
                 <TaskCreateForm
@@ -83,7 +108,8 @@ const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
                     defaultStageId={clickedStageId}
                     onClose={handleCloseTaskForm}
                 />
-            )}
+            )
+            }
         </>
     );
 };
