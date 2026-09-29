@@ -2,7 +2,7 @@ import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
 import StageViewBox from "@/features/tasks/components/StageViewBox";
 import TaskCard from "@/features/tasks/components/TaskCard";
 import type { Stage } from "@/lib/services/stages/type";
-import { useUpdateTask } from "@/lib/services/tasks/hooks";
+// import { useUpdateTask } from "@/lib/services/tasks/hooks";
 import type { TaskWithUsers } from "@/lib/services/tasks/types";
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import { useState } from "react";
@@ -25,7 +25,7 @@ const CardTaskPage = ({
     const [newTask, setNewTask] = useState(false);
     const [clickedStageId, setClickedStageId] = useState("");
     const [dragging, setDragging] = useState(false)
-    const [draggedTask, setDraggedTask] = useState<TaskWithUsers | null>()
+    const [, setDraggedTask] = useState<TaskWithUsers | null>()
 
     const visibleStages = stages.filter(
         (stage) => stage.name !== "Backlog",
@@ -41,18 +41,11 @@ const CardTaskPage = ({
         setClickedStageId("");
     };
 
-    const { mutate } = useUpdateTask();
+    // const { mutate } = useUpdateTask();
 
     const handleUpdateTaskStage = (taskId: string, stageId: string) => {
-        const task = Object.values(tasksByStage).flat().find((task) => task.id === taskId);
-
-        if (!task || task.stageId === stageId) return;
-
-        mutate({
-            id: taskId,
-            projectId,
-            updates: { stageId },
-        });
+        // const task = Object.values(tasksByStage).flat().find((task) => task.id === taskId);
+        if (!taskId || !stageId) return;
     };
 
     return (
@@ -102,7 +95,7 @@ const CardTaskPage = ({
                             tasks={tasksByStage[stage.stageId] ?? []}
                             isLoading={isLoading}
                             onCreateTask={handleCreateTask}
-                            isCurrentStage={draggedTask?.stageId === stage.stageId}
+                            isCurrentStage={false}
                         />
                     ))}
 
