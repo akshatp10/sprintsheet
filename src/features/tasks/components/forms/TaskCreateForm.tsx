@@ -50,7 +50,7 @@ const TaskCreateForm = ({
     const handleFormSubmit = (data: TaskFormData) => {
         const newTask: CreateTaskInput = {
             projectId,
-            stageId: data.stage,
+            // stageId: data.stage,
             name: data.name,
             description: data.description,
             assigneeIds: data.assigneeIds,
