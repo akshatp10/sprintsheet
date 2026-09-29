@@ -2,7 +2,7 @@ import { cn } from '@/lib/cn'
 
 interface ChipProps extends React.HTMLAttributes<HTMLDivElement> {
     /** Text displayed inside the chip. */
-    text: string;
+    text: React.ReactNode;
 
     /**
      * Visual style variant applied to the chip:

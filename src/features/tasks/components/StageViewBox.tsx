@@ -1,5 +1,5 @@
 import type { Stage } from "@/lib/services/stages/type";
-import type { TaskWithUsers } from "@/lib/services/tasks/types";
+import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useDroppable } from "@dnd-kit/react";
 import { cn } from "@/lib/cn";
 import StageHeader from "./StageHeader";
@@ -9,7 +9,7 @@ import Text from "@/components/common/Text";
 
 interface StageViewBoxProps {
     stage: Stage;
-    tasks: TaskWithUsers[];
+    tasks: CycleTaskWithUsers[];
     isLoading: boolean;
     onCreateTask: (stageId: string) => void;
     isCurrentStage: boolean;

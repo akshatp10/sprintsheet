@@ -1,9 +1,9 @@
 import TaskCardSkeleton from "@/features/tasks/components/skeletons/TaskCardSkeleton";
-import type { TaskWithUsers } from "@/lib/services/tasks/types";
+import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import DraggableTaskCard from "./dragging/DraggableTaskCard";
 
 interface StageTaskListProps {
-    tasks: TaskWithUsers[];
+    tasks: CycleTaskWithUsers[];
     isLoading: boolean;
     isDropTarget: boolean;
     isTerminal: boolean;
