@@ -51,6 +51,7 @@ const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
                         value={searchProject}
                         className="w-full h-10"
                         autoFocus
+                        searchElementId="backlogTasksSearch"
                     />
                     <Button
                         variant="primary"

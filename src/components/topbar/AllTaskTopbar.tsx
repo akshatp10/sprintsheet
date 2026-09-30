@@ -15,7 +15,7 @@ const AllTaskTopbar = () => {
 
     const [searchProject, setSearchProject] = useState("")
     const focusSearch = useCallback(() => {
-        document.getElementById("search")?.focus();
+        document.getElementById("taskSearch")?.focus();
     }, []);
 
     useShortcutSearch("k", focusSearch)
@@ -38,7 +38,7 @@ const AllTaskTopbar = () => {
                 {/* Right Side */}
                 <div className="flex items-center gap-2 shrink-0">
                     <SearchInput value={searchProject} onChange={setSearchProject} placeholder={`Search tasks... ${isMac ? "⌘ K" : "Ctrl K"
-                        }`} />
+                        }`} searchElementId="taskSearch" />
                     <Button
                         variant="primary"
                         className="py-0.5 font-medium"
