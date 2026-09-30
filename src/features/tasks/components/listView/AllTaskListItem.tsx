@@ -37,11 +37,13 @@ const AllTaskListItem = ({
         >
 
             {/* Checkbox */}
-            <div className="flex items-center border-r border-lines-hairline bg-surface-desk px-3">
+            <div className="flex items-center border-r border-lines-hairline px-3">
 
                 <Checkbox
                     checked={checked}
                     onChange={setChecked}
+                    className="bg-surface-page"
+
                 />
             </div>
             {/* Key */}
