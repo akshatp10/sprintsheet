@@ -49,6 +49,43 @@ export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
 				throw new Error("Type is not available in this project");
 			}
 
+			// Resolve the stage first, since it decides backlog vs cycle
+			let isBacklogStage = false;
+
+			if (input.cycle) {
+				const projectStage = await db.projectStages.get(
+					input.cycle.stageId,
+				);
+
+				if (!projectStage) {
+					throw new Error("Project stage not found");
+				}
+
+				if (projectStage.projectId !== input.projectId) {
+					throw new Error("Stage does not belong to this project");
+				}
+
+				isBacklogStage = projectStage.name === "Backlog";
+
+				// Cycle only matters when the task actually goes into it
+				if (!isBacklogStage) {
+					const cycle = await db.cycles.get(input.cycle.id);
+
+					if (!cycle) {
+						throw new Error("Cycle not found");
+					}
+
+					if (cycle.projectId !== input.projectId) {
+						throw new Error(
+							"Cycle does not belong to this project",
+						);
+					}
+				}
+			}
+
+			const cycleInput =
+				input.cycle && !isBacklogStage ? input.cycle : null;
+
 			const taskNumber = project.nextTaskNumber;
 			const now = Date.now();
 
@@ -62,7 +99,7 @@ export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
 				dueDate: input.dueDate ?? null,
 				typeId: input.typeId,
 				tags: input.tags ?? [],
-				isBacklog: input.cycle?.id ? 0 : 1,
+				isBacklog: cycleInput ? 0 : 1,
 				createdAt: now,
 				updatedAt: now,
 			};
@@ -74,40 +111,19 @@ export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
 				updatedAt: now,
 			});
 
-			if (input.cycle) {
-				const cycle = await db.cycles.get(input.cycle.id);
-
-				if (!cycle) {
-					throw new Error("Cycle not found");
-				}
-
-				if (cycle.projectId !== input.projectId) {
-					throw new Error("Cycle does not belong to this project");
-				}
-
-				const projectStage = await db.projectStages.get(
-					input.cycle.stageId,
-				);
-
-				if (!projectStage) {
-					throw new Error("Project stage not found");
-				}
-
-				if (projectStage.projectId !== input.projectId) {
-					throw new Error("Stage does not belong to this project");
-				}
-
+			if (cycleInput) {
 				const newTaskCycle: TaskCycleRow = {
 					id: crypto.randomUUID(),
 					taskId: task.id,
-					cycleId: input.cycle.id,
-					stageId: input.cycle.stageId,
+					cycleId: cycleInput.id,
+					stageId: cycleInput.stageId,
 					createdAt: now,
 					updatedAt: now,
 				};
 
 				await db.taskCycles.add(newTaskCycle);
 			}
+
 			return task;
 		},
 	);
