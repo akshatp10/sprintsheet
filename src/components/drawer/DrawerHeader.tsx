@@ -3,7 +3,10 @@ import Text from "@/components/common/Text";
 import { X } from "lucide-react";
 
 interface DrawerHeaderProps {
+    /** Callback triggered when the user clicks the close (`X`) button, allowing the parent drawer to handle closing or exit confirmation. */
     onClose: () => void;
+
+    /** Text displayed as the drawer header title, identifying the content or purpose of the drawer. Defaults to an empty string. */
     label?: string;
 }
 

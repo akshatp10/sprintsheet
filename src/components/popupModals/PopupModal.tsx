@@ -5,17 +5,33 @@ import PopupHeader from "./PopupHeader";
 import ExitAlert from "./ExitAlert";
 
 interface PopupModalProps {
+    /** Additional CSS classes applied to the modal content container, allowing its size, spacing, layout, or other visual styles to be customized. */
     className?: string;
+
+    /** Main content rendered inside the popup below the header. */
     children: React.ReactNode;
+
+    /** Text displayed in the popup header to identify the popup's content or purpose. Defaults to an empty string. */
     label?: string;
+
+    /** Callback invoked when the popup is closed directly or when the user confirms the exit through the confirmation alert. */
     onClose: () => void;
+
+    /** Enables an exit confirmation before closing the popup, preventing accidental loss of unsaved changes. Defaults to `false`. */
     alert?: boolean;
+
+    /** Heading displayed in the exit confirmation alert when `alert` is enabled. Defaults to `Discard Changes?`. */
     alertLabel?: string;
+
+    /** Explanatory message displayed in the exit confirmation alert, describing what will happen if the user confirms the exit. */
     alertContent?: string;
+
+    /** Ref exposing the popup's imperative close handler through `requestClose`, allowing a parent component to trigger the same close/confirmation behavior programmatically. */
     ref?: React.Ref<PopupModalHandle>;
 }
 
 export interface PopupModalHandle {
+    /** Triggers the popup's close behavior, including the exit confirmation when `alert` is enabled. */
     requestClose: () => void;
 }
 

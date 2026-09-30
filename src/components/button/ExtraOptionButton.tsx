@@ -3,6 +3,7 @@ import Button from './Button'
 import { Ellipsis } from 'lucide-react'
 
 interface ExtraOptionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+    /** Callback invoked when the extra options button is clicked. */
     handleClick: () => void;
 }
 

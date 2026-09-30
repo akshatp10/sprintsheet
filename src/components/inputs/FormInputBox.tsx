@@ -4,10 +4,19 @@ import Text from "../common/Text";
 
 interface FormInputBoxProps
     extends React.HTMLAttributes<HTMLDivElement> {
+    /** Label displayed above the input content to identify the field or value being entered. */
     label?: string;
+
+    /** Validation or input error message displayed below the field and positioned independently of the input layout. */
     error?: string;
+
+    /** Additional text displayed beside the label, typically used to indicate that a field is optional or provide a short hint. */
     optionalText?: string;
+
+    /** Form control or other content rendered between the label section and the error message. */
     children: React.ReactNode;
+
+    /** Additional CSS classes applied to the outer form field container, allowing its layout and styling to be customized. */
     className?: string;
 }
 

@@ -1,15 +1,25 @@
 import { cn } from "@/lib/cn";
 
 export type TabsOption<T extends string> = {
+    /** Text displayed for the tab option in the tab selector. */
     label: string;
+
+    /** Unique string value representing the tab, used to identify the active tab and trigger the corresponding change. */
     value: T;
 };
 
 type TabsProps<T extends string> = {
+    /** List of tab options rendered in the selector, with each option defining its display label and type-safe value. */
     tabs: TabsOption<T>[];
+
+    /** Value of the tab currently selected, which controls the active tab styling and position of the selection indicator. */
     activeTab: T;
+
+    /** Handles tab selection and receives the value of the newly selected tab. */
     onChange: (activeTab: T) => void;
-    classname?: string;
+
+    /** Additional CSS classes applied to the outer tabs container, allowing its layout and visual styling to be customized. */
+    className?: string;
 } & Omit<React.HTMLAttributes<HTMLDivElement>, "onChange">;
 
 export default function Tabs<T extends string>({

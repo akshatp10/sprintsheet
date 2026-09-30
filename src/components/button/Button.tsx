@@ -2,10 +2,25 @@ import { cn } from "@/lib/cn";
 import type { ButtonHTMLAttributes } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+    /** Content displayed inside the button. */
     children: React.ReactNode;
+
+    /** Callback invoked when the button is clicked. */
     onClick?: () => void;
+
+    /**
+     * Visual style variant applied to the button:
+     *
+     * - `primary` — filled accent background with surface-colored text.
+     * - `secondary` — transparent background with accent-colored text and accent border.
+     * - `tertiary` — transparent background with secondary ink-colored text and control border.
+     */
     variant: "primary" | "secondary" | "tertiary";
+
+    /** Prevents interaction and applies the browser's disabled button behavior. */
     disabled?: boolean;
+
+    /** Additional CSS classes applied to the button. */
     className?: string;
 }
 

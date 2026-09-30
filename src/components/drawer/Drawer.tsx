@@ -7,14 +7,38 @@ import { cn } from "@/lib/cn";
 export type DrawerSide = "left" | "right";
 
 interface DrawerProps {
+    /** Content rendered inside the drawer below the header, typically containing the drawer's main form or interactive content. */
     children: React.ReactNode;
+
+    /** Callback invoked when the drawer is closed directly or when the user confirms discarding changes through the exit alert. */
     onClose: () => void;
+
+    /** Text displayed in the drawer header to identify the drawer's current content or purpose. Defaults to an empty string. */
     label?: string;
+
+    /**
+     * Controls which side of the viewport the drawer slides in from:
+     *
+     * - `left` — positions the drawer against the left edge of the viewport.
+     * - `right` — positions the drawer against the right edge of the viewport.
+     *
+     * Defaults to `right`.
+     */
     side?: DrawerSide;
+
+    /** Controls the drawer's width using any valid CSS width value. Defaults to `50dvw`. */
     width?: string;
+
+    /** Enables a confirmation alert before closing, preventing accidental loss of unsaved changes. Defaults to `false`. */
     alert?: boolean;
+
+    /** Text displayed as the title of the exit confirmation alert when `alert` is enabled. Defaults to `Discard Changes?`. */
     alertLabel?: string;
+
+    /** Descriptive message displayed in the exit confirmation alert to explain the consequence of closing the drawer. */
     alertContent?: string;
+
+    /** Additional CSS classes applied to the drawer container, allowing its layout and visual styling to be customized. */
     className?: string;
 }
 

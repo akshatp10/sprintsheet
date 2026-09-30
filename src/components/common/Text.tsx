@@ -42,7 +42,10 @@ interface TextProps extends HTMLAttributes<HTMLParagraphElement> {
      */
     variant?: TextVariant;
 
+    /** HTML element used to render the text. Defaults to `p`. */
     as?: "p" | "span";
+
+    /** Truncates overflowing text with an ellipsis. */
     truncate?: boolean;
 }
 

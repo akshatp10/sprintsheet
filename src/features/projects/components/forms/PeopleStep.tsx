@@ -109,7 +109,7 @@ const PeopleStep = ({ register, control, watch, setValue }: PeopleStepProps) => 
             <ToggleButtonBox
                 checked={startFirstCycle}
                 onChange={(value) => setValue("startFirstCycle", value)}
-                classname="flex-row items-center justify-between w-full"
+                className="flex-row items-center justify-between w-full"
             >
                 <div className="flex justify-between items-center w-full">
                     <Text variant="body-sm" className="text-ink-2 font-medium">Start the first cycle today</Text>
