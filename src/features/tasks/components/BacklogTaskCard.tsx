@@ -2,11 +2,15 @@ import Avatar from "@/components/avatar/Avatar";
 import AvatarGroup from "@/components/avatar/AvatarGroups";
 import Chip from "@/components/chips/Chip";
 import Text from "@/components/common/Text";
+import Checkbox from "@/components/inputs/Checkbox";
 import { cn } from "@/lib/cn";
 import { GripVertical } from "lucide-react";
+import { useState } from "react";
 
 const BacklogTaskCard = () => {
     const assignees = ["John Doe"];
+
+    const [checked, setChecked] = useState(false);
 
     return (
         <div
@@ -16,11 +20,10 @@ const BacklogTaskCard = () => {
             )}
         >
             {/* Checkbox */}
-            <div className="flex shrink-0 items-center">
-                <div className="flex h-4 w-4 items-center justify-center rounded-full border border-lines-control">
-                    {/* Empty checkbox */}
-                </div>
-            </div>
+            <Checkbox
+                checked={checked}
+                onChange={setChecked}
+            />
 
             {/* Main content */}
             <div className="flex min-w-0 flex-1 flex-col gap-1">
