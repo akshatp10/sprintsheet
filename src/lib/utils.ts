@@ -3,26 +3,10 @@ export const getExtractedLetterFromString = (
 	padded?: number,
 ): string => {
 	const words = value.trim().split(/\s+/).filter(Boolean);
+	const maxLength = padded ?? 3;
 
-	if (!words.length) return "";
+	const initials = words.map((word) => word[0]).join("");
+	const remainders = words.map((word) => word.slice(1)).join("");
 
-	const maxLength = padded ?? words.length;
-
-	if (words.length === 1) {
-		return words[0].slice(0, maxLength).toUpperCase();
-	}
-
-	let result = words.map((word) => word[0]).join("");
-
-	if (result.length < maxLength) {
-		for (const word of words) {
-			for (let i = 1; i < word.length && result.length < maxLength; i++) {
-				result += word[i];
-			}
-
-			if (result.length >= maxLength) break;
-		}
-	}
-
-	return result.slice(0, maxLength).toUpperCase();
+	return (initials + remainders).slice(0, maxLength).toUpperCase();
 };
