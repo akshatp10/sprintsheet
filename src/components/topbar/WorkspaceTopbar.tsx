@@ -15,7 +15,7 @@ const WorkspaceTopbar = () => {
     const handleClick = () => { setShowForm(true) }
 
     const focusSearch = useCallback(() => {
-        document.getElementById("search")?.focus();
+        document.getElementById("projectSearch")?.focus();
     }, []);
 
     useShortcutSearch("k", focusSearch)
@@ -33,7 +33,7 @@ const WorkspaceTopbar = () => {
                 {/* Right side containing search project and new project buttons */}
                 <div className="flex items-center gap-2">
                     <SearchInput value={searchProject} onChange={setSearchProject} placeholder={`Search projects, tasks... ${isMac ? "⌘ K" : "Ctrl K"
-                        }`} />
+                        }`} searchElementId="projectSearch" />
 
                     <Button variant="primary" className="h-full font-medium" onClick={handleClick}>
                         + New Project

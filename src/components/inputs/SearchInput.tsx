@@ -18,6 +18,9 @@ type SearchInputProps = {
 
     /** Automatically focuses the search input when the component mounts. Defaults to `false`. */
     autoFocus?: boolean;
+
+    /** Id to be linked with searchbox to remove trigerring multiple elements in a single call. */
+    searchElementId: string
 };
 const SearchInput = ({
     value,
