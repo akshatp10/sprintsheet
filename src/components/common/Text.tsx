@@ -63,7 +63,7 @@ const Text = ({
         <Component
             className={cn(
                 variantClasses[variant],
-                truncate && "truncate",
+                truncate && "min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap",
                 className
             )}
             {...props}

@@ -29,7 +29,7 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
 
     return (
         <div
-            className={`rounded-md border border-lines-hairline w-full min-h-fit bg-surface px-4 py-2 flex flex-col gap-2 justify-center ${isDone ? "opacity-50" : ""} ${isOverlay ? "opacity-75" : ""}`}
+            className={`rounded-md border border-lines-hairline w-full h-30 bg-surface px-4 py-2 flex flex-col gap-2 justify-center ${isDone ? "opacity-50" : ""} ${isOverlay ? "opacity-75" : ""}`}
             onClick={() => {
                 if (!isOverlay) {
                     openTask(task);
@@ -66,6 +66,7 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
             <Text
                 variant="h2"
                 className={isDone ? "line-through" : ""}
+                truncate
             >
                 {task.name}
             </Text>
