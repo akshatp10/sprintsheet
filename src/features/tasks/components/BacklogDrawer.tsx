@@ -50,7 +50,7 @@ const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
                         onChange={setSearchProject}
                         value={searchProject}
                         className="w-full h-10"
-                        autofocus
+                        autoFocus
                     />
                     <Button
                         variant="primary"
