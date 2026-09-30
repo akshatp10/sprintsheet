@@ -44,7 +44,8 @@ const AllTaskListItem = ({
 
                 <Text
                     variant="body"
-                    className={cn("truncate", isDone && "line-through")}
+                    truncate
+                    className={cn(isDone && "line-through")}
                 >
 
                     Implement task list view

@@ -33,7 +33,7 @@ const CycleHeaderElement = ({ variant, cycle }: CycleHeaderElementProps) => {
             <div className="flex min-w-0 items-center gap-2">
                 <Text className="shrink-0">{isBacklog ? <Inbox strokeWidth={1.5} size={10} /> : <RefreshCcw strokeWidth={1.5} size={10} />}</Text>
 
-                <Text className="truncate">
+                <Text truncate>
                     {isBacklog ? "BACKLOG — NO CYCLE" : `${formatCycleDate(cycle?.startDate ?? "")} - ${formatCycleDate(cycle?.endDate ?? "")}`}
                 </Text>
 

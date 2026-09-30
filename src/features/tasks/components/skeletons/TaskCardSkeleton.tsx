@@ -1,6 +1,6 @@
 const TaskCardSkeleton = () => {
     return (
-        <div className="rounded-md border-2 border-lines-hairline w-full min-h-fit bg-surface px-4 py-2 flex flex-col gap-2 justify-center animate-pulse">
+        <div className="rounded-md border-2 border-lines-hairline w-full h-30 bg-surface px-4 py-2 flex flex-col gap-2 justify-center animate-pulse">
             {/* Task ID + Tags */}
             <div className="w-full flex justify-between items-center">
                 <div className="h-3 w-16 rounded bg-lines-hairline" />

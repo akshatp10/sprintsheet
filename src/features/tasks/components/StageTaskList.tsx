@@ -37,7 +37,7 @@ const StageTaskList = ({
                     ))}
 
                     {!tasks.length && !isDropTarget && (
-                        <div className="flex h-24 items-center justify-center rounded-md border border-dashed border-lines-control text-sm text-ink-2">
+                        <div className="flex h-30 items-center justify-center rounded-md border border-dashed border-lines-control text-sm text-ink-2">
                             No tasks
                         </div>
                     )}

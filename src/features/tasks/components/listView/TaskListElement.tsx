@@ -73,12 +73,12 @@ const TaskListElement = ({
                     className="px-1 py-0"
                 />
             </div>
-
             {/* Title */}
             <div className="flex min-w-0 items-center border-r border-lines-hairline px-3">
                 <Text
                     variant="body"
-                    className={`truncate ${isDone ? "line-through" : ""}`}
+                    truncate
+                    className={`${isDone ? "line-through" : ""}`}
                 >
                     {task.name}
                 </Text>

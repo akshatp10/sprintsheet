@@ -36,7 +36,7 @@ const columns = [
     {
         key: "title",
         label: "TITLE",
-        width: "1fr",
+        width: "minmax(0, 1fr)",
     },
     {
         key: "assignee",
