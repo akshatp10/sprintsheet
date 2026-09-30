@@ -10,6 +10,7 @@ import { isFeatureEnabled } from "@/config/features";
 import { useBacklogTasks, useTasksByStage } from "@/lib/services/tasks/hooks";
 import { useGetAllCyclesByProject } from "@/lib/services/cycles/hooks";
 import { useUpdateTaskCycle } from "@/lib/services/taskCycles/hooks";
+import TaskDetailsDrawer from "@/features/tasks/components/TaskDetailsDrawer";
 
 const TaskViewPage = () => {
     const [isDragging, setIsDragging] = useState(false)
@@ -115,6 +116,8 @@ const TaskViewPage = () => {
                     }}
                     cycles={cycles} currentCycleId={currentCycleId} setCurrentCycleId={handleCycleChange} openBacklog={openBacklog} />
             </div>
+
+            <TaskDetailsDrawer />
 
             {openBacklog && <BacklogDrawer handleClose={() => setOpenBacklog(false)} backlogTasks={backlogTasks} />}
         </>

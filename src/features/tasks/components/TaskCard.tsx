@@ -3,6 +3,8 @@ import AvatarGroup from "@/components/avatar/AvatarGroups";
 import Chip from "@/components/chips/Chip";
 import Text from "@/components/common/Text";
 
+import useTaskDetailStore from "@/store/taskDetailStore";
+
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useTypeById } from "@/lib/services/types/hooks";
 import { formatDate } from "@/lib/utils";
@@ -15,6 +17,8 @@ interface TaskCardProps {
 
 const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
 
+    const openTask = useTaskDetailStore((state) => state.openTask);
+
     const { data: curType } = useTypeById(task.typeId);
 
     const visibleUsers = task.assignees.slice(0, 3);
@@ -26,6 +30,11 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
     return (
         <div
             className={`rounded-md border border-lines-hairline w-full min-h-fit bg-surface px-4 py-2 flex flex-col gap-2 justify-center ${isDone ? "opacity-50" : ""} ${isOverlay ? "opacity-75" : ""}`}
+            onClick={() => {
+                if (!isOverlay) {
+                    openTask(task);
+                }
+            }}
         >
             <div className="flex w-full items-start justify-between gap-2">
                 <Text variant="mono" className="shrink-0 text-ink-3">

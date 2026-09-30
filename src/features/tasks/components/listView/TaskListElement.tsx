@@ -8,6 +8,7 @@ import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useTypeById } from "@/lib/services/types/hooks";
 import { stageConfig, StageName } from "@/lib/stageConfig";
 import { formatDate } from "@/lib/utils";
+import useTaskDetailStore from "@/store/taskDetailStore";
 import { GripVertical } from "lucide-react";
 
 interface TaskListElementProps {
@@ -27,6 +28,8 @@ const TaskListElement = ({
 }: TaskListElementProps) => {
     const { data: curType } = useTypeById(task.typeId);
 
+    const openTask = useTaskDetailStore((state) => state.openTask);
+
     const visibleUsers = task.assignees.slice(0, 3);
     const extraUsers = task.assignees.length - 3;
 
@@ -45,6 +48,8 @@ const TaskListElement = ({
 				${isOverlay ? "opacity-75" : ""}
 			`}
             style={{ gridTemplateColumns }}
+
+            onClick={() => { openTask(task) }}
         >
             {/* Number */}
             <div className="flex items-center border-r border-lines-hairline px-3 bg-surface-desk">
