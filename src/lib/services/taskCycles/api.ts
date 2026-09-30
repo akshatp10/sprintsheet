@@ -1,6 +1,7 @@
 import {
 	createTaskCycle,
 	getTaskCyclesByCycle,
+	getTaskCyclesByProject,
 	getTaskCyclesByTask,
 	updateTaskCycle,
 } from "@/lib/db/dbFunctions/taskCycleFunctions";
@@ -96,6 +97,28 @@ export const getTaskTaskCycles = async (
 			success: true,
 			message: "Successfully fetched task cycle relationships",
 			data: taskCycles,
+		};
+	} catch {
+		return {
+			status: 500,
+			success: false,
+			message: "Internal Server Error",
+			data: null,
+		};
+	}
+};
+
+export const getAllTaskCyclesByProject = async (
+	projectId: string,
+): Promise<ApiResponse<TaskCycle[]>> => {
+	try {
+		const allTaskCycles = await getTaskCyclesByProject(projectId);
+
+		return {
+			status: 200,
+			success: true,
+			message: "Successfully fetched task cycle relationships",
+			data: allTaskCycles,
 		};
 	} catch {
 		return {

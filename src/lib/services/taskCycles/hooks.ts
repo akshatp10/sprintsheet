@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
 	createNewTaskCycle,
+	getAllTaskCyclesByProject,
 	getCycleTaskCycles,
 	getTaskTaskCycles,
 	updateExistingTaskCycle,
@@ -26,6 +27,9 @@ export const taskCycleQueryKeys = {
 
 	task: (taskId: string) =>
 		[...taskCycleQueryKeys.all, "task", taskId] as const,
+
+	project: (projectId: string) =>
+		[...taskCycleQueryKeys.all, "project", projectId] as const,
 };
 
 export const useGetTaskCyclesByCycle = (cycleId: string) => {
@@ -61,6 +65,24 @@ export const useGetTaskCyclesByTask = (taskId: string) => {
 		},
 
 		enabled: !!taskId,
+	});
+};
+
+export const useGetAllTaskCyclesByProject = (projectId: string) => {
+	return useQuery({
+		queryKey: taskCycleQueryKeys.project(projectId),
+
+		queryFn: async () => {
+			const response = await getAllTaskCyclesByProject(projectId);
+
+			if (!response.success) {
+				throw new Error(response.message);
+			}
+
+			return response.data ?? [];
+		},
+
+		enabled: !!projectId,
 	});
 };
 

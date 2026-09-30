@@ -15,6 +15,7 @@ import type {
 } from "./types";
 import { getUsers } from "../users/api";
 import type { User } from "../users/types";
+import { getProjectCycles } from "../cycles/api";
 
 export const taskQueryKeys = {
 	all: ["tasks"] as const,
@@ -30,6 +31,9 @@ export const taskQueryKeys = {
 
 	cycleByStage: (cycleId: string) =>
 		[...taskQueryKeys.cycle(cycleId), "by-stage"] as const,
+
+	cycleByProject: (projectId: string) =>
+		[...taskQueryKeys.cycle(projectId), projectId] as const,
 };
 
 export const useGetAllTasksByProject = (projectId: string) => {
@@ -131,6 +135,71 @@ export const useTasksByStage = (cycleId: string) => {
 				const stageId = task.stage.id;
 
 				(acc[stageId] ??= []).push(task);
+				return acc;
+			}, {}),
+	});
+};
+
+export const useGetTasksByCycle = (projectId: string) => {
+	return useQuery({
+		queryKey: taskQueryKeys.cycleByProject(projectId),
+
+		queryFn: async () => {
+			const cyclesResponse = await getProjectCycles(projectId);
+
+			if (!cyclesResponse.success) {
+				throw new Error(cyclesResponse.message);
+			}
+
+			const cycles = cyclesResponse.data ?? [];
+
+			const tasksResponses = await Promise.all(
+				cycles.map((cycle) => getAllCycleTasks(cycle.id)),
+			);
+
+			const tasksWithCycle = tasksResponses.flatMap((response, index) => {
+				if (!response.success) {
+					throw new Error(response.message);
+				}
+
+				return (response.data ?? []).map((task) => ({
+					...task,
+					cycle: cycles[index],
+				}));
+			});
+
+			const userIds = [
+				...new Set(tasksWithCycle.flatMap((task) => task.assigneeIds)),
+			];
+
+			const userResponse = userIds.length
+				? await getUsers(userIds)
+				: { success: true as const, data: [] as User[] };
+
+			if (!userResponse.success) {
+				throw new Error(userResponse.message);
+			}
+
+			const users = userResponse.data ?? [];
+
+			const usersById = new Map(users.map((user) => [user.id, user]));
+
+			return tasksWithCycle.map((task) => ({
+				...task,
+
+				assignees: task.assigneeIds
+					.map((id) => usersById.get(id))
+					.filter((user): user is User => user !== undefined),
+			}));
+		},
+
+		enabled: !!projectId,
+
+		select: (tasks) =>
+			tasks.reduce<Record<string, CycleTaskWithUsers[]>>((acc, task) => {
+				const cycleId = task.cycle.id;
+
+				(acc[cycleId] ??= []).push(task);
 				return acc;
 			}, {}),
 	});

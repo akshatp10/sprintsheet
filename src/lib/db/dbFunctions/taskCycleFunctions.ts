@@ -102,3 +102,24 @@ export const getTaskCyclesByTask = async (
 ): Promise<TaskCycleRow[]> => {
 	return db.taskCycles.where("taskId").equals(taskId).toArray();
 };
+
+export const getTaskCyclesByProject = async (
+	projectId: string,
+): Promise<TaskCycleRow[]> => {
+	const cycles = await db.cycles
+		.where("projectId")
+		.equals(projectId)
+		.toArray();
+
+	if (cycles.length === 0) {
+		return [];
+	}
+
+	const taskCycles = await Promise.all(
+		cycles.map((cycle) =>
+			db.taskCycles.where("cycleId").equals(cycle.id).toArray(),
+		),
+	);
+
+	return taskCycles.flat();
+};
