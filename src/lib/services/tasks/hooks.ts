@@ -16,6 +16,7 @@ import type {
 import { getUsers } from "../users/api";
 import type { User } from "../users/types";
 import { getProjectCycles } from "../cycles/api";
+import { getStagesForProject } from "../stages/api";
 
 export const taskQueryKeys = {
 	all: ["tasks"] as const,
@@ -59,13 +60,55 @@ export const useBacklogTasks = (projectId: string) => {
 		queryKey: taskQueryKeys.backlog(projectId),
 
 		queryFn: async () => {
-			const response = await getAllProjectBacklogTasks(projectId);
+			const [tasksResponse, stagesResponse] = await Promise.all([
+				getAllProjectBacklogTasks(projectId),
+				getStagesForProject(projectId),
+			]);
 
-			if (!response.success) {
-				throw new Error(response.message);
+			if (!tasksResponse.success) {
+				throw new Error(tasksResponse.message);
 			}
 
-			return response.data ?? [];
+			if (!stagesResponse.success) {
+				throw new Error(stagesResponse.message);
+			}
+
+			const tasks = tasksResponse.data ?? [];
+			const stages = stagesResponse.data ?? [];
+
+			const backlogStage = stages.find(
+				(stage) => stage.name === "Backlog",
+			);
+
+			if (!backlogStage) {
+				throw new Error("Backlog stage not found");
+			}
+
+			const userIds = [
+				...new Set(tasks.flatMap((task) => task.assigneeIds)),
+			];
+
+			const userResponse = userIds.length
+				? await getUsers(userIds)
+				: { success: true as const, data: [] as User[] };
+
+			if (!userResponse.success) {
+				throw new Error(userResponse.message);
+			}
+
+			const users = userResponse.data ?? [];
+
+			const usersById = new Map(users.map((user) => [user.id, user]));
+
+			return tasks.map((task) => ({
+				...task,
+
+				stage: backlogStage,
+
+				assignees: task.assigneeIds
+					.map((id) => usersById.get(id))
+					.filter((user): user is User => user !== undefined),
+			}));
 		},
 
 		enabled: !!projectId,

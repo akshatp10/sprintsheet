@@ -1,10 +1,11 @@
 import TableWrapper from "@/components/table/TableWrapper";
 import CycleAllTaskSelectionFooter from "@/features/cycles/components/CycleAllTaskSelectionFooter";
-// import CycleHeaderElement from "@/features/cycles/components/CycleHeaderElement";
+import CycleHeaderElement from "@/features/cycles/components/CycleHeaderElement";
 import CycleTaskSection from "@/features/tasks/components/CycleTaskSection";
+import AllTaskListItem from "@/features/tasks/components/listView/AllTaskListItem";
 import { useCycleStatus } from "@/hooks/useCycleStatus";
 import { useGetAllCyclesByProject } from "@/lib/services/cycles/hooks";
-import { useGetTasksByCycle } from "@/lib/services/tasks/hooks";
+import { useBacklogTasks, useGetTasksByCycle } from "@/lib/services/tasks/hooks";
 import { useParams } from "react-router-dom";
 
 const columns = [
@@ -24,6 +25,7 @@ const AllTaskPage = () => {
 
     const { data: allCycles = [] } = useGetAllCyclesByProject(projectid ?? "");
     const { data: tasksByCycle = {} } = useGetTasksByCycle(projectid ?? "");
+    const { data: allBacklogTasks } = useBacklogTasks(projectid ?? "");
 
     const {
         active: activeCycles,
@@ -40,7 +42,15 @@ const AllTaskPage = () => {
     return (
         <div className="flex h-full flex-col justify-between">
             <TableWrapper columns={columns}>
-                {/* <CycleHeaderElement variant="backlog" /> */}
+                <CycleHeaderElement variant="backlog" taskCount={allBacklogTasks?.length ?? 0} />
+                {!!allBacklogTasks?.length && allBacklogTasks.map((task) => (
+                    <AllTaskListItem
+                        key={task.id}
+                        task={task}
+                        gridTemplateColumns={gridTemplateColumns}
+                        isDone={false}
+                    />
+                ))}
 
                 {cyclesWithStatus.map(({ cycle, status }) => (
                     <CycleTaskSection
