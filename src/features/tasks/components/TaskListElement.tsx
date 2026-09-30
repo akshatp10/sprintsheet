@@ -80,7 +80,7 @@ const TaskListElement = ({
 
             {/* Assignee */}
             <div className="flex min-w-0 items-center border-r border-lines-hairline px-3">
-                {task.assignees.length > 0 ? (
+                {!!task?.assignees.length ? (
                     <div className="flex min-w-0 items-center gap-2">
                         <AvatarGroup>
                             {visibleUsers.map((assignee) => (

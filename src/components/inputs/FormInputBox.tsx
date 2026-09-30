@@ -48,7 +48,7 @@ const FormInputBox = ({
             {error && (
                 <Text
                     variant="caption"
-                    className="absolute left-0 top-full whitespace-nowrap text-stage-blocked-text"
+                    className="absolute left-0 top-full w-full wrap-break-words text-stage-blocked-text"
                 >
                     {error}
                 </Text>

@@ -69,7 +69,7 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
             />
 
             <div className="flex items-center justify-start gap-2">
-                {task.assigneeIds.length > 0 ? (
+                {!!task?.assigneeIds.length ? (
                     <AvatarGroup>
                         {visibleUsers.map((assignee) => (
                             <Avatar key={assignee.id} userName={assignee.name} />
