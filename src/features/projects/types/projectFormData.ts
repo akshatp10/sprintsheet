@@ -7,7 +7,7 @@ const projectPersonSchema = z.object({
 export const projectFormSchema = z
 	.object({
 		name: z.string().min(1, "Project name is required"),
-		key: z.string().min(1, "Key is required"),
+		key: z.string().length(3, "Key must be exactly 3 characters"),
 		description: z
 			.string()
 			.min(10, "Description must be at least 10 characters")

@@ -41,7 +41,7 @@ export function AssigneeSelect({
     return (
         <div className="relative">
             <div className="flex flex-wrap items-center gap-1.5">
-                {selectedMembers.length > 0 ? (
+                {!!selectedMembers?.length ? (
                     <AvatarGroup>
                         {selectedMembers.slice(0, 3).map(member => (<Avatar userName={member.name} key={member.id} />))}
                         {selectedMembers.length > 3 && <Avatar extraUsers={selectedMembers.length - 3} />}
