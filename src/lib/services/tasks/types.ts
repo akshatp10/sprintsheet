@@ -39,7 +39,7 @@ export interface TaskWithUsers extends Task {
 }
 
 export interface CycleTaskWithUsers extends TaskWithUsers {
-	taskCycleId: string;
+	taskCycleId?: string;
 	stage: ProjectStageRow;
 }
 
