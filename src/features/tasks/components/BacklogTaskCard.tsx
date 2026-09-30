@@ -4,11 +4,21 @@ import Chip from "@/components/chips/Chip";
 import Text from "@/components/common/Text";
 import Checkbox from "@/components/inputs/Checkbox";
 import { cn } from "@/lib/cn";
+import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
+import { useTypeById } from "@/lib/services/types/hooks";
 import { GripVertical } from "lucide-react";
 import { useState } from "react";
 
-const BacklogTaskCard = () => {
-    const assignees = ["John Doe"];
+interface BacklogTaskCardProps {
+    backlogTask: CycleTaskWithUsers;
+}
+
+const BacklogTaskCard = ({ backlogTask }: BacklogTaskCardProps) => {
+    const { data: curType } = useTypeById(backlogTask.typeId);
+
+    const visibleUsers = backlogTask.assignees.slice(0, 3);
+    const extraUsers = backlogTask.assignees.length - 3;
+
 
     const [checked, setChecked] = useState(false);
 
@@ -32,7 +42,7 @@ const BacklogTaskCard = () => {
                     variant="body"
                     maxLines={1}
                 >
-                    Split the settings screen into tabs
+                    {backlogTask?.name}
                 </Text>
 
                 {/* Metadata */}
@@ -41,31 +51,45 @@ const BacklogTaskCard = () => {
                         variant="mono"
                         className="text-ink-3"
                     >
-                        CRM-158
+                        {backlogTask?.key}
                     </Text>
 
+
+                    {/* Type */}
                     <Chip
                         variant="secondary"
-                        text="refactor"
+                        text={curType?.name ?? ""}
                         textType="text-type-caption"
                         className="px-1 py-0"
                     />
 
-                    <Chip
-                        variant="secondary"
-                        text="WEB"
-                        textType="text-type-caption"
-                        className="px-1 py-0"
-                    />
+                    {!!backlogTask?.assignees.length ? (
+                        <div className="flex min-w-0 items-center gap-2">
+                            <AvatarGroup>
+                                {visibleUsers.map((assignee) => (
+                                    <Avatar
+                                        key={assignee.id}
+                                        userName={assignee.name}
+                                    />
+                                ))}
 
-                    <AvatarGroup>
-                        {assignees.map((assignee) => (
-                            <Avatar
-                                key={assignee}
-                                userName={assignee}
-                            />
-                        ))}
-                    </AvatarGroup>
+                                {extraUsers > 0 && (
+                                    <Avatar extraUsers={extraUsers} />
+                                )}
+                            </AvatarGroup>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-1">
+                            <Avatar />
+
+                            <Text
+                                variant="caption"
+                                className="text-ink-2"
+                            >
+                                Unassigned
+                            </Text>
+                        </div>
+                    )}
                 </div>
             </div>
 

@@ -1,7 +1,6 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import TableTaskPage from "./tasks/TableTaskPage";
 import CardTaskPage from "./tasks/CardTaskPage";
-// import { useTasksByStage } from "@/lib/services/tasks/hooks";
 import { useGetStagesPerProject } from "@/lib/services/stages/hooks";
 import TaskViewFooter from "@/features/tasks/components/TaskViewFooter";
 import { useEffect, useState } from "react";
@@ -70,7 +69,7 @@ const TaskViewPage = () => {
             .flat()
             .find((task) => task.id === taskId);
 
-        if (!task || task.stage.stageId === stageId) return;
+        if (!task || task.stage.stageId === stageId || !task.taskCycleId) return;
 
         updateTaskCycle({
             id: task.taskCycleId,

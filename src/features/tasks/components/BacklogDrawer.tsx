@@ -4,7 +4,7 @@ import SearchInput from "@/components/inputs/SearchInput";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import TaskCreateForm from "./forms/TaskCreateForm";
-import type { Task } from "@/lib/services/tasks/types";
+import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { ArrowUpToLine, Inbox } from "lucide-react";
 import Text from "@/components/common/Text";
 import BacklogTaskCard from "./BacklogTaskCard";
@@ -12,7 +12,7 @@ import Mascot from "@/components/common/Mascot";
 
 interface BacklogDrawerProps {
     handleClose: () => void;
-    backlogTasks: Task[];
+    backlogTasks: CycleTaskWithUsers[];
 }
 
 const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
@@ -65,7 +65,7 @@ const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
                 </div>
                 <div className="w-full px-4 flex flex-col flex-1 gap-2 min-h-0 overflow-y-auto">
                     {backlogTasks?.length > 0
-                        ? backlogTasks.map(backlogTask => (<BacklogTaskCard key={backlogTask.id} />))
+                        ? backlogTasks.map(backlogTask => (<BacklogTaskCard key={backlogTask.id} backlogTask={backlogTask} />))
                         : <div className="flex min-h-16 items-center justify-center gap-2 rounded-lg border border-lines-control bg-surface">
                             <Mascot renderAnimation expression="sleeping" />
                             <Text
