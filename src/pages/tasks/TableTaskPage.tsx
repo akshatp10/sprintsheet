@@ -1,4 +1,4 @@
-import Text from "@/components/common/Text";
+import TableWrapper from "@/components/table/TableWrapper";
 import StageListBox from "@/features/stages/components/StageListBox";
 import TaskDragDrop from "@/features/tasks/components/dragging/TaskDragDrop";
 import TaskCreateForm from "@/features/tasks/components/forms/TaskCreateForm";
@@ -18,6 +18,11 @@ interface TableTaskPageProps {
 }
 
 const columns = [
+    {
+        key: "serialNo",
+        label: "",
+        width: "40px",
+    },
     {
         key: "type",
         label: "TYPE",
@@ -56,7 +61,6 @@ const columns = [
 ];
 
 const gridTemplateColumns = [
-    "40px",
     ...columns.map((column) => column.width),
 ].join(" ");
 
@@ -92,26 +96,7 @@ const TableTaskPage = ({
 
     return (
         <>
-            <div className="w-full overflow-hidden rounded-md">
-                {/* Table Header */}
-                <div
-                    className="grid h-10 border-b border-lines-control bg-surface-desk text-xs font-medium"
-                    style={{
-                        gridTemplateColumns,
-                    }}
-                >
-                    <div className="flex items-center border-r border-lines-control px-3" />
-
-                    {columns.map((column) => (
-                        <Text
-                            key={column.key}
-                            className="flex items-center border-r border-lines-control px-3 last:border-r-0 text-ink-3"
-                        >
-                            {column.label}
-                        </Text>
-                    ))}
-                </div>
-
+            <TableWrapper columns={columns}>
                 <TaskDragDrop
                     tasksByStage={tasksByStage}
                     onDraggingChange={onDraggingChange}
@@ -122,6 +107,7 @@ const TableTaskPage = ({
                             isDone={false}
                             isOverlay
                             taskNumber={0}
+                            gridTemplateColumns={gridTemplateColumns}
                         />
                     )}
                 >
@@ -137,12 +123,13 @@ const TableTaskPage = ({
                                     isLoading={isLoading}
                                     onCreateTask={handleCreateTask}
                                     isCurrentStage={draggedTask?.stage.stageId === stage.stageId}
+                                    gridTemplateColumns={gridTemplateColumns}
                                 />
                             );
                         })
                     }
                 </TaskDragDrop>
-            </div>
+            </TableWrapper>
 
             {
                 newTask && (

@@ -1,12 +1,16 @@
-import { TASK_LIST_GRID } from "./TaskListElement";
 import Text from "@/components/common/Text";
 
-const TaskListEmpty = () => {
+interface TaskListEmptyProps {
+    gridTemplateColumns: string;
+}
+
+
+const TaskListEmpty = ({ gridTemplateColumns }: TaskListEmptyProps) => {
     return (
         <div
             className="grid min-h-10 border-b border-lines-hairline bg-surface-page"
             style={{
-                gridTemplateColumns: TASK_LIST_GRID,
+                gridTemplateColumns
             }}
         >
             <div className="col-span-full flex items-center justify-center">

@@ -56,7 +56,7 @@ const TableWrapper = ({
         .join(" ");
 
     return (
-        <div className={cn("w-full overflow-hidden rounded-md", className)}>
+        <div className={cn("w-full overflow-y-auto rounded-md", className)}>
             {showHeader && (
                 <TableHeader
                     columns={columns}
