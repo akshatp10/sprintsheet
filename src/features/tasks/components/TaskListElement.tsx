@@ -144,7 +144,7 @@ const TaskListElement = ({
 
             {/* Tags */}
             <div className="flex min-w-0 items-center gap-1 px-3">
-                {!!task.tags?.length === true ? (
+                {!!task.tags?.length ? (
                     task.tags.map((tag) => (
                         <Chip
                             key={tag}
