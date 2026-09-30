@@ -10,6 +10,7 @@ import DraggableTaskListElement from "@/features/tasks/components/dragging/Dragg
 import TaskListEmpty from "@/features/tasks/components/listView/TaskListEmpty";
 
 interface StageListBoxProps {
+    gridTemplateColumns: string;
     stage: Stage;
     tasks: CycleTaskWithUsers[];
     isLoading: boolean;
@@ -18,6 +19,7 @@ interface StageListBoxProps {
 }
 
 const StageListBox = ({
+    gridTemplateColumns,
     stage,
     tasks,
     isLoading,
@@ -79,10 +81,11 @@ const StageListBox = ({
                                     1 + index
                                 }
                                 isDone={stage.isTerminal}
+                                gridTemplateColumns={gridTemplateColumns}
                             />
                         ))
 
-                        : <TaskListEmpty />
+                        : <TaskListEmpty gridTemplateColumns={gridTemplateColumns} />
                     )}
                 </div>
             )}

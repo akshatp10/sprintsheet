@@ -1,4 +1,4 @@
-import Text from "@/components/common/Text"
+import TableWrapper from "@/components/table/TableWrapper";
 import CycleAllTaskSelectionFooter from "@/features/cycles/components/CycleAllTaskSelectionFooter";
 import CycleHeaderElement from "@/features/cycles/components/CycleHeaderElement";
 import AllTaskListItem from "@/features/tasks/components/listView/AllTaskListItem";
@@ -10,6 +10,11 @@ import { useParams } from "react-router-dom";
 const AllTaskPage = () => {
 
     const columns = [
+        {
+            key: "selection",
+            label: "",
+            width: "40px",
+        },
         {
             key: "key",
             label: "KEY",
@@ -43,7 +48,6 @@ const AllTaskPage = () => {
     ];
 
     const gridTemplateColumns = [
-        "40px",
         ...columns.map((column) => column.width),
     ].join(" ");
 
@@ -75,41 +79,28 @@ const AllTaskPage = () => {
     // const { data: backlogTasks = [] } = useBacklogTasks(projectid ?? "");
 
     return (
-        <>
-            <div className="flex flex-col h-full justify-between">
-                <div>
-                    {/* Header */}
-                    <div
-                        className="grid h-10 border-b border-lines-control bg-surface-desk text-xs font-medium"
-                        style={{
-                            gridTemplateColumns,
-                        }}
-                    >
-                        <div className="flex items-center border-r border-lines-control px-3" />
+        <div className="flex h-full flex-col justify-between">
+            <TableWrapper columns={columns}>
+                <CycleHeaderElement variant="backlog" />
 
-                        {columns.map((column) => (
-                            <Text
-                                key={column.key}
-                                className="flex items-center border-r border-lines-control px-3 last:border-r-0 text-ink-3"
-                            >
-                                {column.label}
-                            </Text>
-                        ))}
-                    </div>
+                {cyclesWithStatus.map((cycle) => (
+                    <CycleHeaderElement
+                        key={cycle.cycle.id}
+                        variant={
+                            cycle.status === "active"
+                                ? "active"
+                                : "other"
+                        }
+                        cycle={cycle.cycle}
+                    />
+                ))}
 
-                    {/* Cycle and Tasks */}
-                    <CycleHeaderElement variant="backlog" />
-                    {cyclesWithStatus.map((cycle) => (
-                        <CycleHeaderElement variant={cycle?.status === "active" ? "active" : "other"} cycle={cycle?.cycle} />
-                    ))}
+                <AllTaskListItem gridTemplateColumns={gridTemplateColumns} isDone={false} />
+            </TableWrapper>
 
-                    <AllTaskListItem gridTemplateColumns={gridTemplateColumns} isDone={false} />
-                </div>
-
-                <CycleAllTaskSelectionFooter />
-            </div>
-        </>
-    )
-}
+            <CycleAllTaskSelectionFooter />
+        </div>
+    );
+};
 
 export default AllTaskPage

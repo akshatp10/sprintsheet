@@ -9,6 +9,7 @@ interface DraggableTaskListElementProps {
     taskNumber: number;
     isDone: boolean;
     isOverlay?: boolean;
+    gridTemplateColumns: string;
 }
 
 const DraggableTaskListElement = ({
@@ -16,12 +17,13 @@ const DraggableTaskListElement = ({
     taskNumber,
     isDone,
     isOverlay = false,
+    gridTemplateColumns
 }: DraggableTaskListElementProps) => {
     const { ref, isDragging } = useDraggable({
         id: task.id,
     });
 
-    if (isDragging) return (<TaskListPlaceholder />);
+    if (isDragging) return (<TaskListPlaceholder gridTemplateColumns={gridTemplateColumns} />);
 
     return (
         <div
@@ -46,6 +48,7 @@ const DraggableTaskListElement = ({
                 taskNumber={taskNumber}
                 isDone={isDone}
                 isOverlay={isOverlay}
+                gridTemplateColumns={gridTemplateColumns}
             />
         </div>
     );

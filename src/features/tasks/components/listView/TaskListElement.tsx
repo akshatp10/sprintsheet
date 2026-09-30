@@ -10,10 +10,8 @@ import { stageConfig, StageName } from "@/lib/stageConfig";
 import { formatDate } from "@/lib/utils";
 import { GripVertical } from "lucide-react";
 
-export const TASK_LIST_GRID =
-    "40px 100px minmax(250px, 1fr) 120px 120px 100px 140px";
-
 interface TaskListElementProps {
+    gridTemplateColumns: string;
     task: CycleTaskWithUsers;
     taskNumber: number;
     isDone: boolean;
@@ -21,6 +19,7 @@ interface TaskListElementProps {
 }
 
 const TaskListElement = ({
+    gridTemplateColumns,
     task,
     taskNumber,
     isDone,
@@ -45,9 +44,7 @@ const TaskListElement = ({
 				${isDone ? "opacity-50" : ""}
 				${isOverlay ? "opacity-75" : ""}
 			`}
-            style={{
-                gridTemplateColumns: TASK_LIST_GRID,
-            }}
+            style={{ gridTemplateColumns }}
         >
             {/* Number */}
             <div className="flex items-center border-r border-lines-hairline px-3 bg-surface-desk">
