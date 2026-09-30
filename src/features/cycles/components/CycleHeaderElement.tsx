@@ -1,4 +1,5 @@
 import Text from "@/components/common/Text";
+import { getToday } from "@/hooks/useCycleStatus";
 import { cn } from "@/lib/cn";
 import type { Cycle } from "@/lib/services/cycles/types";
 import { formatCycleDate } from "@/lib/utils";
@@ -14,11 +15,26 @@ interface CycleHeaderElementProps {
     variant: "backlog" | "active" | "other";
 
     cycle?: Cycle;
+
+    taskCount: number;
 }
 
-const CycleHeaderElement = ({ variant, cycle }: CycleHeaderElementProps) => {
+const CycleHeaderElement = ({ variant, cycle, taskCount }: CycleHeaderElementProps) => {
     const isBacklog = variant === "backlog";
     const isActive = variant === "active";
+
+    const cycleLength = (new Date(cycle!.endDate).getTime() - new Date(cycle!.startDate).getTime()) / (1000 * 60 * 60 * 24);
+
+    const currentDay = Math.min(
+        cycleLength,
+        Math.max(
+            1,
+            Math.floor(
+                (new Date(getToday()).getTime() - new Date(cycle!.startDate).getTime()) /
+                (1000 * 60 * 60 * 24)
+            ) + 1
+        )
+    );
 
     return (
         <div
@@ -44,7 +60,7 @@ const CycleHeaderElement = ({ variant, cycle }: CycleHeaderElementProps) => {
                 )}
 
                 <Text className="shrink-0 text-ink-3">
-                    {isBacklog ? "18" : isActive ? "9" : "11"}
+                    {taskCount}
                 </Text>
             </div>
 
@@ -53,7 +69,7 @@ const CycleHeaderElement = ({ variant, cycle }: CycleHeaderElementProps) => {
                     {isBacklog
                         ? "a task with no cycle lives here"
                         : isActive
-                            ? "day 4 of 5"
+                            ? `day ${currentDay} of ${cycleLength}`
                             : "9 of 11 done"}
                 </Text>
             </div>
