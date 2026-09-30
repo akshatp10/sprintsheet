@@ -4,19 +4,27 @@ import { cn } from "@/lib/cn";
 import Input from "./Input";
 
 type SearchInputProps = {
+    /** Current search query displayed in the input and kept in sync with the parent component. */
     value: string;
-    onChange: (value: string) => void;
-    className?: string;
-    placeholder?: string;
-    autofocus?: boolean
-};
 
+    /** Handles changes to the search query and receives the updated input value on each keystroke. */
+    onChange: (value: string) => void;
+
+    /** Additional CSS classes applied to the search input's outer container, allowing its size, spacing, positioning, or other styles to be customized. */
+    className?: string;
+
+    /** Placeholder text displayed inside the input when no search query has been entered. Defaults to `Search`. */
+    placeholder?: string;
+
+    /** Automatically focuses the search input when the component mounts. Defaults to `false`. */
+    autoFocus?: boolean;
+};
 const SearchInput = ({
     value,
     onChange,
     className,
     placeholder = "Search",
-    autofocus = false,
+    autoFocus = false,
 }: SearchInputProps) => {
 
     return (
@@ -32,7 +40,7 @@ const SearchInput = ({
                 onChange={onChange}
                 placeholder={placeholder}
                 className="pl-8 w-64 py-1 placeholder:font-medium"
-                autoFocus={autofocus}
+                autoFocus={autoFocus}
                 id="search"
             />
         </div>

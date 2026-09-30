@@ -179,7 +179,7 @@ const BasicsStep = ({
                         shouldDirty: true,
                     })
                 }
-                classname="opacity-30"
+                className="opacity-30"
                 isDisabled
             >
                 <div className="flex flex-col">

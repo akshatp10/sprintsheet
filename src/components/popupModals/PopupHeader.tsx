@@ -3,8 +3,11 @@ import Text from "@/components/common/Text";
 import { X } from "lucide-react";
 
 interface PopupHeaderProps {
+    /** Callback triggered when the user clicks the close (`X`) button, allowing the parent popup to handle closing or exit confirmation. */
     onClose: () => void;
-    label?: string
+
+    /** Text displayed as the popup header title, identifying the content or purpose of the popup. Defaults to an empty string. */
+    label?: string;
 }
 
 const PopupHeader = ({

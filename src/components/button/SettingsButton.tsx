@@ -4,7 +4,8 @@ import Text from '../common/Text'
 import { Settings } from 'lucide-react'
 
 interface SettingsButtonProps {
-    isAdmin?: boolean
+    /** Indicates admin access; when `true`, displays an `Admin` chip alongside the Settings label. */
+    isAdmin?: boolean;
 }
 
 const SettingsButton = ({ isAdmin }: SettingsButtonProps) => {

@@ -3,14 +3,24 @@ import Text from "../common/Text";
 import PopupModal from "./PopupModal";
 
 interface ExitAlertProps {
+    /** Closes the confirmation modal without performing the exit action, typically used when the user rejects or dismisses the alert. */
     onClose: () => void;
+
+    /** Performs the confirmed exit action, such as closing the parent drawer or discarding the current changes. */
     exitPopup: () => void;
+
+    /** Heading displayed at the top of the confirmation modal to describe the action being confirmed. */
     alertLabel: string;
+
+    /** Main explanatory message displayed in the modal, informing the user what will happen if they confirm the exit. */
     alertContent: string;
+
+    /** Text displayed on the confirmation button that performs the exit action. Defaults to `Yes`. */
     acceptText?: string;
+
+    /** Text displayed on the rejection button that closes the alert without exiting. Defaults to `No`. */
     rejectText?: string;
 }
-
 const ExitAlert = ({
     onClose,
     exitPopup,

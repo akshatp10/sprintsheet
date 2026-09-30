@@ -7,10 +7,14 @@ import { getExtractedLetterFromString } from '@/lib/utils';
 type AvatarVariant = 'purple' | 'blue' | 'amber' | 'rose' | 'chip' | 'default';
 
 interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
+    /** User name used to generate the avatar initials and deterministically assign an avatar color. */
     userName?: string | null;
+
+    /** Number of additional users represented by the avatar. When provided, renders as a `+N` overflow chip. */
     extraUsers?: number;
+
+    /** Uses the larger sidebar avatar size and larger text when enabled. Defaults to `false`. */
     isSideBar?: boolean;
-    variant?: AvatarVariant;
 }
 
 const variantClasses: Record<AvatarVariant, string> = {

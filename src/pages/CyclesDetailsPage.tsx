@@ -74,7 +74,7 @@ const CyclesDetailsPage = () => {
                 <ToggleButtonBox
                     checked={automaticCycle}
                     onChange={(value) => setAutomaticCycle(value)}
-                    classname="flex flex-1 items-center"
+                    className="flex flex-1 items-center"
                     contentClassName="gap-0 w-full justify-between"
                     isDisabled
                 >
