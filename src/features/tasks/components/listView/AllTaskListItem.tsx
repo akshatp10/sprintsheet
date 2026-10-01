@@ -44,7 +44,7 @@ const AllTaskListItem = ({
 
                 <Text
                     variant="body"
-                    truncate
+                    maxLines={1}
                     className={cn(isDone && "line-through")}
                 >
 

@@ -77,7 +77,7 @@ const TaskListElement = ({
             <div className="flex min-w-0 items-center border-r border-lines-hairline px-3">
                 <Text
                     variant="body"
-                    truncate
+                    maxLines={1}
                     className={`${isDone ? "line-through" : ""}`}
                 >
                     {task.name}

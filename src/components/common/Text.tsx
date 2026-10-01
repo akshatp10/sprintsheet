@@ -45,14 +45,17 @@ interface TextProps extends HTMLAttributes<HTMLParagraphElement> {
     /** HTML element used to render the text. Defaults to `p`. */
     as?: "p" | "span";
 
-    /** Truncates overflowing text with an ellipsis. */
-    truncate?: boolean;
+    /**
+ * Truncates overflowing text after the specified number of lines.
+ * When omitted, text is not truncated.
+ */
+    maxLines?: number;
 }
 
 const Text = ({
     variant = "body",
     as = "p",
-    truncate = false,
+    maxLines,
     className,
     children,
     ...props
@@ -63,14 +66,22 @@ const Text = ({
         <Component
             className={cn(
                 variantClasses[variant],
-                truncate && "min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap",
-                className
+                maxLines && "overflow-hidden",
+                className,
             )}
+            style={
+                maxLines
+                    ? {
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: maxLines,
+                    }
+                    : undefined
+            }
             {...props}
         >
             {children}
         </Component>
     );
 };
-
 export default Text;

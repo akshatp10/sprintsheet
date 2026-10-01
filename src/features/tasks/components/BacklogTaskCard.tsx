@@ -30,7 +30,7 @@ const BacklogTaskCard = () => {
                 {/* Title */}
                 <Text
                     variant="body"
-                    className="truncate"
+                    maxLines={1}
                 >
                     Split the settings screen into tabs
                 </Text>
