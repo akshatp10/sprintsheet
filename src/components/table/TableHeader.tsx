@@ -65,7 +65,7 @@ const TableHeader = ({
     return (
         <div
             className={cn(
-                "grid h-10 border-b border-lines-control bg-surface-desk text-xs font-medium",
+                "grid h-10 min-w-max border-b border-lines-control bg-surface-desk text-xs font-medium",
                 className,
             )}
             style={{
