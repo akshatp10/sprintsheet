@@ -7,20 +7,20 @@ import { cn } from "@/lib/cn";
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { useTypeById } from "@/lib/services/types/hooks";
 import { GripVertical } from "lucide-react";
-import { useState } from "react";
 
 interface BacklogTaskCardProps {
     backlogTask: CycleTaskWithUsers;
+    onSelectionChange: (taskId: string, selected: boolean) => void;
+    selectedTaskIds: string[];
 }
 
-const BacklogTaskCard = ({ backlogTask }: BacklogTaskCardProps) => {
+const BacklogTaskCard = ({ backlogTask, onSelectionChange, selectedTaskIds }: BacklogTaskCardProps) => {
     const { data: curType } = useTypeById(backlogTask.typeId);
 
-    const visibleUsers = backlogTask.assignees.slice(0, 3);
-    const extraUsers = backlogTask.assignees.length - 3;
+    const checked = selectedTaskIds.includes(backlogTask?.id)
 
-
-    const [checked, setChecked] = useState(false);
+    const visibleUsers = backlogTask?.assignees.slice(0, 3);
+    const extraUsers = backlogTask?.assignees.length - 3;
 
     return (
         <div
@@ -32,7 +32,9 @@ const BacklogTaskCard = ({ backlogTask }: BacklogTaskCardProps) => {
             {/* Checkbox */}
             <Checkbox
                 checked={checked}
-                onChange={setChecked}
+                onChange={(value) => {
+                    onSelectionChange(backlogTask?.id, value);
+                }}
             />
 
             {/* Main content */}

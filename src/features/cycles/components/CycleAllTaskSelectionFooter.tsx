@@ -7,10 +7,12 @@ import { ArrowUpToLine, Inbox } from "lucide-react";
 
 interface CycleAllTaskSelectionFooterProps {
     activeCycle: Cycle;
-    selectedTaskLength: number
+    selectedTaskLength: number;
+    onMoveToCycle: (cycleId: string) => void;
+    onMoveToBacklog: () => void;
 }
 
-const CycleAllTaskSelectionFooter = ({ activeCycle, selectedTaskLength }: CycleAllTaskSelectionFooterProps) => {
+const CycleAllTaskSelectionFooter = ({ activeCycle, selectedTaskLength, onMoveToBacklog, onMoveToCycle }: CycleAllTaskSelectionFooterProps) => {
 
     return (
         <div className="flex w-full items-center justify-between px-4 py-2 bg-black text-white h-[5dvh]">
@@ -21,6 +23,7 @@ const CycleAllTaskSelectionFooter = ({ activeCycle, selectedTaskLength }: CycleA
 
                 {activeCycle && <>
                     <Button
+                        onClick={() => onMoveToCycle(activeCycle?.id)}
                         variant="secondary"
                         className="border-ink-3 text-white shadow-none flex items-center gap-1"
                     >
@@ -29,6 +32,7 @@ const CycleAllTaskSelectionFooter = ({ activeCycle, selectedTaskLength }: CycleA
                 </>
                 }
                 <Button
+                    onClick={onMoveToBacklog}
                     variant="secondary"
                     className="border-ink-3 text-white shadow-none flex items-center gap-1"
                 >

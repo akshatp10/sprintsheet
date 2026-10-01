@@ -8,7 +8,7 @@ import BacklogDrawer from "@/features/tasks/components/BacklogDrawer";
 import { isFeatureEnabled } from "@/config/features";
 import { useBacklogTasks, useTasksByStage } from "@/lib/services/tasks/hooks";
 import { useGetAllCyclesByProject } from "@/lib/services/cycles/hooks";
-import { useUpdateTaskCycle } from "@/lib/services/taskCycles/hooks";
+import { useUpdateTaskCycleStage } from "@/lib/services/taskCycles/hooks";
 import TaskDetailsDrawer from "@/features/tasks/components/TaskDetailsDrawer";
 
 const TaskViewPage = () => {
@@ -62,20 +62,19 @@ const TaskViewPage = () => {
         });
     };
 
-    const { mutate: updateTaskCycle } = useUpdateTaskCycle();
+    const { mutate: updateTaskStage } = useUpdateTaskCycleStage();
 
     const handleUpdateTaskStage = (taskId: string, stageId: string) => {
         const task = Object.values(tasksByStage)
             .flat()
             .find((task) => task.id === taskId);
 
-        if (!task || task.stage.stageId === stageId || !task.taskCycleId) return;
+        if (!task || !task.taskCycleId || task.stage.id === stageId) return;
 
-        updateTaskCycle({
-            id: task.taskCycleId,
+        updateTaskStage({
+            taskCycleId: task.taskCycleId,
             cycleId: currentCycleId,
             stageId,
-            taskId,
         });
     };
 
@@ -118,7 +117,7 @@ const TaskViewPage = () => {
 
             <TaskDetailsDrawer className="h-[95dvh]" />
 
-            {openBacklog && <BacklogDrawer handleClose={() => setOpenBacklog(false)} backlogTasks={backlogTasks} />}
+            {openBacklog && <BacklogDrawer handleClose={() => setOpenBacklog(false)} backlogTasks={backlogTasks} currentCycleId={currentCycleId} />}
         </>
     );
 };

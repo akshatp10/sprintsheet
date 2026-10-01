@@ -9,28 +9,74 @@ import { ArrowUpToLine, Inbox } from "lucide-react";
 import Text from "@/components/common/Text";
 import BacklogTaskCard from "./BacklogTaskCard";
 import Mascot from "@/components/common/Mascot";
+import { useGetBacklogStagePerProject, useGetStagesPerProject } from "@/lib/services/stages/hooks";
+import { useGetCycle } from "@/lib/services/cycles/hooks";
+import { formatCycleDate } from "@/lib/utils";
+import { useMoveTasksAcrossCycle } from "@/lib/services/taskCycles/hooks";
 
 interface BacklogDrawerProps {
     handleClose: () => void;
     backlogTasks: CycleTaskWithUsers[];
+    currentCycleId: string;
 }
 
-const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
+const BacklogDrawer = ({ handleClose, backlogTasks, currentCycleId }: BacklogDrawerProps) => {
+    const [selectedTaskIds, setSelectedTaskIds] = useState<string[]>([]);
+
     const [searchProject, setSearchProject] = useState("");
     const [openTaskForm, setOpenTaskForm] = useState(false);
-    const [clickedStageId, setClickedStageId] = useState("");
 
     const { projectid } = useParams<{ projectid: string }>();
 
+    const { data: backlogId = "" } = useGetBacklogStagePerProject(projectid ?? "");
+    const { data: stages = [] } = useGetStagesPerProject(projectid ?? "");
+    const { data: cycle } = useGetCycle(currentCycleId)
+    const { mutate: handleMoveTaskAcrossCycle } = useMoveTasksAcrossCycle();
+
+    const cycleDuration = cycle ? `${formatCycleDate(cycle.startDate)} - ${formatCycleDate(cycle.endDate)}` : "";
+
     const handleCreateTask = () => {
-        setClickedStageId("");
         setOpenTaskForm(true);
     };
 
     const handleCloseTaskForm = () => {
         setOpenTaskForm(false);
-        setClickedStageId("");
     };
+
+    const defaultStageId = [...stages]
+        .sort((a, b) => a.order - b.order)
+        .find((s) => s.name !== "Backlog")?.id;
+
+    const handleTaskSelection = (taskId: string, selected: boolean) => {
+        setSelectedTaskIds((prev) => {
+            if (selected) {
+                return [...prev, taskId];
+            }
+
+            return prev.filter((id) => id !== taskId);
+        });
+    };
+
+    const handleMoveSelectedToCycle = () => {
+        if (!defaultStageId) return;
+
+        const tasks = selectedTaskIds
+            .map((taskId) => ({
+                taskId,
+                fromCycleId: currentCycleId
+            }))
+
+        if (!tasks.length) return;
+
+        handleMoveTaskAcrossCycle(
+            {
+                projectId: projectid ?? "",
+                tasks,
+                to: { type: "cycle", cycleId: currentCycleId, stageId: defaultStageId },
+            },
+            { onSuccess: () => setSelectedTaskIds([]) },
+        );
+    }
 
     return (
         <>
@@ -65,7 +111,14 @@ const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
                 </div>
                 <div className="w-full px-4 flex flex-col flex-1 gap-2 min-h-0 overflow-y-auto">
                     {backlogTasks?.length > 0
-                        ? backlogTasks.map(backlogTask => (<BacklogTaskCard key={backlogTask.id} backlogTask={backlogTask} />))
+                        ? backlogTasks.map(backlogTask => (
+                            <BacklogTaskCard
+                                key={backlogTask.id}
+                                backlogTask={backlogTask}
+                                onSelectionChange={handleTaskSelection}
+                                selectedTaskIds={selectedTaskIds}
+                            />
+                        ))
                         : <div className="flex min-h-16 items-center justify-center gap-2 rounded-lg border border-lines-control bg-surface">
                             <Mascot renderAnimation expression="sleeping" />
                             <Text
@@ -82,7 +135,7 @@ const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
                     <Text className="text-ink-3">
                         Adds to
                         <Text as="span" className="font-medium mx-1 text-ink">
-                            Aug 17-21
+                            {cycleDuration}
                         </Text>
                         and leaves the backlog. Stage, status, assignee and history are unchanged.
                     </Text>
@@ -95,9 +148,10 @@ const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
                         <Button
                             variant="secondary"
                             className="text-ink border flex items-center gap-1 flex-1 justify-center"
+                            onClick={handleMoveSelectedToCycle}
                         >
                             <ArrowUpToLine strokeWidth={1.5} size={15} /> Add to{" "}
-                            {"Sep 18 - Sep 20"}
+                            {cycle?.name}
                         </Button>
                     </div>
                 </div>
@@ -106,7 +160,7 @@ const BacklogDrawer = ({ handleClose, backlogTasks }: BacklogDrawerProps) => {
             {openTaskForm && (
                 <TaskCreateForm
                     projectId={projectid ?? ""}
-                    defaultStageId={clickedStageId}
+                    defaultStageId={backlogId}
                     onClose={handleCloseTaskForm}
                 />
             )
