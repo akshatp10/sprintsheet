@@ -170,6 +170,7 @@ const CyclesDetailsPage = () => {
                         cycle={cycle}
                         status={status}
                         gridTemplateColumns={gridTemplateColumns}
+                        projectId={projectid ?? ""}
                     />
                 ))}
             </div>
