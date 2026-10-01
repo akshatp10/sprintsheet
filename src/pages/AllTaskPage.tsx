@@ -137,7 +137,7 @@ const AllTaskPage = () => {
     return (
         <div className="flex h-full flex-col justify-between">
             <TableWrapper columns={columns}>
-                <CycleHeaderElement variant="backlog" taskCount={allBacklogTasks?.length ?? 0} />
+                <CycleHeaderElement variant="backlog" doneTasks={0} taskCount={allBacklogTasks?.length ?? 0} />
                 {!!allBacklogTasks?.length && allBacklogTasks.map((task) => (
                     <AllTaskListItem
                         key={task.id}
