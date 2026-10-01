@@ -66,7 +66,7 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
             <Text
                 variant="h2"
                 className={isDone ? "line-through" : ""}
-                truncate
+                maxLines={1}
             >
                 {task.name}
             </Text>

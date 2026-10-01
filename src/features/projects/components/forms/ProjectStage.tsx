@@ -18,7 +18,7 @@ const ProjectStage = ({ color, label, tag, className, ...props }: ProjectStagePr
         >
             <div className="flex items-center gap-2 min-w-0">
                 <span className={cn("w-2 h-2 rounded-full shrink-0", color)} />
-                <Text variant="body-sm" className="text-ink truncate">
+                <Text variant="body-sm" className="text-ink" maxLines={1}>
                     {label}
                 </Text>
             </div>

@@ -17,7 +17,7 @@ const UserPanel = ({ userName, isSidebar, textVariant = "body", textColor = "tex
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
                 <Avatar userName={displayUserName} isSideBar={isSidebar} />
-                <Text variant={textVariant} className={textColor} truncate>{displayUserName}</Text>
+                <Text variant={textVariant} className={textColor} maxLines={1}>{displayUserName}</Text>
             </div>
         </div>
     )
