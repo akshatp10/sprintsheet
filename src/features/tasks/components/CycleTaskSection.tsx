@@ -20,12 +20,16 @@ const CycleTaskSection = ({
     onSelectionChange,
     selectedTaskIds
 }: CycleTaskSectionProps) => {
+
+    const doneTasks = tasks ? tasks.filter((task => task.stage.isTerminal === true)).length : 0;
+
     return (
         <>
             <CycleHeaderElement
                 variant={status === "active" ? "active" : "other"}
                 cycle={cycle}
                 taskCount={tasks?.length}
+                doneTasks={doneTasks}
             />
 
             {tasks.map((task) => (
