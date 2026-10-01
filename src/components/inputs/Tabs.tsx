@@ -55,7 +55,7 @@ export default function Tabs<T extends string>({
                 return (
                     <label
                         key={String(tab.value)}
-                        className={`relative z-10 shrink-0 cursor-pointer rounded-md px-3 py-1.5 text-sm transition-colors duration-200 ${selected
+                        className={`relative shrink-0 cursor-pointer rounded-md px-3 py-1.5 text-sm transition-colors duration-200 ${selected
                             ? "text-ink"
                             : "text-ink-fades-ghost-rows"
                             }`}
