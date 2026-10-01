@@ -34,7 +34,7 @@ export const taskQueryKeys = {
 		[...taskQueryKeys.cycle(cycleId), "by-stage"] as const,
 
 	cycleByProject: (projectId: string) =>
-		[...taskQueryKeys.cycle(projectId), projectId] as const,
+		[...taskQueryKeys.cycle(projectId), "by-cycle"] as const,
 };
 
 export const useGetAllTasksByProject = (projectId: string) => {
@@ -292,12 +292,8 @@ export const useUpdateTask = () => {
 			return response.data;
 		},
 
-		onSuccess: (_, variables) => {
-			const { projectId } = variables;
-
-			queryClient.invalidateQueries({
-				queryKey: taskQueryKeys.project(projectId),
-			});
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: taskQueryKeys.all });
 		},
 	});
 };
