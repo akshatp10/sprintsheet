@@ -66,11 +66,11 @@ const Text = ({
         <Component
             className={cn(
                 variantClasses[variant],
-                maxLines && "overflow-hidden",
+                maxLines !== undefined && "overflow-hidden",
                 className,
             )}
             style={
-                maxLines
+                maxLines !== undefined
                     ? {
                         display: "-webkit-box",
                         WebkitBoxOrient: "vertical",
