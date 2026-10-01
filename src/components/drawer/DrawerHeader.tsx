@@ -16,7 +16,7 @@ const DrawerHeader = ({
 }: DrawerHeaderProps) => {
     return (
         <div className="flex items-center justify-between p-4 border-b border-lines-hairline">
-            <Text variant="h1">
+            <Text variant="h1" as="span">
                 {label}
             </Text>
 
