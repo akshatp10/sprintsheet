@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Check, Plus } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Plus } from "lucide-react";
 
 import Avatar from "@/components/avatar/Avatar";
 import AvatarGroup from "@/components/avatar/AvatarGroups";
 import Button from "@/components/button/Button";
+import Checkbox from "@/components/inputs/Checkbox"; // adjust to your actual path
 import Text from "@/components/common/Text";
 import UserPanel from "@/components/sidebar/UserPanel";
 import { cn } from "@/lib/cn";
@@ -23,6 +24,14 @@ export function AssigneeSelect({
     const { data: members = [], isLoading } = useGetProjectMembers(projectId);
     const [open, setOpen] = useState(false);
 
+    //For already selected users
+    const [pinnedIds, setPinnedIds] = useState<string[]>([]);
+
+    const handleToggleOpen = () => {
+        if (!open) setPinnedIds(value);
+        setOpen((prev) => !prev);
+    };
+
     const toggleAssignee = (userId: string) => {
         const nextValue = value.includes(userId)
             ? value.filter((id) => id !== userId)
@@ -32,31 +41,62 @@ export function AssigneeSelect({
     };
 
     const selectedMembers = members.filter((member) =>
-        value.includes(member.userId)
+        value.includes(member.userId),
     );
+
+    const { pinnedMembers, otherMembers } = useMemo(() => {
+        const pinned = new Set(pinnedIds);
+
+        return {
+            pinnedMembers: members.filter((m) => pinned.has(m.userId)),
+            otherMembers: members.filter((m) => !pinned.has(m.userId)),
+        };
+    }, [members, pinnedIds]);
 
     const commonClass =
         "flex items-center gap-1 rounded-md border border-lines-hairline bg-surface-2 pl-1 pr-2 py-0.5";
 
+    const renderRow = (member: (typeof members)[number]) => (
+        <div
+            key={member.userId}
+            className="flex w-full items-center gap-2 px-3 py-1.5 hover:bg-surface-page"
+        >
+            <Checkbox
+                checked={value.includes(member.userId)}
+                onChange={() => toggleAssignee(member.userId)}
+            />
+
+            <UserPanel
+                userName={member.name}
+                textVariant="body-sm"
+                textColor="text-ink"
+            />
+        </div>
+    );
+
     return (
         <div className="relative">
             <div className="flex flex-wrap items-center gap-1.5">
-                {!!selectedMembers?.length ? (
+                {selectedMembers.length ? (
                     <AvatarGroup>
-                        {selectedMembers.slice(0, 3).map(member => (<Avatar userName={member.name} key={member.id} />))}
-                        {selectedMembers.length > 3 && <Avatar extraUsers={selectedMembers.length - 3} />}
-                    </AvatarGroup>)
-                    : (
-                        <Avatar />
-                    )}
+                        {selectedMembers.slice(0, 3).map((member) => (
+                            <Avatar userName={member.name} key={member.id} />
+                        ))}
+                        {selectedMembers.length > 3 && (
+                            <Avatar extraUsers={selectedMembers.length - 3} />
+                        )}
+                    </AvatarGroup>
+                ) : (
+                    <Avatar />
+                )}
 
                 <Button
                     variant="tertiary"
                     type="button"
-                    onClick={() => setOpen((prev) => !prev)}
+                    onClick={handleToggleOpen}
                     className={cn(
                         commonClass,
-                        "border-dashed text-ink-3 hover:text-ink-2"
+                        "border-dashed text-ink-3 hover:text-ink-2",
                     )}
                 >
                     <Plus className="h-3 w-3" />
@@ -68,7 +108,7 @@ export function AssigneeSelect({
             </div>
 
             {open && (
-                <div className="absolute z-10 mt-1.5 w-52 rounded-md border border-lines-hairline bg-surface py-1 shadow-md max-h-50 overflow-auto">
+                <div className="absolute z-10 mt-1.5 max-h-52 w-52 overflow-auto rounded-md border border-lines-hairline bg-surface py-1 shadow-md">
                     {isLoading ? (
                         <Text
                             variant="caption"
@@ -84,31 +124,10 @@ export function AssigneeSelect({
                             No members found
                         </Text>
                     ) : (
-                        members.map((member) => {
-                            const selected = value.includes(member.userId);
-
-                            return (
-                                <Button
-                                    key={member.userId}
-                                    variant="tertiary"
-                                    type="button"
-                                    onClick={() =>
-                                        toggleAssignee(member.userId)
-                                    }
-                                    className="flex w-full items-center justify-between border-0 px-3 py-1.5 text-left hover:bg-surface-page"
-                                >
-                                    <UserPanel
-                                        userName={member.name}
-                                        textVariant="body-sm"
-                                        textColor="text-ink"
-                                    />
-
-                                    {selected && (
-                                        <Check className="h-3.5 w-3.5 text-accent-deep" />
-                                    )}
-                                </Button>
-                            );
-                        })
+                        <>
+                            {pinnedMembers.map(renderRow)}
+                            {otherMembers.map(renderRow)}
+                        </>
                     )}
                 </div>
             )}
