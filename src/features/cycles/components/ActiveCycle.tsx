@@ -8,6 +8,7 @@ import { useGetStagesPerProject } from '@/lib/services/stages/hooks'
 import { useTasksByStage } from '@/lib/services/tasks/hooks'
 import { formatCycleDate, getPercentage } from '@/lib/utils'
 import { Copy, Lock, Pencil } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 interface ActiveCycleProps {
     activeCycle: Cycle[]
@@ -47,7 +48,7 @@ const ActiveCycle = ({ activeCycle, projectId }: ActiveCycleProps) => {
     if (isLoading) return ("wait");
 
     return (
-        <div className="w-full border border-accent rounded-md p-4 bg-surface min-h-30 flex flex-col justify-evenly">
+        <Link to={`/project/${projectId}/board?cycle=${curCycle.id}&view=table`} className="w-full border border-accent rounded-md p-4 bg-surface min-h-30 flex flex-col justify-evenly">
             <div className="flex items-center justify-between">
                 <div className="flex gap-3 items-center">
                     <Chip text="Active" variant="primary" bgColor="bg-accent-tint" textColor="text-accent-deep" className="font-medium" />
@@ -83,7 +84,7 @@ const ActiveCycle = ({ activeCycle, projectId }: ActiveCycleProps) => {
                 }
                 )}
             </div>
-        </div>
+        </Link>
     )
 }
 

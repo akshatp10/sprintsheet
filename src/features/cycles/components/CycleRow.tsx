@@ -2,7 +2,7 @@ import Chip from "@/components/chips/Chip";
 import Text from "@/components/common/Text";
 import ProgressBar from "@/components/progressBar/ProgressBar";
 import { cn } from "@/lib/cn";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import type { Cycle } from "@/lib/services/cycles/types";
 import { useTasksByCycle } from "@/lib/services/tasks/hooks";
 
@@ -20,7 +20,7 @@ const CycleRow = ({ cycle, status, gridTemplateColumns, projectId }: CycleRowPro
     const { data: allTasks } = useTasksByCycle(cycle.id)
 
     return (
-        <NavLink
+        <Link
             to={`/project/${projectId}/board?cycle=${cycle.id}&view=table`}
             className="grid items-center border-b border-lines px-3 py-3"
             style={{ gridTemplateColumns }}
@@ -71,7 +71,7 @@ const CycleRow = ({ cycle, status, gridTemplateColumns, projectId }: CycleRowPro
                     </Text>
                     : <ProgressBar progress={40} label={{ cur: 4, total: 10 }} />}
             </div>
-        </NavLink>
+        </Link>
     );
 };
 
