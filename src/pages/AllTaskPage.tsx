@@ -28,7 +28,7 @@ const AllTaskPage = () => {
                 />),
         },
         { key: "key", label: "KEY", width: "100px" },
-        { key: "title", label: "TITLE", width: "1fr" },
+        { key: "title", label: "TITLE", width: "minmax(200px, 1fr)" },
         { key: "stage", label: "STAGE", width: "120px" },
         { key: "status", label: "STATUS", width: "120px" },
         { key: "assignee", label: "ASSIGNEE", width: "120px" },

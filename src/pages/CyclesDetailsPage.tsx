@@ -44,7 +44,7 @@ const CyclesDetailsPage = () => {
         {
             key: "cycle",
             label: "CYCLE",
-            width: "1fr",
+            width: "minmax(200px,1fr)",
         },
         {
             key: "length",
@@ -70,7 +70,7 @@ const CyclesDetailsPage = () => {
     return (
         <div className="w-full flex flex-col px-8 py-6 gap-8">
             {/* Top section containing toggle */}
-            <div className="w-full flex gap-3 items-stretch opacity-50">
+            <div className="w-full max-h-40 flex gap-3 items-stretch opacity-50 overflow-hidden">
                 <ToggleButtonBox
                     checked={automaticCycle}
                     onChange={(value) => setAutomaticCycle(value)}
@@ -128,7 +128,7 @@ const CyclesDetailsPage = () => {
                     </div>
                 </ToggleButtonBox>
 
-                <div className="w-[25%] h-full border border-lines rounded-md p-4">
+                <div className="w-[25dvw] h-full border border-lines rounded-md p-4">
                     <Text className="text-ink-3">ON ROLLOVER</Text>
                     <Text>
                         The finished cycle closes itself and unfinished tasks
@@ -146,7 +146,7 @@ const CyclesDetailsPage = () => {
             }
 
             {/* All Cycles */}
-            <div className="w-full">
+            <div className="w-full overflow-x-auto">
                 {/* Header */}
                 <div
                     className="grid items-center border-b border-lines px-3 py-2"
