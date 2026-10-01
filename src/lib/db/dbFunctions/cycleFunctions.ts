@@ -21,6 +21,24 @@ export const createCycle = async (
 		throw new Error("Project not found");
 	}
 
+	if (input.startDate >= input.endDate) {
+		throw new Error("Cycle end date must be after start date");
+	}
+
+	const existingCycles = await db.cycles
+		.where("projectId")
+		.equals(input.projectId)
+		.toArray();
+
+	const hasOverlap = existingCycles.some(
+		(cycle) =>
+			input.startDate < cycle.endDate && input.endDate > cycle.startDate,
+	);
+
+	if (hasOverlap) {
+		throw new Error("Cycle dates overlap with an existing cycle");
+	}
+
 	const now = Date.now();
 
 	const cycle: CycleRow = {
