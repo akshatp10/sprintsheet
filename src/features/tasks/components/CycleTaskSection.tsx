@@ -8,6 +8,8 @@ interface CycleTaskSectionProps {
     status: "active" | "closed" | "planned";
     tasks: CycleTaskWithUsers[];
     gridTemplateColumns: string;
+    onSelectionChange: (taskId: string, selected: boolean) => void;
+    selectedTaskIds: string[];
 }
 
 const CycleTaskSection = ({
@@ -15,6 +17,8 @@ const CycleTaskSection = ({
     status,
     tasks,
     gridTemplateColumns,
+    onSelectionChange,
+    selectedTaskIds
 }: CycleTaskSectionProps) => {
     return (
         <>
@@ -30,6 +34,8 @@ const CycleTaskSection = ({
                     task={task}
                     gridTemplateColumns={gridTemplateColumns}
                     isDone={false}
+                    onSelectionChange={onSelectionChange}
+                    selectedTaskIds={selectedTaskIds}
                 />
             ))}
         </>

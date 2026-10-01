@@ -20,6 +20,12 @@ export type TableColumn = {
      * the table grid layout.
      */
     width: string;
+
+    /**
+     * Optional custom content rendered inside the column header.
+     * When provided, it takes precedence over the label.
+     */
+    renderHeader?: () => React.ReactNode;
 };
 
 interface TableHeaderProps {
@@ -67,15 +73,21 @@ const TableHeader = ({
             }}
         >
             {columns.map((column) => (
-                <Text
+                <div
                     key={column.key}
                     className={cn(
                         "flex items-center border-r border-lines-control px-3 text-ink-3 last:border-r-0",
                         cellClassName,
                     )}
                 >
-                    {column.label}
-                </Text>
+                    {column.renderHeader
+                        ? column.renderHeader()
+                        : (
+                            <Text>
+                                {column.label}
+                            </Text>
+                        )}
+                </div>
             ))}
         </div>
     );
