@@ -7,19 +7,26 @@ import { cn } from "@/lib/cn";
 import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
 import { stageConfig, StageName } from "@/lib/stageConfig";
 import { formatDate } from "@/lib/utils";
-import { useState } from "react";
+import useTaskDetailStore from "@/store/taskDetailStore";
 
 interface AllTaskListItemProps {
     gridTemplateColumns: string;
     isDone: boolean;
     task: CycleTaskWithUsers;
+    onSelectionChange: (taskId: string, selected: boolean) => void;
+    selectedTaskIds: string[];
 }
 const AllTaskListItem = ({
     gridTemplateColumns,
     isDone,
-    task
+    task,
+    onSelectionChange,
+    selectedTaskIds
 }: AllTaskListItemProps) => {
-    const [checked, setChecked] = useState(false);
+
+    const openTask = useTaskDetailStore((state) => state.openTask);
+
+    const checked = selectedTaskIds.includes(task.id)
 
     const visibleUsers = task.assignees.slice(0, 3);
     const extraUsers = task.assignees.length - 3;
@@ -34,16 +41,20 @@ const AllTaskListItem = ({
                 checked && "bg-accent-wash-selected"
             )}
             style={{ gridTemplateColumns }}
+            onClick={() => { openTask(task) }}
         >
 
             {/* Checkbox */}
-            <div className="flex items-center border-r border-lines-hairline px-3">
+            <div className="flex items-center border-r border-lines-hairline px-3"
+                onClick={(e) => e.stopPropagation()}
+            >
 
                 <Checkbox
                     checked={checked}
-                    onChange={setChecked}
+                    onChange={(value) => {
+                        onSelectionChange(task.id, value);
+                    }}
                     className="bg-surface-page"
-
                 />
             </div>
             {/* Key */}

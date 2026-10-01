@@ -116,7 +116,7 @@ const TaskViewPage = () => {
                     cycles={cycles} currentCycleId={currentCycleId} setCurrentCycleId={handleCycleChange} openBacklog={openBacklog} />
             </div>
 
-            <TaskDetailsDrawer />
+            <TaskDetailsDrawer className="h-[95dvh]" />
 
             {openBacklog && <BacklogDrawer handleClose={() => setOpenBacklog(false)} backlogTasks={backlogTasks} />}
         </>

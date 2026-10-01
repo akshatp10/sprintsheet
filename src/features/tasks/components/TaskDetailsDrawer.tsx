@@ -12,7 +12,11 @@ import Input from "@/components/inputs/Input";
 import { cn } from "@/lib/cn";
 import useTaskDetailStore from "@/store/taskDetailStore";
 
-const TaskDetailsDrawer = () => {
+interface TaskDetailsDrawerProps {
+    className?: string;
+}
+
+const TaskDetailsDrawer = ({ className }: TaskDetailsDrawerProps) => {
     const currentTask = useTaskDetailStore((state) => state.currentTask);
     const closeTask = useTaskDetailStore((state) => state.closeTask);
 
@@ -49,7 +53,7 @@ const TaskDetailsDrawer = () => {
                 </div>
             }
             width="30dvw"
-            className="z-50 h-[95dvh] bg-surface-sunken"
+            className={cn("z-50 h-full bg-surface-sunken", className)}
         >
             <div className="flex h-full min-h-0 flex-col">
                 {/* Header */}
