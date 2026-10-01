@@ -16,3 +16,13 @@ export interface CreateTaskCycleInput {
 export interface UpdateTaskCycleInput {
 	stageId?: string;
 }
+
+export type TaskDestination =
+	| { type: "backlog" }
+	| { type: "cycle"; cycleId: string; stageId: string };
+
+export interface MoveTasksVariables {
+	projectId: string;
+	tasks: { taskId: string; fromCycleId: string | null }[];
+	to: TaskDestination;
+}
