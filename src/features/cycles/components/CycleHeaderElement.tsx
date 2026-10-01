@@ -9,6 +9,7 @@ const DAY_MS = 1000 * 60 * 60 * 24;
 
 type CycleHeaderElementProps = {
     taskCount: number;
+    doneTasks: number;
 } & (
         | {
             variant: "backlog";
@@ -38,6 +39,7 @@ const CycleHeaderElement = ({
     variant,
     cycle,
     taskCount,
+    doneTasks,
 }: CycleHeaderElementProps) => {
     const isBacklog = variant === "backlog";
     const isActive = variant === "active";
@@ -52,7 +54,7 @@ const CycleHeaderElement = ({
         ? "a task with no cycle lives here"
         : isActive && progress
             ? `day ${progress.currentDay} of ${progress.cycleLength}`
-            : "9 of 11 done";
+            : `${doneTasks} of ${taskCount} done`;
 
     return (
         <div

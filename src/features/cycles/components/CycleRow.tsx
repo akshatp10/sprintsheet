@@ -5,6 +5,7 @@ import { cn } from "@/lib/cn";
 import { Link } from "react-router-dom";
 import type { Cycle } from "@/lib/services/cycles/types";
 import { useTasksByCycle } from "@/lib/services/tasks/hooks";
+import { getPercentage } from "@/lib/utils";
 
 interface CycleRowProps {
     cycle: Cycle;
@@ -18,6 +19,9 @@ const CycleRow = ({ cycle, status, gridTemplateColumns, projectId }: CycleRowPro
     const cycleLength = (new Date(cycle.endDate).getTime() - new Date(cycle.startDate).getTime()) / (1000 * 60 * 60 * 24);
 
     const { data: allTasks } = useTasksByCycle(cycle.id)
+
+    const doneTasks = allTasks ? allTasks.filter((task => task.stage.isTerminal === true)).length : 0;
+    const totalTasks = allTasks?.length ?? 0;
 
     return (
         <Link
@@ -69,7 +73,7 @@ const CycleRow = ({ cycle, status, gridTemplateColumns, projectId }: CycleRowPro
                     <Text variant="body-sm" className="text-ink-3">
                         —
                     </Text>
-                    : <ProgressBar progress={40} label={{ cur: 4, total: 10 }} />}
+                    : <ProgressBar progress={getPercentage(doneTasks, totalTasks)} label={{ cur: doneTasks, total: totalTasks }} />}
             </div>
         </Link>
     );
