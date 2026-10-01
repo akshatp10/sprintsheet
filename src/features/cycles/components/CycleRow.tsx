@@ -2,6 +2,7 @@ import Chip from "@/components/chips/Chip";
 import Text from "@/components/common/Text";
 import ProgressBar from "@/components/progressBar/ProgressBar";
 import { cn } from "@/lib/cn";
+import { NavLink } from "react-router-dom";
 import type { Cycle } from "@/lib/services/cycles/types";
 import { useTasksByCycle } from "@/lib/services/tasks/hooks";
 
@@ -9,16 +10,18 @@ interface CycleRowProps {
     cycle: Cycle;
     status: "active" | "closed" | "planned";
     gridTemplateColumns: string;
+    projectId: string;
 }
 
-const CycleRow = ({ cycle, status, gridTemplateColumns }: CycleRowProps) => {
+const CycleRow = ({ cycle, status, gridTemplateColumns, projectId }: CycleRowProps) => {
 
     const cycleLength = (new Date(cycle.endDate).getTime() - new Date(cycle.startDate).getTime()) / (1000 * 60 * 60 * 24);
 
     const { data: allTasks } = useTasksByCycle(cycle.id)
 
     return (
-        <div
+        <NavLink
+            to={`/project/${projectId}/board?cycle=${cycle.id}&view=table`}
             className="grid items-center border-b border-lines px-3 py-3"
             style={{ gridTemplateColumns }}
         >
@@ -68,7 +71,7 @@ const CycleRow = ({ cycle, status, gridTemplateColumns }: CycleRowProps) => {
                     </Text>
                     : <ProgressBar progress={40} label={{ cur: 4, total: 10 }} />}
             </div>
-        </div>
+        </NavLink>
     );
 };
 
