@@ -7,8 +7,10 @@ import AllTaskListItem from "@/features/tasks/components/listView/AllTaskListIte
 import TaskDetailsDrawer from "@/features/tasks/components/TaskDetailsDrawer";
 import { useCycleStatus } from "@/hooks/useCycleStatus";
 import { useGetAllCyclesByProject } from "@/lib/services/cycles/hooks";
+import { useGetStagesPerProject } from "@/lib/services/stages/hooks";
+import { useMoveTasksAcrossCycle } from "@/lib/services/taskCycles/hooks";
 import { useBacklogTasks, useGetAllTasksByProject, useGetTasksByCycle } from "@/lib/services/tasks/hooks";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 
@@ -41,6 +43,9 @@ const AllTaskPage = () => {
     const { data: allCycles = [] } = useGetAllCyclesByProject(projectid ?? "");
     const { data: tasksByCycle = {} } = useGetTasksByCycle(projectid ?? "");
     const { data: allBacklogTasks } = useBacklogTasks(projectid ?? "");
+    const { data: allTasks } = useGetAllTasksByProject(projectid ?? "");
+    const { data: stages = [] } = useGetStagesPerProject(projectid ?? "");
+    const { mutate: handleMoveTaskAcrossCycle } = useMoveTasksAcrossCycle();
 
     const {
         active: activeCycles,
@@ -54,12 +59,22 @@ const AllTaskPage = () => {
         ...closedCycles.map((cycle) => ({ cycle, status: "closed" as const })),
     ];
 
-    const { data: allTasks } = useGetAllTasksByProject(projectid ?? "");
+    const defaultStageId = [...stages]
+        .sort((a, b) => a.order - b.order)
+        .find((s) => s.name !== "Backlog")?.id;
+
+    const sourceCycleByTask = useMemo(() => {
+        const map = new Map<string, string | null>();
+
+        allBacklogTasks?.forEach((t) => map.set(t.id, null));
+        Object.entries(tasksByCycle).forEach(([cycleId, tasks]) =>
+            tasks.forEach((t) => map.set(t.id, cycleId)),
+        );
+
+        return map;
+    }, [allBacklogTasks, tasksByCycle]);
 
     const allTaskIds = allTasks?.map((task) => task.id) ?? [];
-
-    console.log(allTasks?.length);
-
 
     const allTasksSelected =
         allTaskIds.length > 0 &&
@@ -77,6 +92,46 @@ const AllTaskPage = () => {
 
             return prev.filter((id) => id !== taskId);
         });
+    };
+
+    const handleMoveSelectedToBacklog = () => {
+        const tasks = selectedTaskIds
+            .map((taskId) => ({
+                taskId,
+                fromCycleId: sourceCycleByTask.get(taskId) ?? null,
+            }))
+            // Already in the backlog, so nothing to do
+            .filter((t) => t.fromCycleId !== null);
+
+        if (!tasks.length) return;
+
+        handleMoveTaskAcrossCycle(
+            { projectId: projectid ?? "", tasks, to: { type: "backlog" } },
+            { onSuccess: () => setSelectedTaskIds([]) },
+        );
+    };
+
+    const handleMoveSelectedToCycle = (cycleId: string) => {
+        if (!defaultStageId) return;
+
+        const tasks = selectedTaskIds
+            .map((taskId) => ({
+                taskId,
+                fromCycleId: sourceCycleByTask.get(taskId) ?? null,
+            }))
+            // Skip tasks already in the target cycle, otherwise their stage gets reset
+            .filter((t) => t.fromCycleId !== cycleId);
+
+        if (!tasks.length) return;
+
+        handleMoveTaskAcrossCycle(
+            {
+                projectId: projectid ?? "",
+                tasks,
+                to: { type: "cycle", cycleId, stageId: defaultStageId },
+            },
+            { onSuccess: () => setSelectedTaskIds([]) },
+        );
     };
 
     return (
@@ -107,7 +162,8 @@ const AllTaskPage = () => {
                 ))}
             </TableWrapper>
             {!!selectedTaskIds.length &&
-                <CycleAllTaskSelectionFooter activeCycle={activeCycles[0]} selectedTaskLength={selectedTaskIds.length} />
+                <CycleAllTaskSelectionFooter activeCycle={activeCycles[0]} selectedTaskLength={selectedTaskIds.length} onMoveToCycle={handleMoveSelectedToCycle}
+                    onMoveToBacklog={handleMoveSelectedToBacklog} />
             }
 
             <TaskDetailsDrawer />
