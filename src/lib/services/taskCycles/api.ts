@@ -3,12 +3,14 @@ import {
 	getTaskCyclesByCycle,
 	getTaskCyclesByProject,
 	getTaskCyclesByTask,
-	updateTaskCycle,
+	moveMultipleTasksAcrossCycle,
+	moveTaskAcrossCycle,
+	updateTaskCycleStage,
 } from "@/lib/db/dbFunctions/taskCycleFunctions";
 
-import type { ApiResponse } from "../types";
-
-import type { CreateTaskCycleInput, TaskCycle } from "./types";
+import { errorMessage, type ApiResponse } from "../types";
+import type { Task } from "../tasks/types";
+import type { CreateTaskCycleInput, TaskCycle, TaskDestination } from "./types";
 
 export const createNewTaskCycle = async (
 	input: CreateTaskCycleInput,
@@ -32,33 +34,70 @@ export const createNewTaskCycle = async (
 	}
 };
 
-export const updateExistingTaskCycle = async (
-	id: string,
+export const updateExistingTaskCycleStage = async (
+	taskCycleId: string,
 	stageId: string,
 ): Promise<ApiResponse<TaskCycle>> => {
 	try {
-		const taskCycle = await updateTaskCycle(id, stageId);
-
-		if (!taskCycle) {
-			return {
-				status: 404,
-				success: false,
-				message: "Task cycle not found",
-				data: null,
-			};
-		}
+		const taskCycle = await updateTaskCycleStage(taskCycleId, stageId);
 
 		return {
 			status: 200,
 			success: true,
-			message: "Successfully updated task cycle",
+			message: "Successfully updated task cycle stage",
 			data: taskCycle,
 		};
-	} catch {
+	} catch (error) {
 		return {
 			status: 500,
 			success: false,
-			message: "Internal Server Error",
+			message: errorMessage(error),
+			data: null,
+		};
+	}
+};
+
+export const moveTaskToDestination = async (
+	taskId: string,
+	destination: TaskDestination,
+): Promise<ApiResponse<Task>> => {
+	try {
+		const task = await moveTaskAcrossCycle(taskId, destination);
+
+		return {
+			status: 200,
+			success: true,
+			message: "Successfully moved task",
+			data: task,
+		};
+	} catch (error) {
+		return {
+			status: 500,
+			success: false,
+			message: errorMessage(error),
+			data: null,
+		};
+	}
+};
+
+export const moveMultipleTasksToDestination = async (
+	taskIds: string[],
+	destination: TaskDestination,
+): Promise<ApiResponse<Task[]>> => {
+	try {
+		const tasks = await moveMultipleTasksAcrossCycle(taskIds, destination);
+
+		return {
+			status: 200,
+			success: true,
+			message: "Successfully moved tasks",
+			data: tasks,
+		};
+	} catch (error) {
+		return {
+			status: 500,
+			success: false,
+			message: errorMessage(error),
 			data: null,
 		};
 	}

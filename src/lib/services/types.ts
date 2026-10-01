@@ -4,3 +4,6 @@ export interface ApiResponse<T> {
 	message: string;
 	data: T | null;
 }
+
+export const errorMessage = (error: unknown) =>
+	error instanceof Error ? error.message : "Internal Server Error";
