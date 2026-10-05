@@ -53,7 +53,7 @@ const PeopleStep = ({ register, control, watch, setValue }: PeopleStepProps) => 
           <Input
             value={inviteInput}
             onChange={setInviteInput}
-            placeholder="name@company.com, comma separated"
+            placeholder="name@thealteroffice.com, comma separated"
             className="flex-1"
             autoFocus
           />
