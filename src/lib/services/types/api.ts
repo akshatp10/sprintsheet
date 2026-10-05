@@ -1,6 +1,7 @@
 import { getAllTypesByProject, getType } from '@/lib/db/dbFunctions/typeFunctions';
 
-import type { ApiResponse } from '../types';
+import { errorMessage, type ApiResponse } from '../types';
+
 import type { Type } from './types';
 
 export const getProjectTypesById = async (projectId: string): Promise<ApiResponse<Type[]>> => {
@@ -13,11 +14,11 @@ export const getProjectTypesById = async (projectId: string): Promise<ApiRespons
       message: 'Successfully fetched project types',
       data: types,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to fetch types for project'),
       data: null,
     };
   }
@@ -42,11 +43,11 @@ export const getTypeById = async (typeId: string): Promise<ApiResponse<Type>> =>
       message: 'Successfully fetched type',
       data: type,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to fetch type'),
       data: null,
     };
   }

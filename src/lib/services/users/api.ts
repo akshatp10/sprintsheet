@@ -1,5 +1,7 @@
 import { getUserById, getUsersByIds } from '@/lib/db/dbFunctions/userFunctions';
-import type { ApiResponse } from '../types';
+
+import { errorMessage, type ApiResponse } from '../types';
+
 import type { User } from './types';
 
 export const getUser = async (id: string): Promise<ApiResponse<User>> => {
@@ -21,11 +23,11 @@ export const getUser = async (id: string): Promise<ApiResponse<User>> => {
       message: 'Successfully fetched user',
       data: user,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to fetch user'),
       data: null,
     };
   }
@@ -41,11 +43,11 @@ export const getUsers = async (ids: string[]): Promise<ApiResponse<User[]>> => {
       message: 'Successfully fetched users',
       data: users,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to fetch users'),
       data: null,
     };
   }
