@@ -1,5 +1,6 @@
-import type { Project, ProjectMember } from './services/projects/types';
-import { getExtractedLetterFromString } from './utils';
+import type { Project, ProjectMember } from '../lib/services/projects/types';
+import { useGetAllTasksByProject } from '../lib/services/tasks/hooks';
+import { getExtractedLetterFromString, getPercentage } from '../lib/utils';
 
 interface ProjectUser {
   userName: string;
@@ -14,7 +15,15 @@ const formatDate = (timestamp: number) =>
     day: 'numeric',
   });
 
-export const mapProjectToCard = (project: Project, members: ProjectMember[] = []) => {
+export const useMapProjectToCard = (project: Project, members: ProjectMember[] = []) => {
+  const { data: tasks = [] } = useGetAllTasksByProject(project.id);
+
+  const totalTasks = tasks.length;
+
+  const doneTasks = tasks.filter((task) => task.stage.isTerminal).length;
+
+  const progress = getPercentage(doneTasks, totalTasks);
+
   const users: ProjectUser[] = members.map((m, i) => ({
     userName: m.name || m.email,
     variant: avatarVariants[i % avatarVariants.length],
@@ -26,9 +35,9 @@ export const mapProjectToCard = (project: Project, members: ProjectMember[] = []
     title: project.name,
     description: project.description,
     date: formatDate(project.createdAt),
-    openCount: 0,
-    progress: 0,
-    progressText: '0% this cycle',
+    openCount: totalTasks - doneTasks,
+    progress,
+    progressText: `${progress}% complete`,
     users,
   };
 };

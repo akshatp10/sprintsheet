@@ -22,6 +22,10 @@ export interface CycleTaskRow extends TaskRow {
   stage: ProjectStageRow;
 }
 
+export interface TaskWithStageRow extends TaskRow {
+  stage: ProjectStageRow;
+}
+
 export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
   return db.transaction(
     'rw',
@@ -117,8 +121,79 @@ export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
   );
 };
 
-export const getAllTasksByProject = async (projectId: string): Promise<TaskRow[]> => {
-  return db.tasks.where('projectId').equals(projectId).sortBy('createdAt');
+export const getAllTasksByProject = async (projectId: string): Promise<TaskWithStageRow[]> => {
+  const tasks = await db.tasks.where('projectId').equals(projectId).sortBy('createdAt');
+
+  if (tasks.length === 0) {
+    return [];
+  }
+
+  const backlogStage = await db.projectStages
+    .where('projectId')
+    .equals(projectId)
+    .filter((stage) => stage.name === 'Backlog')
+    .first();
+
+  if (!backlogStage) {
+    throw new Error('Backlog stage not found');
+  }
+
+  const nonBacklogTasks = tasks.filter((task) => !task.isBacklog);
+
+  const taskCycles = await db.taskCycles
+    .where('taskId')
+    .anyOf(nonBacklogTasks.map((task) => task.id))
+    .toArray();
+
+  const latestTaskCycleByTaskId = new Map<string, TaskCycleRow>();
+
+  for (const taskCycle of taskCycles) {
+    const existing = latestTaskCycleByTaskId.get(taskCycle.taskId);
+
+    if (!existing || taskCycle.updatedAt > existing.updatedAt) {
+      latestTaskCycleByTaskId.set(taskCycle.taskId, taskCycle);
+    }
+  }
+
+  const stageIds = [...new Set(taskCycles.map((taskCycle) => taskCycle.stageId))];
+
+  const stages = await db.projectStages.bulkGet(stageIds);
+
+  const stagesById = new Map(
+    stages
+      .filter((stage): stage is ProjectStageRow => stage !== undefined)
+      .map((stage) => [stage.id, stage]),
+  );
+
+  return tasks.flatMap((task) => {
+    if (task.isBacklog) {
+      return [
+        {
+          ...task,
+          stage: backlogStage,
+        },
+      ];
+    }
+
+    const taskCycle = latestTaskCycleByTaskId.get(task.id);
+
+    if (!taskCycle) {
+      return [];
+    }
+
+    const stage = stagesById.get(taskCycle.stageId);
+
+    if (!stage) {
+      return [];
+    }
+
+    return [
+      {
+        ...task,
+        stage,
+      },
+    ];
+  });
 };
 
 export const getBacklogTasksByProject = async (projectId: string): Promise<TaskRow[]> => {
