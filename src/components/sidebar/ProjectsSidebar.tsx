@@ -47,7 +47,7 @@ const ProjectsSidebar = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 w-full">
       {/* Back to all projects */}
       <Button
         className="flex items-center gap-2 border-none"

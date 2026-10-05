@@ -56,7 +56,7 @@ const Text = ({
 
   return (
     <Component
-      className={cn(variantClasses[variant], !!maxLines && 'overflow-hidden', className)}
+      className={cn(variantClasses[variant], !!maxLines && 'overflow-hidden break-all', className)}
       style={
         !!maxLines
           ? {
