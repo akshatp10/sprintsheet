@@ -1,18 +1,18 @@
 import type { ButtonHTMLAttributes } from 'react';
-import Button from './Button'
-import { Ellipsis } from 'lucide-react'
+import Button from './Button';
+import { Ellipsis } from 'lucide-react';
 
 interface ExtraOptionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    /** Callback invoked when the extra options button is clicked. */
-    handleClick: () => void;
+  /** Callback invoked when the extra options button is clicked. */
+  handleClick: () => void;
 }
 
 const ExtraOptionButton = ({ handleClick }: ExtraOptionButtonProps) => {
-    return (
-        <Button onClick={handleClick} variant='tertiary' className='border-0'>
-            <Ellipsis size={17} strokeWidth={1.5} className="text-ink-fades-ghost-rows" />
-        </Button>
-    )
-}
+  return (
+    <Button onClick={handleClick} variant="tertiary" className="border-0">
+      <Ellipsis size={17} strokeWidth={1.5} className="text-ink-fades-ghost-rows" />
+    </Button>
+  );
+};
 
-export default ExtraOptionButton
+export default ExtraOptionButton;

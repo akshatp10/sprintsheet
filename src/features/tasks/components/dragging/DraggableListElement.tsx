@@ -1,57 +1,53 @@
-import type { CycleTaskWithUsers } from "@/lib/services/tasks/types";
-import { useDraggable } from "@dnd-kit/react";
-import { GripVertical } from "lucide-react";
-import TaskListElement from "../listView/TaskListElement";
-import TaskListPlaceholder from "../listView/TaskListPlaceholder";
+import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import { useDraggable } from '@dnd-kit/react';
+import { GripVertical } from 'lucide-react';
+import TaskListElement from '../listView/TaskListElement';
+import TaskListPlaceholder from '../listView/TaskListPlaceholder';
 
 interface DraggableTaskListElementProps {
-    task: CycleTaskWithUsers;
-    taskNumber: number;
-    isDone: boolean;
-    isOverlay?: boolean;
-    gridTemplateColumns: string;
+  task: CycleTaskWithUsers;
+  taskNumber: number;
+  isDone: boolean;
+  isOverlay?: boolean;
+  gridTemplateColumns: string;
 }
 
 const DraggableTaskListElement = ({
-    task,
-    taskNumber,
-    isDone,
-    isOverlay = false,
-    gridTemplateColumns
+  task,
+  taskNumber,
+  isDone,
+  isOverlay = false,
+  gridTemplateColumns,
 }: DraggableTaskListElementProps) => {
-    const { ref, isDragging } = useDraggable({
-        id: task.id,
-    });
+  const { ref, isDragging } = useDraggable({
+    id: task.id,
+  });
 
-    if (isDragging) return (<TaskListPlaceholder gridTemplateColumns={gridTemplateColumns} />);
+  if (isDragging) return <TaskListPlaceholder gridTemplateColumns={gridTemplateColumns} />;
 
-    return (
-        <div
-            className={`
+  return (
+    <div
+      className={`
 				relative
 				group
 			`}
-        >
-            <div
-                ref={ref}
-                className="absolute left-0 top-0 z-10 flex h-full w-10 items-center justify-center cursor-grab opacity-0 group-hover:opacity-100"
-            >
-                <GripVertical
-                    strokeWidth={1.5}
-                    size={15}
-                    className="text-ink-3"
-                />
-            </div>
+    >
+      <div
+        ref={ref}
+        className="absolute left-0 top-0 z-10 flex h-full w-10 items-center justify-center cursor-grab opacity-0 group-hover:opacity-100"
+      >
+        <GripVertical strokeWidth={1.5} size={15} className="text-ink-3" />
+      </div>
 
-            <TaskListElement
-                task={task}
-                taskNumber={taskNumber}
-                isDone={isDone}
-                isOverlay={isOverlay}
-                gridTemplateColumns={gridTemplateColumns}
-            />
-        </div>
-    );
+      <TaskListElement
+        task={task}
+        taskNumber={taskNumber}
+        isDone={isDone}
+        isOverlay={isOverlay}
+        gridTemplateColumns={gridTemplateColumns}
+      />
+    </div>
+  );
 };
 
 export default DraggableTaskListElement;

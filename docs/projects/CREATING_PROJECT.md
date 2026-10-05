@@ -20,7 +20,6 @@ The creation flow is divided into three logical steps:
 
 <img width="1902" height="906" alt="20260915-0553-32 1958032" src="https://github.com/user-attachments/assets/69ab2196-3c48-4be4-9380-4b460f04f934" />
 
-
 ## 1. Project Basics
 
 Collect the project's core information.
@@ -44,7 +43,6 @@ useCreateProject()
 
 <img width="1763" height="844" alt="image" src="https://github.com/user-attachments/assets/e24236a5-db42-4a8a-a89e-e314275a4fe2" />
 
-
 ## 2. Columns & Stages
 
 The project starts from Sprintsheet's common basic structure.
@@ -56,7 +54,6 @@ Stage ordering is project-specific, so the project stores the relationship/order
 See [Reordering Stages](./REORDERING_STAGES.md).
 
 <img width="1763" height="844" alt="image" src="https://github.com/user-attachments/assets/ed484557-e862-462c-a415-3c3158c51aec" />
-
 
 ## 3. People
 
@@ -76,7 +73,6 @@ A user can belong to multiple projects with different roles.
 ### Screenshot
 
 <img width="1763" height="844" alt="image" src="https://github.com/user-attachments/assets/6f1c66c1-26fc-4d4e-b426-7b013a644645" />
-
 
 ## Data flow
 

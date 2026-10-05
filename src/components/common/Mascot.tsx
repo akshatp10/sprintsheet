@@ -1,616 +1,545 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties } from 'react';
 
 export type MascotExpression =
-    | "neutral"
-    | "happy"
-    | "sad"
-    | "error"
-    | "excited"
-    | "loading"
-    | "thinking"
-    | "sleeping"
-    | "wave"
-    | "blocked"
-    | "float"
-    | "info";
+  | 'neutral'
+  | 'happy'
+  | 'sad'
+  | 'error'
+  | 'excited'
+  | 'loading'
+  | 'thinking'
+  | 'sleeping'
+  | 'wave'
+  | 'blocked'
+  | 'float'
+  | 'info';
 
 export interface MascotProps {
-    /**
-     * The mascot keeps one fixed visual language across every state.
-     * Only the face, accent marks and small accessories change.
-     */
-    expression?: MascotExpression;
+  /**
+   * The mascot keeps one fixed visual language across every state.
+   * Only the face, accent marks and small accessories change.
+   */
+  expression?: MascotExpression;
 
-    /**
-     * SVG scales proportionally from the canonical 44 × 40 viewBox.
-     * Example: size={50}, size={72}, size="4rem".
-     */
-    size?: number | string;
+  /**
+   * SVG scales proportionally from the canonical 44 × 40 viewBox.
+   * Example: size={50}, size={72}, size="4rem".
+   */
+  size?: number | string;
 
-    className?: string;
-    style?: CSSProperties;
+  className?: string;
+  style?: CSSProperties;
 
-    /**
-     * Enables the mascot's subtle, expression-aware motion.
-     * Defaults to false so static illustrations remain completely still.
-     */
-    renderAnimation?: boolean;
+  /**
+   * Enables the mascot's subtle, expression-aware motion.
+   * Defaults to false so static illustrations remain completely still.
+   */
+  renderAnimation?: boolean;
 
-    /**
-     * Use decorative=true when nearby text already describes the state.
-     */
-    label?: string;
-    decorative?: boolean;
+  /**
+   * Use decorative=true when nearby text already describes the state.
+   */
+  label?: string;
+  decorative?: boolean;
 }
 
 const COLORS = {
-    white: "#ffffff",
-    purple: "#5a4fb0",
-    green: "#2f8f5b",
-    amber: "#b3781f",
-    rose: "#c0566a",
-    teal: "#2f7f9e",
+  white: '#ffffff',
+  purple: '#5a4fb0',
+  green: '#2f8f5b',
+  amber: '#b3781f',
+  rose: '#c0566a',
+  teal: '#2f7f9e',
 };
 
 function Eyes({ expression }: { expression: MascotExpression }) {
-    switch (expression) {
-        case "error":
-            return (
-                <g className="mascot-error-eyes">
-                    <path
-                        d="M14 14 l6 6 M20 14 l-6 6"
-                        stroke={COLORS.rose}
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                    />
-                    <path
-                        d="M24 14 l6 6 M30 14 l-6 6"
-                        stroke={COLORS.rose}
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                    />
-                </g>
-            );
+  switch (expression) {
+    case 'error':
+      return (
+        <g className="mascot-error-eyes">
+          <path
+            d="M14 14 l6 6 M20 14 l-6 6"
+            stroke={COLORS.rose}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <path
+            d="M24 14 l6 6 M30 14 l-6 6"
+            stroke={COLORS.rose}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </g>
+      );
 
-        case "sad":
-            return (
-                <g className="mascot-sad-eyes">
-                    <path
-                        d="M14 18 q3 2 6 0"
-                        stroke={COLORS.rose}
-                        strokeWidth="2"
-                        fill="none"
-                        strokeLinecap="round"
-                    />
-                    <path
-                        d="M24 18 q3 2 6 0"
-                        stroke={COLORS.rose}
-                        strokeWidth="2"
-                        fill="none"
-                        strokeLinecap="round"
-                    />
-                </g>
-            );
+    case 'sad':
+      return (
+        <g className="mascot-sad-eyes">
+          <path
+            d="M14 18 q3 2 6 0"
+            stroke={COLORS.rose}
+            strokeWidth="2"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M24 18 q3 2 6 0"
+            stroke={COLORS.rose}
+            strokeWidth="2"
+            fill="none"
+            strokeLinecap="round"
+          />
+        </g>
+      );
 
-        case "sleeping":
-            return (
-                <>
-                    <path
-                        d="M14 18 q3 3 6 0"
-                        stroke={COLORS.purple}
-                        strokeWidth="2"
-                        fill="none"
-                        strokeLinecap="round"
-                    />
-                    <path
-                        d="M24 18 q3 3 6 0"
-                        stroke={COLORS.purple}
-                        strokeWidth="2"
-                        fill="none"
-                        strokeLinecap="round"
-                    />
-                </>
-            );
+    case 'sleeping':
+      return (
+        <>
+          <path
+            d="M14 18 q3 3 6 0"
+            stroke={COLORS.purple}
+            strokeWidth="2"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M24 18 q3 3 6 0"
+            stroke={COLORS.purple}
+            strokeWidth="2"
+            fill="none"
+            strokeLinecap="round"
+          />
+        </>
+      );
 
-        case "loading":
-            // Loading eyes stay fixed in place. Only the dashed stroke rotates.
-            return (
-                <g className="mascot-loading-eyes">
-                    <circle
-                        className="mascot-loading-eye mascot-loading-eye-1"
-                        cx="17"
-                        cy="17"
-                        r="3.2"
-                        fill={COLORS.white}
-                        stroke={COLORS.purple}
-                        strokeWidth="1.6"
-                        strokeDasharray="2 2"
-                    />
-                    <circle
-                        className="mascot-loading-eye mascot-loading-eye-2"
-                        cx="27"
-                        cy="17"
-                        r="3.2"
-                        fill={COLORS.white}
-                        stroke={COLORS.purple}
-                        strokeWidth="1.6"
-                        strokeDasharray="2 2"
-                    />
-                </g>
-            );
+    case 'loading':
+      // Loading eyes stay fixed in place. Only the dashed stroke rotates.
+      return (
+        <g className="mascot-loading-eyes">
+          <circle
+            className="mascot-loading-eye mascot-loading-eye-1"
+            cx="17"
+            cy="17"
+            r="3.2"
+            fill={COLORS.white}
+            stroke={COLORS.purple}
+            strokeWidth="1.6"
+            strokeDasharray="2 2"
+          />
+          <circle
+            className="mascot-loading-eye mascot-loading-eye-2"
+            cx="27"
+            cy="17"
+            r="3.2"
+            fill={COLORS.white}
+            stroke={COLORS.purple}
+            strokeWidth="1.6"
+            strokeDasharray="2 2"
+          />
+        </g>
+      );
 
-        case "excited":
-            // Bigger, brighter eyes distinguish excited from happy.
-            return (
-                <>
-                    <circle className="mascot-loading-dot mascot-loading-dot-1" cx="17" cy="17" r="3.5" fill={COLORS.purple} />
-                    <circle className="mascot-loading-dot mascot-loading-dot-2" cx="27" cy="17" r="3.5" fill={COLORS.purple} />
-                    <circle cx="16" cy="16" r="0.9" fill={COLORS.white} />
-                    <circle cx="26" cy="16" r="0.9" fill={COLORS.white} />
-                </>
-            );
+    case 'excited':
+      // Bigger, brighter eyes distinguish excited from happy.
+      return (
+        <>
+          <circle
+            className="mascot-loading-dot mascot-loading-dot-1"
+            cx="17"
+            cy="17"
+            r="3.5"
+            fill={COLORS.purple}
+          />
+          <circle
+            className="mascot-loading-dot mascot-loading-dot-2"
+            cx="27"
+            cy="17"
+            r="3.5"
+            fill={COLORS.purple}
+          />
+          <circle cx="16" cy="16" r="0.9" fill={COLORS.white} />
+          <circle cx="26" cy="16" r="0.9" fill={COLORS.white} />
+        </>
+      );
 
-        case "thinking":
-            return (
-                <g className="mascot-thinking-eyes">
-                    <circle
-                        cx="17"
-                        cy="17"
-                        r="3"
-                        fill={COLORS.purple}
-                    />
-                    <circle
-                        cx="27"
-                        cy="17"
-                        r="3"
-                        fill={COLORS.purple}
-                    />
-                    <circle
-                        cx="18"
-                        cy="16"
-                        r="0.8"
-                        fill={COLORS.white}
-                        opacity="0.9"
-                    />
-                    <circle
-                        cx="28"
-                        cy="16"
-                        r="0.8"
-                        fill={COLORS.white}
-                        opacity="0.9"
-                    />
-                </g>
-            );
+    case 'thinking':
+      return (
+        <g className="mascot-thinking-eyes">
+          <circle cx="17" cy="17" r="3" fill={COLORS.purple} />
+          <circle cx="27" cy="17" r="3" fill={COLORS.purple} />
+          <circle cx="18" cy="16" r="0.8" fill={COLORS.white} opacity="0.9" />
+          <circle cx="28" cy="16" r="0.8" fill={COLORS.white} opacity="0.9" />
+        </g>
+      );
 
-        case "happy":
-            return (
-                <>
-                    <path
-                        className="mascot-wink-eye"
-                        d="M14 17 q3 2.5 6 0"
-                        stroke={COLORS.purple}
-                        strokeWidth="2"
-                        fill="none"
-                        strokeLinecap="round"
-                    />
-                    <circle cx="27" cy="17" r="3" fill={COLORS.purple} />
-                </>
-            );
+    case 'happy':
+      return (
+        <>
+          <path
+            className="mascot-wink-eye"
+            d="M14 17 q3 2.5 6 0"
+            stroke={COLORS.purple}
+            strokeWidth="2"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <circle cx="27" cy="17" r="3" fill={COLORS.purple} />
+        </>
+      );
 
-        default:
-            return (
-                <>
-                    <circle
-                        cx="17"
-                        cy="17"
-                        r="3"
-                        fill={
-                            expression === "blocked"
-                                ? COLORS.amber
-                                : COLORS.purple
-                        }
-                    />
-                    <circle
-                        cx="27"
-                        cy="17"
-                        r="3"
-                        fill={
-                            expression === "blocked"
-                                ? COLORS.amber
-                                : COLORS.purple
-                        }
-                    />
-                </>
-            );
-    }
+    default:
+      return (
+        <>
+          <circle
+            cx="17"
+            cy="17"
+            r="3"
+            fill={expression === 'blocked' ? COLORS.amber : COLORS.purple}
+          />
+          <circle
+            cx="27"
+            cy="17"
+            r="3"
+            fill={expression === 'blocked' ? COLORS.amber : COLORS.purple}
+          />
+        </>
+      );
+  }
 }
 
 function Mouth({ expression }: { expression: MascotExpression }) {
-    switch (expression) {
-        case "error":
-            return (
-                <path
-                    d="M18 25 q4 -3.5 8 0"
-                    stroke={COLORS.rose}
-                    strokeWidth="2"
-                    fill="none"
-                    strokeLinecap="round"
-                />
-            );
-
-        case "sad":
-            return (
-                <path
-                    d="M18 25 q4 -4.5 8 0"
-                    stroke={COLORS.rose}
-                    strokeWidth="2"
-                    fill="none"
-                    strokeLinecap="round"
-                />
-            );
-
-        case "thinking":
-            return (
-                <path
-                    d="M19 24 h6"
-                    stroke={COLORS.amber}
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                />
-            );
-
-        case "sleeping":
-            return (
-                <path
-                    d="M18 24 q4 2.5 8 0"
-                    stroke={COLORS.teal}
-                    strokeWidth="2"
-                    fill="none"
-                    strokeLinecap="round"
-                />
-            );
-
-        case "blocked":
-            return (
-                <path
-                    d="M18 25 q4 -2.5 8 0"
-                    stroke={COLORS.amber}
-                    strokeWidth="2"
-                    fill="none"
-                    strokeLinecap="round"
-                />
-            );
-
-        case "excited":
-            // Open smile: clearly different from the normal closed smile.
-            return (
-                <path
-                    d="M17 23 q5 7 11 0"
-                    stroke={COLORS.green}
-                    strokeWidth="2"
-                    fill="none"
-                    strokeLinecap="round"
-                />
-            );
-
-        case "loading":
-            return (
-                <circle
-                    className="mascot-loading-mouth"
-                    cx="22"
-                    cy="24"
-                    r="2.2"
-                    fill={COLORS.white}
-                    stroke={COLORS.teal}
-                    strokeWidth="1.6"
-                />
-            );
-
-        case "neutral":
-            return (
-                <path
-                    d="M18 24 h8"
-                    stroke={COLORS.purple}
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                />
-            );
-
-        case "happy":
-        case "float":
-        case "info":
-        case "wave":
-        default:
-            return (
-                <path
-                    className="mascot-smile"
-                    d="M18 24 q4 3.5 8 0"
-                    stroke={COLORS.green}
-                    strokeWidth="2"
-                    fill="none"
-                    strokeLinecap="round"
-                />
-            );
-    }
-}
-
-function TopAccessory({
-    expression,
-}: {
-    expression: MascotExpression;
-}) {
-    return (
-        <rect
-            className="mascot-top-accessory"
-            x="14"
-            y="3"
-            width="16"
-            height="5"
-            rx="2.5"
-            fill={
-                expression === "error" || expression === "sad"
-                    ? COLORS.rose
-                    : COLORS.amber
-            }
+  switch (expression) {
+    case 'error':
+      return (
+        <path
+          d="M18 25 q4 -3.5 8 0"
+          stroke={COLORS.rose}
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
         />
-    );
+      );
+
+    case 'sad':
+      return (
+        <path
+          d="M18 25 q4 -4.5 8 0"
+          stroke={COLORS.rose}
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+        />
+      );
+
+    case 'thinking':
+      return <path d="M19 24 h6" stroke={COLORS.amber} strokeWidth="2" strokeLinecap="round" />;
+
+    case 'sleeping':
+      return (
+        <path
+          d="M18 24 q4 2.5 8 0"
+          stroke={COLORS.teal}
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+        />
+      );
+
+    case 'blocked':
+      return (
+        <path
+          d="M18 25 q4 -2.5 8 0"
+          stroke={COLORS.amber}
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+        />
+      );
+
+    case 'excited':
+      // Open smile: clearly different from the normal closed smile.
+      return (
+        <path
+          d="M17 23 q5 7 11 0"
+          stroke={COLORS.green}
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+        />
+      );
+
+    case 'loading':
+      return (
+        <circle
+          className="mascot-loading-mouth"
+          cx="22"
+          cy="24"
+          r="2.2"
+          fill={COLORS.white}
+          stroke={COLORS.teal}
+          strokeWidth="1.6"
+        />
+      );
+
+    case 'neutral':
+      return <path d="M18 24 h8" stroke={COLORS.purple} strokeWidth="2" strokeLinecap="round" />;
+
+    case 'happy':
+    case 'float':
+    case 'info':
+    case 'wave':
+    default:
+      return (
+        <path
+          className="mascot-smile"
+          d="M18 24 q4 3.5 8 0"
+          stroke={COLORS.green}
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+        />
+      );
+  }
 }
 
-function SideAccessory({
-    expression,
-}: {
-    expression: MascotExpression;
-}) {
-    switch (expression) {
-        case "float":
-            // The exact reference/info rays.
-            return (
-                <g className="mascot-float-rays">
-                    <path
-                        d="M39 11 l4 -4"
-                        stroke={COLORS.amber}
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                    />
-                    <path
-                        d="M40 20 h4"
-                        stroke={COLORS.amber}
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                    />
-                    <path
-                        d="M39 27 l4 4"
-                        stroke={COLORS.amber}
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                    />
-                </g>
-            );
-
-        case "info":
-            // Information state: small outlined information badge.
-            return (
-                <g className="mascot-info-mark">
-                    <circle
-                        cx="41"
-                        cy="10"
-                        r="3"
-                        fill={COLORS.white}
-                        stroke={COLORS.teal}
-                        strokeWidth="1.5"
-                    />
-                    <circle cx="41" cy="8.8" r="0.8" fill={COLORS.teal} />
-                    <path
-                        d="M41 10.5 v1.8"
-                        stroke={COLORS.teal}
-                        strokeWidth="1.4"
-                        strokeLinecap="round"
-                    />
-                </g>
-            );
-
-        case "excited":
-            // Stronger burst than the info/float state.
-            return (
-                <g className="mascot-excited-burst">
-                    <path
-                        d="M39 9 l3 -3 M41 15 h4 M39 21 l3 3"
-                        stroke={COLORS.amber}
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                    />
-                    <path
-                        d="M35 4 l1.5 2.5 M35 27 l1.5 -2.5"
-                        stroke={COLORS.green}
-                        strokeWidth="1.6"
-                        strokeLinecap="round"
-                    />
-                </g>
-            );
-
-        case "wave":
-            // A clearly visible raised hand/arm.
-            return (
-                <g className="mascot-wave-arm">
-                    <path
-                        d="M36 21 q4 -1 5 -6"
-                        stroke={COLORS.purple}
-                        strokeWidth="1.8"
-                        fill="none"
-                        strokeLinecap="round"
-                    />
-                    <path
-                        d="M40 15 q0 -4 2 -4 q2 0 1 3"
-                        stroke={COLORS.purple}
-                        strokeWidth="1.8"
-                        fill="none"
-                        strokeLinecap="round"
-                    />
-                    <path
-                        d="M42 10 l2 -2 M43 13 l3 -1 M42 16 l3 1"
-                        stroke={COLORS.amber}
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                    />
-                </g>
-            );
-
-        case "thinking":
-            return (
-                <g className="mascot-thinking-bubbles">
-                    <circle
-                        className="mascot-thinking-bubble-1"
-                        cx="41.5"
-                        cy="8"
-                        r="2.2"
-                        fill={COLORS.white}
-                        stroke={COLORS.amber}
-                        strokeWidth="1.2"
-                    />
-                    <circle
-                        className="mascot-thinking-bubble-2"
-                        cx="39.5"
-                        cy="12"
-                        r="1.5"
-                        fill={COLORS.white}
-                        stroke={COLORS.amber}
-                        strokeWidth="1.1"
-                    />
-                    <circle
-                        className="mascot-thinking-bubble-3"
-                        cx="37.5"
-                        cy="15.5"
-                        r="0.9"
-                        fill={COLORS.amber}
-                    />
-                </g>
-            );
-
-        case "sleeping":
-            return (
-                <g className="mascot-sleeping-zs">
-                    <text
-                        className="mascot-sleeping-z-1"
-                        x="38"
-                        y="10"
-                        fill={COLORS.purple}
-                        fontSize="5"
-                        fontFamily="Inter, system-ui, sans-serif"
-                        fontWeight="700"
-                    >
-                        z
-                    </text>
-                    <text
-                        className="mascot-sleeping-z-2"
-                        x="41"
-                        y="6"
-                        fill={COLORS.purple}
-                        fontSize="3.5"
-                        fontFamily="Inter, system-ui, sans-serif"
-                        fontWeight="700"
-                    >
-                        z
-                    </text>
-                    <text
-                        className="mascot-sleeping-z-3"
-                        x="43"
-                        y="3"
-                        fill={COLORS.purple}
-                        fontSize="2.5"
-                        fontFamily="Inter, system-ui, sans-serif"
-                        fontWeight="700"
-                    >
-                        z
-                    </text>
-                </g>
-            );
-
-        case "blocked":
-            return (
-                <path
-                    d="M39 12 l4 4 M43 12 l-4 4"
-                    stroke={COLORS.rose}
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                />
-            );
-
-        case "loading":
-            // Small teal activity marks outside the body make loading
-            // visibly different from the normal face.
-            return (
-                <g className="mascot-loading-orbit">
-                    <circle cx="40" cy="10" r="1.3" fill={COLORS.teal} />
-                    <circle cx="43" cy="13" r="1" fill={COLORS.teal} />
-                    <circle cx="44" cy="17" r="0.8" fill={COLORS.teal} />
-                </g>
-            );
-
-        default:
-            return null;
-    }
+function TopAccessory({ expression }: { expression: MascotExpression }) {
+  return (
+    <rect
+      className="mascot-top-accessory"
+      x="14"
+      y="3"
+      width="16"
+      height="5"
+      rx="2.5"
+      fill={expression === 'error' || expression === 'sad' ? COLORS.rose : COLORS.amber}
+    />
+  );
 }
 
-function MascotBody({
-    expression,
-}: {
-    expression: MascotExpression;
-}) {
-    const sideColor =
-        expression === "error" || expression === "sad"
-            ? COLORS.rose
-            : COLORS.purple;
-
-    return (
-        <g className="mascot-body">
-            {/* Main rounded robot body */}
-            <rect
-                x="8"
-                y="6"
-                width="28"
-                height="24"
-                rx="7"
-                fill={COLORS.white}
-                stroke={COLORS.purple}
-                strokeWidth="2"
-            />
-
-            {/* Left ear */}
-            <rect
-                x="3.5"
-                y="13"
-                width="5"
-                height="11"
-                rx="2.5"
-                fill={COLORS.white}
-                stroke={sideColor}
-                strokeWidth="1.8"
-            />
-
-            {/* Right ear */}
-            <rect
-                x="35.5"
-                y="13"
-                width="5"
-                height="11"
-                rx="2.5"
-                fill={COLORS.white}
-                stroke={sideColor}
-                strokeWidth="1.8"
-            />
-
-            <Eyes expression={expression} />
-            <Mouth expression={expression} />
-
-            {/* Two small amber feet, retained from the original mascot */}
-            <path
-                d="M16 33 h12 M19 33 v4 M25 33 v4"
-                stroke={COLORS.amber}
-                strokeWidth="2"
-                strokeLinecap="round"
-            />
+function SideAccessory({ expression }: { expression: MascotExpression }) {
+  switch (expression) {
+    case 'float':
+      // The exact reference/info rays.
+      return (
+        <g className="mascot-float-rays">
+          <path d="M39 11 l4 -4" stroke={COLORS.amber} strokeWidth="1.8" strokeLinecap="round" />
+          <path d="M40 20 h4" stroke={COLORS.amber} strokeWidth="1.8" strokeLinecap="round" />
+          <path d="M39 27 l4 4" stroke={COLORS.amber} strokeWidth="1.8" strokeLinecap="round" />
         </g>
-    );
+      );
+
+    case 'info':
+      // Information state: small outlined information badge.
+      return (
+        <g className="mascot-info-mark">
+          <circle
+            cx="41"
+            cy="10"
+            r="3"
+            fill={COLORS.white}
+            stroke={COLORS.teal}
+            strokeWidth="1.5"
+          />
+          <circle cx="41" cy="8.8" r="0.8" fill={COLORS.teal} />
+          <path d="M41 10.5 v1.8" stroke={COLORS.teal} strokeWidth="1.4" strokeLinecap="round" />
+        </g>
+      );
+
+    case 'excited':
+      // Stronger burst than the info/float state.
+      return (
+        <g className="mascot-excited-burst">
+          <path
+            d="M39 9 l3 -3 M41 15 h4 M39 21 l3 3"
+            stroke={COLORS.amber}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <path
+            d="M35 4 l1.5 2.5 M35 27 l1.5 -2.5"
+            stroke={COLORS.green}
+            strokeWidth="1.6"
+            strokeLinecap="round"
+          />
+        </g>
+      );
+
+    case 'wave':
+      // A clearly visible raised hand/arm.
+      return (
+        <g className="mascot-wave-arm">
+          <path
+            d="M36 21 q4 -1 5 -6"
+            stroke={COLORS.purple}
+            strokeWidth="1.8"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M40 15 q0 -4 2 -4 q2 0 1 3"
+            stroke={COLORS.purple}
+            strokeWidth="1.8"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M42 10 l2 -2 M43 13 l3 -1 M42 16 l3 1"
+            stroke={COLORS.amber}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+        </g>
+      );
+
+    case 'thinking':
+      return (
+        <g className="mascot-thinking-bubbles">
+          <circle
+            className="mascot-thinking-bubble-1"
+            cx="41.5"
+            cy="8"
+            r="2.2"
+            fill={COLORS.white}
+            stroke={COLORS.amber}
+            strokeWidth="1.2"
+          />
+          <circle
+            className="mascot-thinking-bubble-2"
+            cx="39.5"
+            cy="12"
+            r="1.5"
+            fill={COLORS.white}
+            stroke={COLORS.amber}
+            strokeWidth="1.1"
+          />
+          <circle
+            className="mascot-thinking-bubble-3"
+            cx="37.5"
+            cy="15.5"
+            r="0.9"
+            fill={COLORS.amber}
+          />
+        </g>
+      );
+
+    case 'sleeping':
+      return (
+        <g className="mascot-sleeping-zs">
+          <text
+            className="mascot-sleeping-z-1"
+            x="38"
+            y="10"
+            fill={COLORS.purple}
+            fontSize="5"
+            fontFamily="Inter, system-ui, sans-serif"
+            fontWeight="700"
+          >
+            z
+          </text>
+          <text
+            className="mascot-sleeping-z-2"
+            x="41"
+            y="6"
+            fill={COLORS.purple}
+            fontSize="3.5"
+            fontFamily="Inter, system-ui, sans-serif"
+            fontWeight="700"
+          >
+            z
+          </text>
+          <text
+            className="mascot-sleeping-z-3"
+            x="43"
+            y="3"
+            fill={COLORS.purple}
+            fontSize="2.5"
+            fontFamily="Inter, system-ui, sans-serif"
+            fontWeight="700"
+          >
+            z
+          </text>
+        </g>
+      );
+
+    case 'blocked':
+      return (
+        <path
+          d="M39 12 l4 4 M43 12 l-4 4"
+          stroke={COLORS.rose}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+      );
+
+    case 'loading':
+      // Small teal activity marks outside the body make loading
+      // visibly different from the normal face.
+      return (
+        <g className="mascot-loading-orbit">
+          <circle cx="40" cy="10" r="1.3" fill={COLORS.teal} />
+          <circle cx="43" cy="13" r="1" fill={COLORS.teal} />
+          <circle cx="44" cy="17" r="0.8" fill={COLORS.teal} />
+        </g>
+      );
+
+    default:
+      return null;
+  }
+}
+
+function MascotBody({ expression }: { expression: MascotExpression }) {
+  const sideColor = expression === 'error' || expression === 'sad' ? COLORS.rose : COLORS.purple;
+
+  return (
+    <g className="mascot-body">
+      {/* Main rounded robot body */}
+      <rect
+        x="8"
+        y="6"
+        width="28"
+        height="24"
+        rx="7"
+        fill={COLORS.white}
+        stroke={COLORS.purple}
+        strokeWidth="2"
+      />
+
+      {/* Left ear */}
+      <rect
+        x="3.5"
+        y="13"
+        width="5"
+        height="11"
+        rx="2.5"
+        fill={COLORS.white}
+        stroke={sideColor}
+        strokeWidth="1.8"
+      />
+
+      {/* Right ear */}
+      <rect
+        x="35.5"
+        y="13"
+        width="5"
+        height="11"
+        rx="2.5"
+        fill={COLORS.white}
+        stroke={sideColor}
+        strokeWidth="1.8"
+      />
+
+      <Eyes expression={expression} />
+      <Mouth expression={expression} />
+
+      {/* Two small amber feet, retained from the original mascot */}
+      <path
+        d="M16 33 h12 M19 33 v4 M25 33 v4"
+        stroke={COLORS.amber}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </g>
+  );
 }
 
 /**
@@ -627,50 +556,44 @@ function MascotBody({
  * The supplied "float/info" reference is the canonical happy/info state.
  */
 export function Mascot({
-    expression = "neutral",
-    size = 50,
-    className,
-    style,
-    renderAnimation = false,
-    label,
-    decorative = true,
+  expression = 'neutral',
+  size = 50,
+  className,
+  style,
+  renderAnimation = false,
+  label,
+  decorative = true,
 }: MascotProps) {
-    const sizeProps =
-        typeof size === "number"
-            ? {
-                width: size,
-                height: size * (40 / 44),
-            }
-            : {
-                width: size,
-                height: "auto",
-            };
+  const sizeProps =
+    typeof size === 'number'
+      ? {
+          width: size,
+          height: size * (40 / 44),
+        }
+      : {
+          width: size,
+          height: 'auto',
+        };
 
-    const animationClass = renderAnimation
-        ? `mascot-animated mascot-${expression}`
-        : "";
+  const animationClass = renderAnimation ? `mascot-animated mascot-${expression}` : '';
 
-    return (
-        <svg
-            viewBox="0 0 44 40"
-            xmlns="http://www.w3.org/2000/svg"
-            className={[className, animationClass].filter(Boolean).join(" ")}
-            style={{
-                display: "block",
-                flexShrink: 0,
-                overflow: "visible",
-                ...style,
-            }}
-            {...sizeProps}
-            role={decorative ? undefined : "img"}
-            aria-label={
-                decorative
-                    ? undefined
-                    : label ?? `${expression} mascot`
-            }
-            aria-hidden={decorative ? true : undefined}
-        >
-            <style>{`
+  return (
+    <svg
+      viewBox="0 0 44 40"
+      xmlns="http://www.w3.org/2000/svg"
+      className={[className, animationClass].filter(Boolean).join(' ')}
+      style={{
+        display: 'block',
+        flexShrink: 0,
+        overflow: 'visible',
+        ...style,
+      }}
+      {...sizeProps}
+      role={decorative ? undefined : 'img'}
+      aria-label={decorative ? undefined : (label ?? `${expression} mascot`)}
+      aria-hidden={decorative ? true : undefined}
+    >
+      <style>{`
                 @media (prefers-reduced-motion: reduce) {
                     .mascot-animated,
                     .mascot-animated * {
@@ -973,11 +896,11 @@ export function Mascot({
                 }
             `}</style>
 
-            <TopAccessory expression={expression} />
-            <MascotBody expression={expression} />
-            <SideAccessory expression={expression} />
-        </svg>
-    );
+      <TopAccessory expression={expression} />
+      <MascotBody expression={expression} />
+      <SideAccessory expression={expression} />
+    </svg>
+  );
 }
 
 export default Mascot;

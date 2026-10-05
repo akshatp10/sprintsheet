@@ -1,98 +1,83 @@
-import Button from "@/components/button/Button";
-import Text from "@/components/common/Text";
-import { Check, MoveLeft, MoveRight } from "lucide-react";
+import Button from '@/components/button/Button';
+import Text from '@/components/common/Text';
+import { Check, MoveLeft, MoveRight } from 'lucide-react';
 
 interface ProjectFormFooterProps {
-    currentStep: number;
-    onClose: () => void;
-    onBack: () => void;
-    onNext: () => void;
-    isNextDisabled: boolean
+  currentStep: number;
+  onClose: () => void;
+  onBack: () => void;
+  onNext: () => void;
+  isNextDisabled: boolean;
 }
 
 const ProjectFormFooter = ({
-    currentStep,
-    onClose,
-    onBack,
-    onNext,
-    isNextDisabled,
+  currentStep,
+  onClose,
+  onBack,
+  onNext,
+  isNextDisabled,
 }: ProjectFormFooterProps) => {
-    return (
-        <div className="flex items-center justify-end gap-2 py-4">
+  return (
+    <div className="flex items-center justify-end gap-2 py-4">
+      {currentStep === 1 && (
+        <Button type="button" onClick={onClose} variant="tertiary">
+          <Text variant="body" className="font-medium">
+            Cancel
+          </Text>
+        </Button>
+      )}
 
-            {currentStep === 1 && (
-                <Button
-                    type="button"
-                    onClick={onClose}
-                    variant="tertiary"
-                >
-                    <Text variant="body" className="font-medium">
-                        Cancel
-                    </Text>
-                </Button>
-            )}
+      <div className="flex gap-2">
+        {currentStep > 1 && (
+          <Button
+            type="button"
+            onClick={onBack}
+            variant="tertiary"
+            className="flex items-center gap-1 border-none"
+          >
+            <MoveLeft className="text-ink-3" strokeWidth={1.5} size={15} />
 
-            <div className="flex gap-2">
+            <Text variant="body" className="font-medium">
+              Back
+            </Text>
+          </Button>
+        )}
 
-                {currentStep > 1 && (
-                    <Button
-                        type="button"
-                        onClick={onBack}
-                        variant="tertiary"
-                        className="flex items-center gap-1 border-none"
-                    >
-                        <MoveLeft
-                            className="text-ink-3"
-                            strokeWidth={1.5}
-                            size={15}
-                        />
+        {currentStep < 3 ? (
+          <Button
+            type="button"
+            onClick={onNext}
+            variant="secondary"
+            className="group flex items-center gap-1 disabled:cursor-not-allowed disabled:bg-ink-fades-disabled disabled:border-ink-fades-disabled disabled:text-ink-fades-disabled disabled:shadow-ink-fades-disabled"
+            disabled={isNextDisabled}
+          >
+            <Text variant="body" className="font-medium">
+              Continue
+            </Text>
 
-                        <Text variant="body" className="font-medium">
-                            Back
-                        </Text>
-                    </Button>
-                )}
+            <MoveRight
+              className="text-accent-deep group-disabled:text-ink-fades-disabled"
+              strokeWidth={1.5}
+              size={15}
+            />
+          </Button>
+        ) : (
+          <Button
+            key={currentStep.toString()}
+            type="submit"
+            variant="primary"
+            className="flex items-center gap-1"
+          >
+            <Check className="text-surface" strokeWidth={1.5} size={15} />
 
-                {currentStep < 3 ? (
-                    <Button
-                        type="button"
-                        onClick={onNext}
-                        variant="secondary"
-                        className="group flex items-center gap-1 disabled:cursor-not-allowed disabled:bg-ink-fades-disabled disabled:border-ink-fades-disabled disabled:text-ink-fades-disabled disabled:shadow-ink-fades-disabled"
-                        disabled={isNextDisabled}
-                    >
-                        <Text variant="body" className="font-medium">
-                            Continue
-                        </Text>
-
-                        <MoveRight
-                            className="text-accent-deep group-disabled:text-ink-fades-disabled"
-                            strokeWidth={1.5}
-                            size={15}
-                        />
-                    </Button>
-                ) : (
-                    <Button
-                        key={currentStep.toString()}
-                        type="submit"
-                        variant="primary"
-                        className="flex items-center gap-1"
-                    >
-                        <Check
-                            className="text-surface"
-                            strokeWidth={1.5}
-                            size={15}
-                        />
-
-                        <Text variant="body" className="font-medium">
-                            Create project
-                        </Text>
-                    </Button>
-                )}
-
-            </div>
-        </div>
-    );
+            <Text variant="body" className="font-medium">
+              Create project
+            </Text>
+          </Button>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default ProjectFormFooter;

@@ -1,75 +1,78 @@
-import {
-    createBrowserRouter,
-    createRoutesFromElements,
-    Route,
-} from "react-router-dom";
-import AppLayout from "./layout/AppLayout";
+import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom';
+import AppLayout from './layout/AppLayout';
 
 // Importing Sidebars and Topbars Components
-import WorkspaceSidebar from "@/components/sidebar/WorkspaceSidebar";
-import WorkspaceTopbar from "@/components/topbar/WorkspaceTopbar";
-import ProjectsTopbar from "@/components/topbar/ProjectsTopbar";
-import ProjectsSidebar from "@/components/sidebar/ProjectsSidebar";
+import WorkspaceSidebar from '@/components/sidebar/WorkspaceSidebar';
+import WorkspaceTopbar from '@/components/topbar/WorkspaceTopbar';
+import ProjectsTopbar from '@/components/topbar/ProjectsTopbar';
+import ProjectsSidebar from '@/components/sidebar/ProjectsSidebar';
 
 // Importing pages
-import { TestPage } from "@/pages/testPage";
-import SidebarBottom from "@/components/sidebar/SidebarBottom";
-import AllProjectsPage from "@/pages/AllProjectsPage";
-import TaskViewPage from "@/pages/TaskViewPage";
-import CyclesDetailsPage from "@/pages/CyclesDetailsPage";
-import CyclesTopbar from "@/components/topbar/CyclesTopbar";
-import AllTaskPage from "@/pages/AllTaskPage";
-import AllTaskTopbar from "@/components/topbar/AllTaskTopbar";
-
+import { TestPage } from '@/pages/testPage';
+import SidebarBottom from '@/components/sidebar/SidebarBottom';
+import AllProjectsPage from '@/pages/AllProjectsPage';
+import TaskViewPage from '@/pages/TaskViewPage';
+import CyclesDetailsPage from '@/pages/CyclesDetailsPage';
+import CyclesTopbar from '@/components/topbar/CyclesTopbar';
+import AllTaskPage from '@/pages/AllTaskPage';
+import AllTaskTopbar from '@/components/topbar/AllTaskTopbar';
 
 export const router = createBrowserRouter(
-    createRoutesFromElements(
-        <>
-            {/* Workspace routes */}
-            <Route
-                element={<AppLayout
-                    dynamicSidebar={<WorkspaceSidebar />}
-                    dynamicTopBar={<WorkspaceTopbar />}
-                    usersPanel={<SidebarBottom />}
-                />}
-            >
-                <Route path="/" element={<AllProjectsPage />} />
-                <Route path="/test" element={<TestPage />} />
-            </Route>
+  createRoutesFromElements(
+    <>
+      {/* Workspace routes */}
+      <Route
+        element={
+          <AppLayout
+            dynamicSidebar={<WorkspaceSidebar />}
+            dynamicTopBar={<WorkspaceTopbar />}
+            usersPanel={<SidebarBottom />}
+          />
+        }
+      >
+        <Route path="/" element={<AllProjectsPage />} />
+        <Route path="/test" element={<TestPage />} />
+      </Route>
 
-            {/* Project Routes */}
-            <Route
-                element={<AppLayout
-                    dynamicSidebar={<ProjectsSidebar />}
-                    dynamicTopBar={<ProjectsTopbar />}
-                    usersPanel={<SidebarBottom />}
-                />}
-            >
-                <Route path="/project/:projectid" element={<TestPage />} />
-                <Route path="/project/:projectid/board" element={<TaskViewPage />} />
-            </Route>
+      {/* Project Routes */}
+      <Route
+        element={
+          <AppLayout
+            dynamicSidebar={<ProjectsSidebar />}
+            dynamicTopBar={<ProjectsTopbar />}
+            usersPanel={<SidebarBottom />}
+          />
+        }
+      >
+        <Route path="/project/:projectid" element={<TestPage />} />
+        <Route path="/project/:projectid/board" element={<TaskViewPage />} />
+      </Route>
 
-            {/* All Task Route */}
-            <Route
-                element={<AppLayout
-                    dynamicSidebar={<ProjectsSidebar />}
-                    dynamicTopBar={<AllTaskTopbar />}
-                    usersPanel={<SidebarBottom />}
-                />}
-            >
-                <Route path="/project/:projectid/tasks" element={<AllTaskPage />} />
-            </Route>
+      {/* All Task Route */}
+      <Route
+        element={
+          <AppLayout
+            dynamicSidebar={<ProjectsSidebar />}
+            dynamicTopBar={<AllTaskTopbar />}
+            usersPanel={<SidebarBottom />}
+          />
+        }
+      >
+        <Route path="/project/:projectid/tasks" element={<AllTaskPage />} />
+      </Route>
 
-            {/* Cycle Routes */}
-            <Route
-                element={<AppLayout
-                    dynamicSidebar={<ProjectsSidebar />}
-                    dynamicTopBar={<CyclesTopbar />}
-                    usersPanel={<SidebarBottom />}
-                />}
-            >
-                <Route path="/project/:projectid/cycles" element={<CyclesDetailsPage />} />
-            </Route>
-        </>
-    )
+      {/* Cycle Routes */}
+      <Route
+        element={
+          <AppLayout
+            dynamicSidebar={<ProjectsSidebar />}
+            dynamicTopBar={<CyclesTopbar />}
+            usersPanel={<SidebarBottom />}
+          />
+        }
+      >
+        <Route path="/project/:projectid/cycles" element={<CyclesDetailsPage />} />
+      </Route>
+    </>,
+  ),
 );

@@ -92,7 +92,6 @@ new task appears in the current project
 
 <img width="1763" height="844" alt="image" src="https://github.com/user-attachments/assets/f7aafa71-35a6-4c31-97f0-592462b10700" />
 
-
 ## Developer checklist
 
 When adding a task field, trace it through:

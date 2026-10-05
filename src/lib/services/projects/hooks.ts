@@ -1,87 +1,79 @@
 // lib/services/projects/hooks.ts
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-	createNewProject,
-	getProject,
-	getProjectMembers,
-	getProjects,
-} from "./api";
-import type { CreateProjectInput } from "./types";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createNewProject, getProject, getProjectMembers, getProjects } from './api';
+import type { CreateProjectInput } from './types';
 
 export const projectQueryKeys = {
-	all: ["projects"] as const,
+  all: ['projects'] as const,
 
-	list: (includeArchived: boolean) =>
-		[...projectQueryKeys.all, includeArchived] as const,
+  list: (includeArchived: boolean) => [...projectQueryKeys.all, includeArchived] as const,
 
-	detail: (projectId: string) =>
-		[...projectQueryKeys.all, projectId] as const,
+  detail: (projectId: string) => [...projectQueryKeys.all, projectId] as const,
 
-	members: (projectId: string) =>
-		[...projectQueryKeys.all, "members", projectId] as const,
+  members: (projectId: string) => [...projectQueryKeys.all, 'members', projectId] as const,
 };
 
 export const useGetAllProjects = (includeArchived: boolean = false) => {
-	return useQuery({
-		queryKey: projectQueryKeys.list(includeArchived),
-		queryFn: async () => {
-			const response = await getProjects(includeArchived);
+  return useQuery({
+    queryKey: projectQueryKeys.list(includeArchived),
+    queryFn: async () => {
+      const response = await getProjects(includeArchived);
 
-			if (!response.success) {
-				throw new Error(response.message);
-			}
+      if (!response.success) {
+        throw new Error(response.message);
+      }
 
-			return response.data ?? [];
-		},
-	});
+      return response.data ?? [];
+    },
+  });
 };
 
 export const useGetProjectById = (projectId: string) => {
-	return useQuery({
-		queryKey: projectQueryKeys.detail(projectId),
-		queryFn: async () => {
-			const response = await getProject(projectId);
+  return useQuery({
+    queryKey: projectQueryKeys.detail(projectId),
+    queryFn: async () => {
+      const response = await getProject(projectId);
 
-			if (!response.success) {
-				throw new Error(response.message);
-			}
+      if (!response.success) {
+        throw new Error(response.message);
+      }
 
-			return response.data;
-		},
-	});
+      return response.data;
+    },
+  });
 };
 
 export const projectMembersQuery = (projectId: string) => ({
-	queryKey: projectQueryKeys.members(projectId),
-	queryFn: async () => {
-		const response = await getProjectMembers(projectId);
+  queryKey: projectQueryKeys.members(projectId),
+  queryFn: async () => {
+    const response = await getProjectMembers(projectId);
 
-		if (!response.success) {
-			throw new Error(response.message);
-		}
+    if (!response.success) {
+      throw new Error(response.message);
+    }
 
-		return response.data ?? [];
-	},
-	enabled: !!projectId,
+    return response.data ?? [];
+  },
+  enabled: !!projectId,
 });
 
 export const useGetProjectMembers = (projectId: string) => {
-	return useQuery(projectMembersQuery(projectId));
+  return useQuery(projectMembersQuery(projectId));
 };
 
 export const useCreateProject = () => {
-	const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-	return useMutation({
-		mutationFn: async (input: CreateProjectInput) => {
-			const response = await createNewProject(input);
-			if (!response.success) throw new Error(response.message);
-			return response.data;
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: projectQueryKeys.all,
-			});
-		},
-	});
+  return useMutation({
+    mutationFn: async (input: CreateProjectInput) => {
+      const response = await createNewProject(input);
+      if (!response.success) throw new Error(response.message);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: projectQueryKeys.all,
+      });
+    },
+  });
 };

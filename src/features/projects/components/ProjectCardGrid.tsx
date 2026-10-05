@@ -1,115 +1,99 @@
-import Text from "@/components/common/Text";
-import Button from "@/components/button/Button";
-import { useNavigate } from "react-router-dom";
-import { Ellipsis } from "lucide-react";
-import AvatarGroup from "@/components/avatar/AvatarGroups";
-import Avatar from "@/components/avatar/Avatar";
-import Chip from "@/components/chips/Chip";
-import ProgressBar from "@/components/progressBar/ProgressBar";
+import Text from '@/components/common/Text';
+import Button from '@/components/button/Button';
+import { useNavigate } from 'react-router-dom';
+import { Ellipsis } from 'lucide-react';
+import AvatarGroup from '@/components/avatar/AvatarGroups';
+import Avatar from '@/components/avatar/Avatar';
+import Chip from '@/components/chips/Chip';
+import ProgressBar from '@/components/progressBar/ProgressBar';
 
 type ProjectUser = {
-    userName: string;
-    variant: "blue" | "amber" | "purple" | "rose";
+  userName: string;
+  variant: 'blue' | 'amber' | 'purple' | 'rose';
 };
 
 type ProjectCardProps = {
-    id: string
-    initials: string;
-    title: string;
-    description: string;
-    date: string;
-    openCount: number;
-    progress: number;
-    progressText: string;
-    users: ProjectUser[];
+  id: string;
+  initials: string;
+  title: string;
+  description: string;
+  date: string;
+  openCount: number;
+  progress: number;
+  progressText: string;
+  users: ProjectUser[];
 };
 
 const ProjectCardGrid = ({
-    id,
-    initials,
-    title,
-    description,
-    date,
-    openCount,
-    progress,
-    progressText,
-    users,
+  id,
+  initials,
+  title,
+  description,
+  date,
+  openCount,
+  progress,
+  progressText,
+  users,
 }: ProjectCardProps) => {
+  const visibleUsers = users.slice(0, 3);
+  const extraUsers = Math.max(users.length - 3, 0);
 
-    const visibleUsers = users.slice(0, 3);
-    const extraUsers = Math.max(users.length - 3, 0);
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const clickingProjectCard = () => {
+    navigate(`/project/${id}/board`);
+  };
 
-    const clickingProjectCard = () => {
-        navigate(`/project/${id}/board`)
-    }
+  return (
+    <Button
+      onClick={clickingProjectCard}
+      variant="tertiary"
+      className="flex h-50 w-full flex-col items-stretch justify-between rounded-xl border border-lines-hairline bg-surface px-6 py-4 text-left"
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-accent-tint text-accent text-type-h2">
+            {initials}
+          </span>
 
-    return (
-        <Button
-            onClick={clickingProjectCard}
-            variant="tertiary"
-            className="flex h-50 w-full flex-col items-stretch justify-between rounded-xl border border-lines-hairline bg-surface px-6 py-4 text-left"
-        >
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-md bg-accent-tint text-accent text-type-h2">
-                        {initials}
-                    </span>
+          <Text variant="h1" className="text-xl text-ink font-medium">
+            {title}
+          </Text>
+        </div>
 
-                    <Text variant="h1" className="text-xl text-ink font-medium">
-                        {title}
-                    </Text>
-                </div>
+        <Ellipsis size={17} strokeWidth={1.5} className="text-ink-fades-ghost-rows" />
+      </div>
 
-                <Ellipsis size={17} strokeWidth={1.5} className="text-ink-fades-ghost-rows" />
-            </div>
+      <Text className="w-full text-left text-ink-2">{description}</Text>
 
-            <Text className="w-full text-left text-ink-2">
-                {description}
-            </Text>
+      <div className="flex gap-2">
+        <Chip text={date} variant="primary" bgColor="bg-accent-tint" textColor="text-accent" />
 
-            <div className="flex gap-2">
-                <Chip
-                    text={date}
-                    variant="primary"
-                    bgColor="bg-accent-tint"
-                    textColor="text-accent"
-                />
+        <Chip
+          text={`${openCount} open`}
+          variant="secondary"
+          borderColor="border-lines-control"
+          textColor="text-ink-2"
+        />
+      </div>
 
-                <Chip
-                    text={`${openCount} open`}
-                    variant="secondary"
-                    borderColor="border-lines-control"
-                    textColor="text-ink-2"
-                />
-            </div>
+      <ProgressBar progress={progress} color="bg-accent" />
 
-            <ProgressBar
-                progress={progress}
-                color="bg-accent"
-            />
+      <div className="flex items-center gap-2">
+        <AvatarGroup>
+          {visibleUsers.map((user) => (
+            <Avatar key={user.userName} userName={user.userName} />
+          ))}
 
-            <div className="flex items-center gap-2">
-                <AvatarGroup>
-                    {visibleUsers.map((user) => (
-                        <Avatar
-                            key={user.userName}
-                            userName={user.userName}
-                        />
-                    ))}
+          {extraUsers > 0 && <Avatar extraUsers={extraUsers} />}
+        </AvatarGroup>
 
-                    {extraUsers > 0 && (
-                        <Avatar extraUsers={extraUsers} />
-                    )}
-                </AvatarGroup>
-
-                <Text variant="body-sm" className="text-ink-2">
-                    {progressText}
-                </Text>
-            </div>
-        </Button>
-    );
+        <Text variant="body-sm" className="text-ink-2">
+          {progressText}
+        </Text>
+      </div>
+    </Button>
+  );
 };
 
 export default ProjectCardGrid;
