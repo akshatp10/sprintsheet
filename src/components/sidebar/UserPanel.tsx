@@ -8,19 +8,15 @@ interface UserPanelSidebarProps {
   textColor?: string;
 }
 
-const UserPanel = ({
-  userName,
-  isSidebar,
-  textVariant = 'body',
-  textColor = 'text-ink',
-}: UserPanelSidebarProps) => {
+const UserPanel = ({ userName, isSidebar, textVariant = 'body' }: UserPanelSidebarProps) => {
   const displayUserName = userName.split(' ')[0];
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2">
+    <div className="flex min-w-0 items-center">
+      <div className="flex min-w-0 items-center gap-2">
         <Avatar userName={displayUserName} isSideBar={isSidebar} />
-        <Text variant={textVariant} className={textColor} maxLines={1}>
+
+        <Text variant={textVariant} maxLines={1}>
           {displayUserName}
         </Text>
       </div>
