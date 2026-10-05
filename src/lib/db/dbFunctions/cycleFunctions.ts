@@ -1,97 +1,85 @@
-import db from "../db";
-import type { CycleRow } from "../db";
+import db from '../db';
+import type { CycleRow } from '../db';
 
 interface CreateCycleInput {
-	projectId: string;
-	name: string;
-	startDate: string;
-	endDate: string;
+  projectId: string;
+  name: string;
+  startDate: string;
+  endDate: string;
 }
 
-type UpdateCycleInput = Partial<
-	Omit<CycleRow, "id" | "projectId" | "createdAt" | "updatedAt">
->;
+type UpdateCycleInput = Partial<Omit<CycleRow, 'id' | 'projectId' | 'createdAt' | 'updatedAt'>>;
 
-export const createCycle = async (
-	input: CreateCycleInput,
-): Promise<CycleRow> => {
-	const project = await db.projects.get(input.projectId);
+export const createCycle = async (input: CreateCycleInput): Promise<CycleRow> => {
+  const project = await db.projects.get(input.projectId);
 
-	if (!project) {
-		throw new Error("Project not found");
-	}
+  if (!project) {
+    throw new Error('Project not found');
+  }
 
-	if (input.startDate >= input.endDate) {
-		throw new Error("Cycle end date must be after start date");
-	}
+  if (input.startDate >= input.endDate) {
+    throw new Error('Cycle end date must be after start date');
+  }
 
-	const existingCycles = await db.cycles
-		.where("projectId")
-		.equals(input.projectId)
-		.toArray();
+  const existingCycles = await db.cycles.where('projectId').equals(input.projectId).toArray();
 
-	const hasOverlap = existingCycles.some(
-		(cycle) =>
-			input.startDate < cycle.endDate && input.endDate > cycle.startDate,
-	);
+  const hasOverlap = existingCycles.some(
+    (cycle) => input.startDate < cycle.endDate && input.endDate > cycle.startDate,
+  );
 
-	if (hasOverlap) {
-		throw new Error("Cycle dates overlap with an existing cycle");
-	}
+  if (hasOverlap) {
+    throw new Error('Cycle dates overlap with an existing cycle');
+  }
 
-	const now = Date.now();
+  const now = Date.now();
 
-	const cycle: CycleRow = {
-		id: crypto.randomUUID(),
-		projectId: input.projectId,
-		name: input.name,
-		startDate: input.startDate,
-		endDate: input.endDate,
-		createdAt: now,
-		updatedAt: now,
-	};
+  const cycle: CycleRow = {
+    id: crypto.randomUUID(),
+    projectId: input.projectId,
+    name: input.name,
+    startDate: input.startDate,
+    endDate: input.endDate,
+    createdAt: now,
+    updatedAt: now,
+  };
 
-	await db.cycles.add(cycle);
+  await db.cycles.add(cycle);
 
-	return cycle;
+  return cycle;
 };
 
-export const getCycleById = async (
-	id: string,
-): Promise<CycleRow | undefined> => {
-	return db.cycles.get(id);
+export const getCycleById = async (id: string): Promise<CycleRow | undefined> => {
+  return db.cycles.get(id);
 };
 
-export const getCyclesByProject = async (
-	projectId: string,
-): Promise<CycleRow[]> => {
-	return db.cycles.where("projectId").equals(projectId).sortBy("startDate");
+export const getCyclesByProject = async (projectId: string): Promise<CycleRow[]> => {
+  return db.cycles.where('projectId').equals(projectId).sortBy('startDate');
 };
 
 export const updateCycle = async (
-	id: string,
-	updates: UpdateCycleInput,
+  id: string,
+  updates: UpdateCycleInput,
 ): Promise<CycleRow | undefined> => {
-	const existing = await db.cycles.get(id);
+  const existing = await db.cycles.get(id);
 
-	if (!existing) {
-		return undefined;
-	}
+  if (!existing) {
+    return undefined;
+  }
 
-	const updatedAt = Date.now();
+  const updatedAt = Date.now();
 
-	await db.cycles.update(id, {
-		...updates,
-		updatedAt,
-	});
+  await db.cycles.update(id, {
+    ...updates,
+    updatedAt,
+  });
 
-	return db.cycles.get(id);
+  return db.cycles.get(id);
 };
 
 export const deleteCycle = async (id: string): Promise<void> => {
-	await db.transaction("rw", [db.cycles, db.taskCycles], async () => {
-		await db.taskCycles.where("cycleId").equals(id).delete();
+  await db.transaction('rw', [db.cycles, db.taskCycles], async () => {
+    await db.taskCycles.where('cycleId').equals(id).delete();
 
-		await db.cycles.delete(id);
-	});
+    await db.cycles.delete(id);
+  });
 };

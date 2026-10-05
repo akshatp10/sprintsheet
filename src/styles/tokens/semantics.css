@@ -1,12 +1,12 @@
 @theme {
-	/* Semantic */
+  /* Semantic */
 
-	--color-semantic-overdue: #a3374a;
-	--color-semantic-drop-target: #5a4fb0;
+  --color-semantic-overdue: #a3374a;
+  --color-semantic-drop-target: #5a4fb0;
 
-	/* Illustration */
+  /* Illustration */
 
-	--color-illustration-accent: #5a4fb0;
-	--color-illustration-good: #2f8f5b;
-	--color-illustration-accent-secondary: #b3781f;
+  --color-illustration-accent: #5a4fb0;
+  --color-illustration-good: #2f8f5b;
+  --color-illustration-accent-secondary: #b3781f;
 }

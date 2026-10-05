@@ -1,299 +1,280 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import {
-	createNewTask,
-	getAllCycleTasks,
-	getAllProjectBacklogTasks,
-	getAllProjectTasks,
-	updateExistingTask,
-} from "./api";
+  createNewTask,
+  getAllCycleTasks,
+  getAllProjectBacklogTasks,
+  getAllProjectTasks,
+  updateExistingTask,
+} from './api';
 
-import type {
-	CreateTaskInput,
-	CycleTaskWithUsers,
-	UpdateTaskVariables,
-} from "./types";
-import { getUsers } from "../users/api";
-import type { User } from "../users/types";
-import { getProjectCycles } from "../cycles/api";
-import { getStagesForProject } from "../stages/api";
+import type { CreateTaskInput, CycleTaskWithUsers, UpdateTaskVariables } from './types';
+import { getUsers } from '../users/api';
+import type { User } from '../users/types';
+import { getProjectCycles } from '../cycles/api';
+import { getStagesForProject } from '../stages/api';
 
 export const taskQueryKeys = {
-	all: ["tasks"] as const,
+  all: ['tasks'] as const,
 
-	project: (projectId: string) =>
-		[...taskQueryKeys.all, "project", projectId] as const,
+  project: (projectId: string) => [...taskQueryKeys.all, 'project', projectId] as const,
 
-	cycle: (cycleId: string) =>
-		[...taskQueryKeys.all, "cycle", cycleId] as const,
+  cycle: (cycleId: string) => [...taskQueryKeys.all, 'cycle', cycleId] as const,
 
-	backlog: (projectId: string) =>
-		[...taskQueryKeys.all, "backlog", projectId] as const,
+  backlog: (projectId: string) => [...taskQueryKeys.all, 'backlog', projectId] as const,
 
-	cycleByStage: (cycleId: string) =>
-		[...taskQueryKeys.cycle(cycleId), "by-stage"] as const,
+  cycleByStage: (cycleId: string) => [...taskQueryKeys.cycle(cycleId), 'by-stage'] as const,
 
-	cycleByProject: (projectId: string) =>
-		[...taskQueryKeys.cycle(projectId), "by-cycle"] as const,
+  cycleByProject: (projectId: string) => [...taskQueryKeys.cycle(projectId), 'by-cycle'] as const,
 };
 
 export const useGetAllTasksByProject = (projectId: string) => {
-	return useQuery({
-		queryKey: taskQueryKeys.project(projectId),
+  return useQuery({
+    queryKey: taskQueryKeys.project(projectId),
 
-		queryFn: async () => {
-			const response = await getAllProjectTasks(projectId);
+    queryFn: async () => {
+      const response = await getAllProjectTasks(projectId);
 
-			if (!response.success) {
-				throw new Error(response.message);
-			}
+      if (!response.success) {
+        throw new Error(response.message);
+      }
 
-			return response.data ?? [];
-		},
+      return response.data ?? [];
+    },
 
-		enabled: !!projectId,
-	});
+    enabled: !!projectId,
+  });
 };
 
 export const useBacklogTasks = (projectId: string) => {
-	return useQuery({
-		queryKey: taskQueryKeys.backlog(projectId),
+  return useQuery({
+    queryKey: taskQueryKeys.backlog(projectId),
 
-		queryFn: async () => {
-			const [tasksResponse, stagesResponse] = await Promise.all([
-				getAllProjectBacklogTasks(projectId),
-				getStagesForProject(projectId),
-			]);
+    queryFn: async () => {
+      const [tasksResponse, stagesResponse] = await Promise.all([
+        getAllProjectBacklogTasks(projectId),
+        getStagesForProject(projectId),
+      ]);
 
-			if (!tasksResponse.success) {
-				throw new Error(tasksResponse.message);
-			}
+      if (!tasksResponse.success) {
+        throw new Error(tasksResponse.message);
+      }
 
-			if (!stagesResponse.success) {
-				throw new Error(stagesResponse.message);
-			}
+      if (!stagesResponse.success) {
+        throw new Error(stagesResponse.message);
+      }
 
-			const tasks = tasksResponse.data ?? [];
-			const stages = stagesResponse.data ?? [];
+      const tasks = tasksResponse.data ?? [];
+      const stages = stagesResponse.data ?? [];
 
-			const backlogStage = stages.find(
-				(stage) => stage.name === "Backlog",
-			);
+      const backlogStage = stages.find((stage) => stage.name === 'Backlog');
 
-			if (!backlogStage) {
-				throw new Error("Backlog stage not found");
-			}
+      if (!backlogStage) {
+        throw new Error('Backlog stage not found');
+      }
 
-			const userIds = [
-				...new Set(tasks.flatMap((task) => task.assigneeIds)),
-			];
+      const userIds = [...new Set(tasks.flatMap((task) => task.assigneeIds))];
 
-			const userResponse = userIds.length
-				? await getUsers(userIds)
-				: { success: true as const, data: [] as User[] };
+      const userResponse = userIds.length
+        ? await getUsers(userIds)
+        : { success: true as const, data: [] as User[] };
 
-			if (!userResponse.success) {
-				throw new Error(userResponse.message);
-			}
+      if (!userResponse.success) {
+        throw new Error(userResponse.message);
+      }
 
-			const users = userResponse.data ?? [];
+      const users = userResponse.data ?? [];
 
-			const usersById = new Map(users.map((user) => [user.id, user]));
+      const usersById = new Map(users.map((user) => [user.id, user]));
 
-			return tasks.map((task) => ({
-				...task,
+      return tasks.map((task) => ({
+        ...task,
 
-				stage: backlogStage,
+        stage: backlogStage,
 
-				assignees: task.assigneeIds
-					.map((id) => usersById.get(id))
-					.filter((user): user is User => user !== undefined),
-			}));
-		},
+        assignees: task.assigneeIds
+          .map((id) => usersById.get(id))
+          .filter((user): user is User => user !== undefined),
+      }));
+    },
 
-		enabled: !!projectId,
-	});
+    enabled: !!projectId,
+  });
 };
 
 export const useTasksByCycle = (cycleId: string) => {
-	return useQuery({
-		queryKey: taskQueryKeys.cycle(cycleId),
+  return useQuery({
+    queryKey: taskQueryKeys.cycle(cycleId),
 
-		queryFn: async () => {
-			const response = await getAllCycleTasks(cycleId);
+    queryFn: async () => {
+      const response = await getAllCycleTasks(cycleId);
 
-			if (!response.success) {
-				throw new Error(response.message);
-			}
+      if (!response.success) {
+        throw new Error(response.message);
+      }
 
-			const tasks = response.data ?? [];
+      const tasks = response.data ?? [];
 
-			return tasks;
-		},
+      return tasks;
+    },
 
-		enabled: !!cycleId,
-	});
+    enabled: !!cycleId,
+  });
 };
 
 export const useTasksByStage = (cycleId: string) => {
-	return useQuery({
-		queryKey: taskQueryKeys.cycleByStage(cycleId),
+  return useQuery({
+    queryKey: taskQueryKeys.cycleByStage(cycleId),
 
-		queryFn: async () => {
-			const response = await getAllCycleTasks(cycleId);
+    queryFn: async () => {
+      const response = await getAllCycleTasks(cycleId);
 
-			if (!response.success) {
-				throw new Error(response.message);
-			}
+      if (!response.success) {
+        throw new Error(response.message);
+      }
 
-			const tasks = response.data ?? [];
+      const tasks = response.data ?? [];
 
-			const userIds = [
-				...new Set(tasks.flatMap((task) => task.assigneeIds)),
-			];
+      const userIds = [...new Set(tasks.flatMap((task) => task.assigneeIds))];
 
-			const userResponse = await getUsers(userIds);
+      const userResponse = await getUsers(userIds);
 
-			if (!userResponse.success) {
-				throw new Error(userResponse.message);
-			}
+      if (!userResponse.success) {
+        throw new Error(userResponse.message);
+      }
 
-			const users = userResponse.data ?? [];
+      const users = userResponse.data ?? [];
 
-			const usersById = new Map(users.map((user) => [user.id, user]));
+      const usersById = new Map(users.map((user) => [user.id, user]));
 
-			return tasks.map((task) => ({
-				...task,
+      return tasks.map((task) => ({
+        ...task,
 
-				assignees: task.assigneeIds
-					.map((id) => usersById.get(id))
-					.filter((user): user is User => user !== undefined),
-			}));
-		},
+        assignees: task.assigneeIds
+          .map((id) => usersById.get(id))
+          .filter((user): user is User => user !== undefined),
+      }));
+    },
 
-		enabled: !!cycleId,
+    enabled: !!cycleId,
 
-		select: (tasks) =>
-			tasks.reduce<Record<string, CycleTaskWithUsers[]>>((acc, task) => {
-				const stageId = task.stage.id;
+    select: (tasks) =>
+      tasks.reduce<Record<string, CycleTaskWithUsers[]>>((acc, task) => {
+        const stageId = task.stage.id;
 
-				(acc[stageId] ??= []).push(task);
-				return acc;
-			}, {}),
-	});
+        (acc[stageId] ??= []).push(task);
+        return acc;
+      }, {}),
+  });
 };
 
 export const useGetTasksByCycle = (projectId: string) => {
-	return useQuery({
-		queryKey: taskQueryKeys.cycleByProject(projectId),
+  return useQuery({
+    queryKey: taskQueryKeys.cycleByProject(projectId),
 
-		queryFn: async () => {
-			const cyclesResponse = await getProjectCycles(projectId);
+    queryFn: async () => {
+      const cyclesResponse = await getProjectCycles(projectId);
 
-			if (!cyclesResponse.success) {
-				throw new Error(cyclesResponse.message);
-			}
+      if (!cyclesResponse.success) {
+        throw new Error(cyclesResponse.message);
+      }
 
-			const cycles = cyclesResponse.data ?? [];
+      const cycles = cyclesResponse.data ?? [];
 
-			const tasksResponses = await Promise.all(
-				cycles.map((cycle) => getAllCycleTasks(cycle.id)),
-			);
+      const tasksResponses = await Promise.all(cycles.map((cycle) => getAllCycleTasks(cycle.id)));
 
-			const tasksWithCycle = tasksResponses.flatMap((response, index) => {
-				if (!response.success) {
-					throw new Error(response.message);
-				}
+      const tasksWithCycle = tasksResponses.flatMap((response, index) => {
+        if (!response.success) {
+          throw new Error(response.message);
+        }
 
-				return (response.data ?? []).map((task) => ({
-					...task,
-					cycle: cycles[index],
-				}));
-			});
+        return (response.data ?? []).map((task) => ({
+          ...task,
+          cycle: cycles[index],
+        }));
+      });
 
-			const userIds = [
-				...new Set(tasksWithCycle.flatMap((task) => task.assigneeIds)),
-			];
+      const userIds = [...new Set(tasksWithCycle.flatMap((task) => task.assigneeIds))];
 
-			const userResponse = userIds.length
-				? await getUsers(userIds)
-				: { success: true as const, data: [] as User[] };
+      const userResponse = userIds.length
+        ? await getUsers(userIds)
+        : { success: true as const, data: [] as User[] };
 
-			if (!userResponse.success) {
-				throw new Error(userResponse.message);
-			}
+      if (!userResponse.success) {
+        throw new Error(userResponse.message);
+      }
 
-			const users = userResponse.data ?? [];
+      const users = userResponse.data ?? [];
 
-			const usersById = new Map(users.map((user) => [user.id, user]));
+      const usersById = new Map(users.map((user) => [user.id, user]));
 
-			return tasksWithCycle.map((task) => ({
-				...task,
+      return tasksWithCycle.map((task) => ({
+        ...task,
 
-				assignees: task.assigneeIds
-					.map((id) => usersById.get(id))
-					.filter((user): user is User => user !== undefined),
-			}));
-		},
+        assignees: task.assigneeIds
+          .map((id) => usersById.get(id))
+          .filter((user): user is User => user !== undefined),
+      }));
+    },
 
-		enabled: !!projectId,
+    enabled: !!projectId,
 
-		select: (tasks) =>
-			tasks.reduce<Record<string, CycleTaskWithUsers[]>>((acc, task) => {
-				const cycleId = task.cycle.id;
+    select: (tasks) =>
+      tasks.reduce<Record<string, CycleTaskWithUsers[]>>((acc, task) => {
+        const cycleId = task.cycle.id;
 
-				(acc[cycleId] ??= []).push(task);
-				return acc;
-			}, {}),
-	});
+        (acc[cycleId] ??= []).push(task);
+        return acc;
+      }, {}),
+  });
 };
 
 export const useCreateTask = () => {
-	const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-	return useMutation({
-		mutationFn: async (input: CreateTaskInput) => {
-			const response = await createNewTask(input);
+  return useMutation({
+    mutationFn: async (input: CreateTaskInput) => {
+      const response = await createNewTask(input);
 
-			if (!response.success) {
-				throw new Error(response.message);
-			}
+      if (!response.success) {
+        throw new Error(response.message);
+      }
 
-			return response.data;
-		},
+      return response.data;
+    },
 
-		onSuccess: (_, variables) => {
-			queryClient.invalidateQueries({
-				queryKey: taskQueryKeys.project(variables.projectId),
-			});
-			queryClient.invalidateQueries({
-				queryKey: taskQueryKeys.backlog(variables.projectId),
-			});
-			if (variables.cycle) {
-				queryClient.invalidateQueries({
-					queryKey: taskQueryKeys.cycle(variables.cycle.id),
-				});
-			}
-		},
-	});
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: taskQueryKeys.project(variables.projectId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: taskQueryKeys.backlog(variables.projectId),
+      });
+      if (variables.cycle) {
+        queryClient.invalidateQueries({
+          queryKey: taskQueryKeys.cycle(variables.cycle.id),
+        });
+      }
+    },
+  });
 };
 
 export const useUpdateTask = () => {
-	const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-	return useMutation({
-		mutationFn: async ({ id, updates }: UpdateTaskVariables) => {
-			const response = await updateExistingTask(id, updates);
+  return useMutation({
+    mutationFn: async ({ id, updates }: UpdateTaskVariables) => {
+      const response = await updateExistingTask(id, updates);
 
-			if (!response.success) {
-				throw new Error(response.message);
-			}
+      if (!response.success) {
+        throw new Error(response.message);
+      }
 
-			return response.data;
-		},
+      return response.data;
+    },
 
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: taskQueryKeys.all });
-		},
-	});
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: taskQueryKeys.all });
+    },
+  });
 };

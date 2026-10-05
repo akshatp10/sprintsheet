@@ -1,49 +1,54 @@
 // import { ChevronDown } from "lucide-react"
 // import Text from "../common/Text"
-import Button from "../button/Button"
-import { useCallback, useState } from "react"
-import SearchInput from "../inputs/SearchInput"
-import NewProjectForm from "@/features/projects/components/forms/NewProjectForm"
-import useShortcutSearch from "@/hooks/useShortcutSearch"
-import { isMac } from "@/lib/utils"
+import Button from '../button/Button';
+import { useCallback, useState } from 'react';
+import SearchInput from '../inputs/SearchInput';
+import NewProjectForm from '@/features/projects/components/forms/NewProjectForm';
+import useShortcutSearch from '@/hooks/useShortcutSearch';
+import { isMac } from '@/lib/utils';
 
 const WorkspaceTopbar = () => {
-    const [searchProject, setSearchProject] = useState("")
-    // const [focusSearch, setFocusSearch] = useState(false)
-    const [showForm, setShowForm] = useState(false)
+  const [searchProject, setSearchProject] = useState('');
+  // const [focusSearch, setFocusSearch] = useState(false)
+  const [showForm, setShowForm] = useState(false);
 
-    const handleClick = () => { setShowForm(true) }
+  const handleClick = () => {
+    setShowForm(true);
+  };
 
-    const focusSearch = useCallback(() => {
-        document.getElementById("projectSearch")?.focus();
-    }, []);
+  const focusSearch = useCallback(() => {
+    document.getElementById('projectSearch')?.focus();
+  }, []);
 
-    useShortcutSearch("k", focusSearch)
+  useShortcutSearch('k', focusSearch);
 
-    return (
-        <>
-            <div className="flex justify-end items-center w-full">
-                {/* Workspace Dropdown */}
-                {/* <Button onClick={() => { }} variant='tertiary' className='border-0 flex justify-center items-center gap-2'>
+  return (
+    <>
+      <div className="flex justify-end items-center w-full">
+        {/* Workspace Dropdown */}
+        {/* <Button onClick={() => { }} variant='tertiary' className='border-0 flex justify-center items-center gap-2'>
                     <Text variant="h2">Alter Office</Text>
                     <ChevronDown size={15} strokeWidth={1.5} className="text-ink-fades-ghost-rows" />
                 </Button> */}
 
+        {/* Right side containing search project and new project buttons */}
+        <div className="flex items-center gap-2">
+          <SearchInput
+            value={searchProject}
+            onChange={setSearchProject}
+            placeholder={`Search projects, tasks... ${isMac ? '⌘ K' : 'Ctrl K'}`}
+            searchElementId="projectSearch"
+          />
 
-                {/* Right side containing search project and new project buttons */}
-                <div className="flex items-center gap-2">
-                    <SearchInput value={searchProject} onChange={setSearchProject} placeholder={`Search projects, tasks... ${isMac ? "⌘ K" : "Ctrl K"
-                        }`} searchElementId="projectSearch" />
+          <Button variant="primary" className="h-full font-medium" onClick={handleClick}>
+            + New Project
+          </Button>
+        </div>
+      </div>
 
-                    <Button variant="primary" className="h-full font-medium" onClick={handleClick}>
-                        + New Project
-                    </Button>
-                </div>
-            </div>
+      {showForm && <NewProjectForm onClose={() => setShowForm(false)} />}
+    </>
+  );
+};
 
-            {showForm && <NewProjectForm onClose={() => setShowForm(false)} />}
-        </>
-    )
-}
-
-export default WorkspaceTopbar
+export default WorkspaceTopbar;
