@@ -8,6 +8,7 @@ import { useState } from 'react';
 import StageListHeader from './StageListHeader';
 import DraggableTaskListElement from '@/features/tasks/components/dragging/DraggableListElement';
 import TaskListEmpty from '@/features/tasks/components/listView/TaskListEmpty';
+import TaskListSkeleton from '@/features/tasks/components/skeletons/TaskListSkeleton';
 
 interface StageListBoxProps {
   gridTemplateColumns: string;
@@ -67,7 +68,7 @@ const StageListBox = ({
       {!isCollapsed && (
         <div>
           {isLoading ? (
-            <div className="h-12 border-b border-lines-hairline" />
+            <TaskListSkeleton gridTemplateColumns={gridTemplateColumns} />
           ) : tasks.length > 0 ? (
             tasks.map((task, index) => (
               <DraggableTaskListElement
