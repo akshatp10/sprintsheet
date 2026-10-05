@@ -10,9 +10,13 @@ import { useBacklogTasks, useTasksByStage } from '@/lib/services/tasks/hooks';
 import { useGetAllCyclesByProject } from '@/lib/services/cycles/hooks';
 import { useUpdateTaskCycleStage } from '@/lib/services/taskCycles/hooks';
 import TaskDetailsDrawer from '@/features/tasks/components/TaskDetailsDrawer';
+import NoCycleActive from '../features/cycles/components/NoCycleActive';
+import CreateCycleForm from '@/features/cycles/forms/CreateCycleForm';
+import LoadingPage from './commons/LoadingPage';
 
 const TaskViewPage = () => {
   const [isDragging, setIsDragging] = useState(false);
+  const [createCycle, setCreateCycle] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [openBacklog, setOpenBacklog] = useState(false);
@@ -24,12 +28,14 @@ const TaskViewPage = () => {
 
   const {
     data: tasksByStage = {},
-    isLoading,
+    isLoading: isTasksLoading,
     isError,
     error,
   } = useTasksByStage(currentCycleId ?? '');
   const { data: stages = [] } = useGetStagesPerProject(projectid ?? '');
-  const { data: cycles = [] } = useGetAllCyclesByProject(projectid ?? '');
+  const { data: cycles = [], isLoading: isCyclesLoading } = useGetAllCyclesByProject(
+    projectid ?? '',
+  );
   const { data: backlogTasks = [] } = useBacklogTasks(projectid ?? '');
 
   const sortedStages = [...stages].sort((a, b) => a.order - b.order);
@@ -84,33 +90,38 @@ const TaskViewPage = () => {
   };
 
   if (isError) return <div>Error: {error.message}</div>;
+
+  if (isCyclesLoading) {
+    return <LoadingPage />;
+  }
+
   return (
     <>
       <div className="grid h-full min-h-0 min-w-fit grid-rows-[1fr_5dvh]">
-        {view === 'table' && (
+        {!!!cycles.length || currentCycleId === '' ? (
+          <NoCycleActive hasCycles={cycles.length > 0} onCreateCycle={() => setCreateCycle(true)} />
+        ) : view === 'table' ? (
           <TableTaskPage
             stages={sortedStages}
             tasksByStage={tasksByStage}
             cycleId={currentCycleId}
-            isLoading={isLoading}
+            isLoading={isTasksLoading}
             projectId={projectid ?? ''}
             onDraggingChange={setIsDragging}
             onUpdateTaskStage={handleUpdateTaskStage}
           />
-        )}
-        {view === 'cards' && (
+        ) : (
           <CardTaskPage
             stages={sortedStages}
             tasksByStage={tasksByStage}
             cycleId={currentCycleId}
-            isLoading={isLoading}
+            isLoading={isTasksLoading}
             projectId={projectid ?? ''}
             onDraggingChange={setIsDragging}
             onUpdateTaskStage={handleUpdateTaskStage}
           />
         )}
         <TaskViewFooter
-          projectId={projectid ?? ''}
           taskLength={backlogTasks.length}
           isCardHeld={isDragging}
           onClick={() => {
@@ -122,6 +133,7 @@ const TaskViewPage = () => {
           currentCycleId={currentCycleId}
           setCurrentCycleId={handleCycleChange}
           openBacklog={openBacklog}
+          setCreateCycle={setCreateCycle}
         />
       </div>
 
@@ -132,6 +144,16 @@ const TaskViewPage = () => {
           handleClose={() => setOpenBacklog(false)}
           backlogTasks={backlogTasks}
           currentCycleId={currentCycleId}
+        />
+      )}
+
+      {createCycle && (
+        <CreateCycleForm
+          projectId={projectid ?? ''}
+          onClose={(cycleId?: string) => {
+            setCreateCycle(false);
+            if (cycleId) handleCycleChange(cycleId);
+          }}
         />
       )}
     </>

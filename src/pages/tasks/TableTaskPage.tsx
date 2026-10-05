@@ -86,10 +86,6 @@ const TableTaskPage = ({
     setClickedStageId('');
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <>
       <TableWrapper columns={columns}>
