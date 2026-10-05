@@ -16,8 +16,7 @@ const AppLayout = ({ dynamicSidebar, dynamicTopBar, usersPanel }: AppLayoutProps
         autoClose={3000}
         newestOnTop
         closeOnClick
-        pauseOnHover
-        draggable
+        limit={5}
         pauseOnFocusLoss={false}
       />
 
