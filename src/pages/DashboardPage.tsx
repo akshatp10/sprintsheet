@@ -10,6 +10,7 @@ import { getToday } from '@/hooks/useCycleStatus';
 import { useGetCycle } from '@/lib/services/cycles/hooks';
 import { useGetStagesPerProject } from '@/lib/services/stages/hooks';
 import { useGetAllTasksByProject, useTasksByStage } from '@/lib/services/tasks/hooks';
+import NoCycleActive from '@/features/cycles/components/NoCycleActive';
 
 const DashboardPage = () => {
   const [searchParams] = useSearchParams();
@@ -39,6 +40,8 @@ const DashboardPage = () => {
       ) + 1,
     ),
   );
+
+  if (currentCycleId === '') return <NoCycleActive />;
 
   return (
     <div className="w-full flex flex-col px-8 py-6 gap-8">
