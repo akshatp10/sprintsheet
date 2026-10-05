@@ -21,7 +21,9 @@ const CurProjectSidebarCard = ({ project, cycleName }: CurProjectSidebarCardProp
         <span className="bg-accent-tint px-2 rounded-md text-accent">{initials}</span>
 
         <div className="flex flex-col">
-          <Text variant="h2">{project.name}</Text>
+          <Text variant="h2" maxLines={1}>
+            {project.name}
+          </Text>
 
           <Text className="text-ink-3">{cycleName}</Text>
         </div>
