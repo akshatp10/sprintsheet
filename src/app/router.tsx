@@ -16,10 +16,16 @@ import CyclesDetailsPage from '@/pages/CyclesDetailsPage';
 import CyclesTopbar from '@/components/topbar/CyclesTopbar';
 import AllTaskPage from '@/pages/AllTaskPage';
 import AllTaskTopbar from '@/components/topbar/AllTaskTopbar';
+import SignInPage from '@/pages/auths/SigninPage';
+import SignUpPage from '@/pages/auths/SignUpPage';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
+      {/* Auth routes */}
+      <Route path="/auth/login" element={<SignInPage />} />
+      <Route path="/auth/register" element={<SignUpPage />} />
+
       {/* Workspace routes */}
       <Route
         element={
