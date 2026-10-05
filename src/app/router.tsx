@@ -18,6 +18,8 @@ import AllTaskPage from '@/pages/AllTaskPage';
 import AllTaskTopbar from '@/components/topbar/AllTaskTopbar';
 import SignInPage from '@/pages/auths/SigninPage';
 import SignUpPage from '@/pages/auths/SignUpPage';
+import DashboardPage from '@/pages/DashboardPage';
+import DashboardTopbar from '@/components/topbar/DashboardTopbar';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -50,7 +52,6 @@ export const router = createBrowserRouter(
           />
         }
       >
-        <Route path="/project/:projectid" element={<TestPage />} />
         <Route path="/project/:projectid/board" element={<TaskViewPage />} />
       </Route>
 
@@ -78,6 +79,19 @@ export const router = createBrowserRouter(
         }
       >
         <Route path="/project/:projectid/cycles" element={<CyclesDetailsPage />} />
+      </Route>
+
+      {/* Dashboard Routes */}
+      <Route
+        element={
+          <AppLayout
+            dynamicSidebar={<ProjectsSidebar />}
+            dynamicTopBar={<DashboardTopbar />}
+            usersPanel={<SidebarBottom />}
+          />
+        }
+      >
+        <Route path="/project/:projectid" element={<DashboardPage />} />
       </Route>
     </>,
   ),
