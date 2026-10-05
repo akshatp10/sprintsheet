@@ -3,8 +3,9 @@ import {
   getProjectStages,
   getTerminalStageId,
 } from '@/lib/db/dbFunctions/stageFunctions';
-import { errorMessage, type ApiResponse } from '../types';
 import type { ProjectStageRow } from '@/lib/db/db';
+
+import { errorMessage, type ApiResponse } from '../types';
 
 export const getStagesForProject = async (
   projectId: string,
@@ -18,11 +19,11 @@ export const getStagesForProject = async (
       message: 'Successfully fetched stages',
       data: stages,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to fetch stages for project'),
       data: null,
     };
   }
@@ -51,7 +52,7 @@ export const getProjectBacklogStageId = async (projectId: string): Promise<ApiRe
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to fetch backlog stage'),
       data: null,
     };
   }
@@ -82,7 +83,7 @@ export const getProjectTerminalStageId = async (
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to fetch terminal stage'),
       data: null,
     };
   }

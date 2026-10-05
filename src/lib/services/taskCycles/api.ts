@@ -8,8 +8,9 @@ import {
   updateTaskCycleStage,
 } from '@/lib/db/dbFunctions/taskCycleFunctions';
 
-import { errorMessage, type ApiResponse } from '../types';
 import type { Task } from '../tasks/types';
+import { errorMessage, type ApiResponse } from '../types';
+
 import type { CreateTaskCycleInput, TaskCycle, TaskDestination } from './types';
 
 export const createNewTaskCycle = async (
@@ -24,11 +25,11 @@ export const createNewTaskCycle = async (
       message: 'Successfully created task cycle',
       data: taskCycle,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to create task cycle'),
       data: null,
     };
   }
@@ -51,7 +52,7 @@ export const updateExistingTaskCycleStage = async (
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to update task cycle stage'),
       data: null,
     };
   }
@@ -74,7 +75,7 @@ export const moveTaskToDestination = async (
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to move task'),
       data: null,
     };
   }
@@ -97,7 +98,7 @@ export const moveMultipleTasksToDestination = async (
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to move tasks'),
       data: null,
     };
   }
@@ -113,11 +114,11 @@ export const getCycleTaskCycles = async (cycleId: string): Promise<ApiResponse<T
       message: 'Successfully fetched cycle task relationships',
       data: taskCycles,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to fetch task cycles for cycle'),
       data: null,
     };
   }
@@ -133,11 +134,11 @@ export const getTaskTaskCycles = async (taskId: string): Promise<ApiResponse<Tas
       message: 'Successfully fetched task cycle relationships',
       data: taskCycles,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to fetch task cycles for task'),
       data: null,
     };
   }
@@ -155,11 +156,11 @@ export const getAllTaskCyclesByProject = async (
       message: 'Successfully fetched task cycle relationships',
       data: allTaskCycles,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to fetch task cycles for project'),
       data: null,
     };
   }

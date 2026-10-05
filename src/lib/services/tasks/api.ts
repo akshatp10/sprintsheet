@@ -7,7 +7,8 @@ import {
   type CycleTaskRow,
 } from '@/lib/db/dbFunctions/taskFunctions';
 
-import type { ApiResponse } from '../types';
+import { errorMessage, type ApiResponse } from '../types';
+
 import type { CreateTaskInput, Task, TaskWithStage, UpdateTaskInput } from './types';
 
 export const createNewTask = async (input: CreateTaskInput): Promise<ApiResponse<Task>> => {
@@ -20,11 +21,11 @@ export const createNewTask = async (input: CreateTaskInput): Promise<ApiResponse
       message: 'Successfully created task',
       data: task,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to create task'),
       data: null,
     };
   }
@@ -42,15 +43,16 @@ export const getAllProjectTasks = async (
       message: 'Successfully fetched tasks',
       data: tasks,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to fetch tasks for project'),
       data: null,
     };
   }
 };
+
 export const getAllProjectBacklogTasks = async (
   projectId: string,
 ): Promise<ApiResponse<Task[]>> => {
@@ -60,14 +62,14 @@ export const getAllProjectBacklogTasks = async (
     return {
       status: 200,
       success: true,
-      message: 'Successfully fetched tasks',
+      message: 'Successfully fetched backlog tasks',
       data: tasks,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to fetch backlog tasks for project'),
       data: null,
     };
   }
@@ -83,11 +85,11 @@ export const getAllCycleTasks = async (cycleId: string): Promise<ApiResponse<Cyc
       message: 'Successfully fetched cycle tasks',
       data: tasks,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to fetch tasks for cycle'),
       data: null,
     };
   }
@@ -115,11 +117,11 @@ export const updateExistingTask = async (
       message: 'Successfully updated task',
       data: task,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error, 'Failed to update task'),
       data: null,
     };
   }
