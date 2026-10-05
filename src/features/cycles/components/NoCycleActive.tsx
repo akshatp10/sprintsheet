@@ -4,8 +4,8 @@ import Text from '@/components/common/Text';
 import { Plus } from 'lucide-react';
 
 interface NoCycleActiveProps {
-  hasCycles: boolean;
-  onCreateCycle: () => void;
+  hasCycles?: boolean;
+  onCreateCycle?: () => void;
 }
 
 const NoCycleActive = ({ hasCycles, onCreateCycle }: NoCycleActiveProps) => {
@@ -23,11 +23,16 @@ const NoCycleActive = ({ hasCycles, onCreateCycle }: NoCycleActiveProps) => {
             ? 'Select a cycle from the bar below to view its tasks, or create a new cycle.'
             : 'Create your first cycle to start organizing and tracking your tasks.'}
         </Text>
-
-        <Button variant="primary" className="mt-5 flex items-center gap-2" onClick={onCreateCycle}>
-          <Plus size={15} strokeWidth={1.5} />
-          Create New Cycle
-        </Button>
+        {!!onCreateCycle && (
+          <Button
+            variant="primary"
+            className="mt-5 flex items-center gap-2"
+            onClick={onCreateCycle}
+          >
+            <Plus size={15} strokeWidth={1.5} />
+            Create New Cycle
+          </Button>
+        )}
       </div>
     </div>
   );
