@@ -68,7 +68,7 @@ const Drawer = ({
 
   return (
     <div className="fixed inset-0">
-      <div className="absolute inset-0 bg-surface-sunken/60" />
+      <div className="absolute inset-0 bg-surface-sunken/60" onClick={handleClose} />
 
       {/* Slide-over */}
       <div
