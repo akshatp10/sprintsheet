@@ -3,6 +3,7 @@
 The **Cycles module** organizes project work into time-bounded planning periods.
 
 It provides:
+
 - Cycle creation
 - Cycle selection
 - Cycle-aware task loading

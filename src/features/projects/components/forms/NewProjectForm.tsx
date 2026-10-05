@@ -1,127 +1,120 @@
-import { useForm } from "react-hook-form";
-import { defaultValues, projectFormSchema, type ProjectFormData } from "../../types/projectFormData";
-import ProjectFormStepper from "./ProjectFormStepper";
-import { useRef, useState } from "react";
-import ProjectFormFooter from "./ProjectFormFooter";
-import PopupModal, { type PopupModalHandle } from "@/components/popupModals/PopupModal";
-import ColumnStagesStep from "./ColumnStagesStep";
-import BasicsStep from "./BasicsStep";
-import PeopleStep from "./PeopleStep";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateProject } from "@/lib/services/projects/hooks";
+import { useForm } from 'react-hook-form';
+import {
+  defaultValues,
+  projectFormSchema,
+  type ProjectFormData,
+} from '../../types/projectFormData';
+import ProjectFormStepper from './ProjectFormStepper';
+import { useRef, useState } from 'react';
+import ProjectFormFooter from './ProjectFormFooter';
+import PopupModal, { type PopupModalHandle } from '@/components/popupModals/PopupModal';
+import ColumnStagesStep from './ColumnStagesStep';
+import BasicsStep from './BasicsStep';
+import PeopleStep from './PeopleStep';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useCreateProject } from '@/lib/services/projects/hooks';
 
 interface NewProjectFormProps {
-    onClose: () => void
+  onClose: () => void;
 }
 
 const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
+  const { mutate: createProject } = useCreateProject();
 
-    const { mutate: createProject } = useCreateProject()
+  const [currentStep, setCurrentStep] = useState(1);
 
-    const [currentStep, setCurrentStep] = useState(1);
+  const popupRef = useRef<PopupModalHandle>(null);
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    setValue,
+    trigger,
+    reset,
+    formState: { errors, isDirty, isValid },
+  } = useForm<ProjectFormData>({
+    defaultValues,
+    resolver: zodResolver(projectFormSchema),
+    mode: 'onChange',
+  });
 
-    const popupRef = useRef<PopupModalHandle>(null);
-    const {
-        register,
-        handleSubmit,
-        control,
-        watch,
-        setValue,
-        trigger,
-        reset,
-        formState: { errors, isDirty, isValid },
-    } = useForm<ProjectFormData>({
-        defaultValues,
-        resolver: zodResolver(projectFormSchema),
-        mode: "onChange",
+  // These fields should have some data in order to move to next step
+  const stepFields: Record<number, (keyof ProjectFormData)[]> = {
+    1: ['name', 'key', 'description', 'cycleLength', 'customCycleDays', 'startingDay'],
+    2: ['stages'],
+    3: ['people'],
+  };
+
+  const onSubmit = async (data: ProjectFormData) => {
+    const newProject = {
+      key: data.key,
+      name: data.name,
+      description: data.description,
+      cycleLength: data.cycleLength,
+      startingDay: data.startingDay,
+      autoCycle: data.autoCycle,
+      invitedPeople: data.people,
+      stages: data.stages,
+    };
+
+    createProject(newProject, {
+      onSuccess: () => {
+        reset();
+        onClose();
+      },
     });
+  };
 
-    // These fields should have some data in order to move to next step
-    const stepFields: Record<number, (keyof ProjectFormData)[]> = {
-        1: ["name", "key", "description", "cycleLength", "customCycleDays", "startingDay"],
-        2: ["stages"],
-        3: ["people"],
-    };
-
-    const onSubmit = async (data: ProjectFormData) => {
-        const newProject = {
-            key: data.key,
-            name: data.name,
-            description: data.description,
-            cycleLength: data.cycleLength,
-            startingDay: data.startingDay,
-            autoCycle: data.autoCycle,
-            invitedPeople: data.people,
-            stages: data.stages,
-        }
-
-        createProject(
-            newProject,
-            {
-                onSuccess: () => {
-                    reset();
-                    onClose();
-                },
-            })
+  const handleNext = async () => {
+    const valid = await trigger(stepFields[currentStep]);
+    if (valid && currentStep < 3) {
+      setCurrentStep((prev) => prev + 1);
     }
+  };
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep((prev) => prev - 1);
+    }
+  };
 
-    const handleNext = async () => {
-        const valid = await trigger(stepFields[currentStep]);
-        if (valid && currentStep < 3) {
-            setCurrentStep((prev) => prev + 1);
-        }
-    };
-    const handleBack = () => {
-        if (currentStep > 1) {
-            setCurrentStep((prev) => prev - 1);
-        }
-    };
+  return (
+    <PopupModal
+      ref={popupRef}
+      className="max-h-[90dvh]"
+      label="New Project"
+      onClose={onClose}
+      alert={isDirty}
+    >
+      <ProjectFormStepper currentStep={currentStep} />
 
-    return (
-        <PopupModal ref={popupRef} className="max-h-[90dvh]" label="New Project" onClose={onClose} alert={isDirty}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col">
+        <div className="py-5 min-h-0 overflow-auto">
+          {currentStep === 1 && <BasicsStep watch={watch} setValue={setValue} errors={errors} />}
 
-            <ProjectFormStepper currentStep={currentStep} />
+          {currentStep === 2 && <ColumnStagesStep control={control} />}
 
-            <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col">
+          {currentStep === 3 && (
+            <PeopleStep
+              register={register}
+              control={control}
+              watch={watch}
+              setValue={setValue}
+              errors={errors}
+            />
+          )}
+        </div>
 
-                <div className="py-5 min-h-0 overflow-auto">
-                    {currentStep === 1 && (
-                        <BasicsStep
-                            watch={watch}
-                            setValue={setValue}
-                            errors={errors}
-                        />
-                    )}
-
-                    {currentStep === 2 && (
-                        <ColumnStagesStep
-                            control={control}
-                        />
-                    )}
-
-                    {currentStep === 3 && (
-                        <PeopleStep
-                            register={register}
-                            control={control}
-                            watch={watch}
-                            setValue={setValue}
-                            errors={errors}
-                        />
-                    )}
-                </div>
-
-                <ProjectFormFooter
-                    currentStep={currentStep}
-                    onClose={() => popupRef.current?.requestClose()}
-                    onBack={handleBack}
-                    onNext={handleNext}
-                    isNextDisabled={!isValid}
-                />
-
-            </form>
-
-        </PopupModal>
-    );
+        <ProjectFormFooter
+          currentStep={currentStep}
+          onClose={() => popupRef.current?.requestClose()}
+          onBack={handleBack}
+          onNext={handleNext}
+          isNextDisabled={!isValid}
+        />
+      </form>
+    </PopupModal>
+  );
 };
 
 export default NewProjectForm;

@@ -1,23 +1,30 @@
-import Button from './Button'
-import Chip from '../chips/Chip'
-import Text from '../common/Text'
-import { Settings } from 'lucide-react'
+import Button from './Button';
+import Chip from '../chips/Chip';
+import Text from '../common/Text';
+import { Settings } from 'lucide-react';
 
 interface SettingsButtonProps {
-    /** Indicates admin access; when `true`, displays an `Admin` chip alongside the Settings label. */
-    isAdmin?: boolean;
+  /** Indicates admin access; when `true`, displays an `Admin` chip alongside the Settings label. */
+  isAdmin?: boolean;
 }
 
 const SettingsButton = ({ isAdmin }: SettingsButtonProps) => {
-    return (
-        <Button onClick={() => { }} variant='tertiary' className='border-0 flex justify-between'>
-            <Text className='flex text-ink-2 gap-3 items-center' variant='h2'>
-                <Settings size={17} strokeWidth={1.5} className='text-ink-3' />
-                Settings
-            </Text>
-            {isAdmin && <Chip text='Admin' variant='secondary' textType='text-type-caption' borderColor='border-accent' />}
-        </Button>
-    )
-}
+  return (
+    <Button onClick={() => {}} variant="tertiary" className="border-0 flex justify-between">
+      <Text className="flex text-ink-2 gap-3 items-center" variant="h2">
+        <Settings size={17} strokeWidth={1.5} className="text-ink-3" />
+        Settings
+      </Text>
+      {isAdmin && (
+        <Chip
+          text="Admin"
+          variant="secondary"
+          textType="text-type-caption"
+          borderColor="border-accent"
+        />
+      )}
+    </Button>
+  );
+};
 
-export default SettingsButton
+export default SettingsButton;

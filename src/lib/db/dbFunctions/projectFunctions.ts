@@ -1,121 +1,108 @@
-import db from "../db";
-import type { ProjectRow } from "../db";
-import { createProjectStage, findOrCreateStage } from "./stageFunctions";
-import {
-	createProjectType,
-	DEFAULT_TYPES,
-	findOrCreateType,
-} from "./typeFunctions";
-import { findOrCreateUser } from "./userFunctions";
+import db from '../db';
+import type { ProjectRow } from '../db';
+import { createProjectStage, findOrCreateStage } from './stageFunctions';
+import { createProjectType, DEFAULT_TYPES, findOrCreateType } from './typeFunctions';
+import { findOrCreateUser } from './userFunctions';
 
 const CURRENT_USER_EMAIL = import.meta.env.VITE_CURRENT_USER_EMAIL;
 
 interface CreateProjectRow {
-	name: string;
-	key: string;
-	description?: string;
-	cycleLength: ProjectRow["cycleLength"];
-	startingDay?: string;
-	autoCycle: boolean;
+  name: string;
+  key: string;
+  description?: string;
+  cycleLength: ProjectRow['cycleLength'];
+  startingDay?: string;
+  autoCycle: boolean;
 
-	invitedPeople?: {
-		email: string;
-		role: "member" | "admin";
-	}[];
+  invitedPeople?: {
+    email: string;
+    role: 'member' | 'admin';
+  }[];
 
-	stages: {
-		name: string;
-	}[];
+  stages: {
+    name: string;
+  }[];
 }
 
-export const createProject = async (
-	input: CreateProjectRow,
-): Promise<ProjectRow> => {
-	const now = Date.now();
+export const createProject = async (input: CreateProjectRow): Promise<ProjectRow> => {
+  const now = Date.now();
 
-	const project: ProjectRow = {
-		id: crypto.randomUUID(),
-		key: input.key,
-		nextTaskNumber: 1,
-		name: input.name,
-		description: input.description ?? "",
-		cycleLength: input.cycleLength,
-		startingDay: input.startingDay ?? "",
-		autoCycle: input.autoCycle,
-		isArchived: false,
-		createdAt: now,
-		updatedAt: now,
-	};
+  const project: ProjectRow = {
+    id: crypto.randomUUID(),
+    key: input.key,
+    nextTaskNumber: 1,
+    name: input.name,
+    description: input.description ?? '',
+    cycleLength: input.cycleLength,
+    startingDay: input.startingDay ?? '',
+    autoCycle: input.autoCycle,
+    isArchived: false,
+    createdAt: now,
+    updatedAt: now,
+  };
 
-	await db.transaction(
-		"rw",
-		[
-			db.projects,
-			db.users,
-			db.projectMembers,
-			db.stages,
-			db.projectStages,
-			db.types,
-			db.projectTypes,
-		],
-		async () => {
-			// Create project
-			await db.projects.add(project);
+  await db.transaction(
+    'rw',
+    [
+      db.projects,
+      db.users,
+      db.projectMembers,
+      db.stages,
+      db.projectStages,
+      db.types,
+      db.projectTypes,
+    ],
+    async () => {
+      // Create project
+      await db.projects.add(project);
 
-			// Create/find owner
-			const owner = await findOrCreateUser(CURRENT_USER_EMAIL);
+      // Create/find owner
+      const owner = await findOrCreateUser(CURRENT_USER_EMAIL);
 
-			await db.projectMembers.add({
-				id: crypto.randomUUID(),
-				projectId: project.id,
-				userId: owner.id,
-				role: "admin",
-				createdAt: now,
-				updatedAt: now,
-			});
+      await db.projectMembers.add({
+        id: crypto.randomUUID(),
+        projectId: project.id,
+        userId: owner.id,
+        role: 'admin',
+        createdAt: now,
+        updatedAt: now,
+      });
 
-			// Add invited members
-			for (const person of input.invitedPeople ?? []) {
-				const user = await findOrCreateUser(person.email);
+      // Add invited members
+      for (const person of input.invitedPeople ?? []) {
+        const user = await findOrCreateUser(person.email);
 
-				await db.projectMembers.add({
-					id: crypto.randomUUID(),
-					projectId: project.id,
-					userId: user.id,
-					role: person.role,
-					createdAt: now,
-					updatedAt: now,
-				});
-			}
+        await db.projectMembers.add({
+          id: crypto.randomUUID(),
+          projectId: project.id,
+          userId: user.id,
+          role: person.role,
+          createdAt: now,
+          updatedAt: now,
+        });
+      }
 
-			// Create/reuse global stages
-			for (const [index, stageInput] of input.stages.entries()) {
-				const stage = await findOrCreateStage(stageInput.name);
-				await createProjectStage(
-					project.id,
-					stage,
-					index,
-					index === input.stages.length - 1,
-				);
-			}
+      // Create/reuse global stages
+      for (const [index, stageInput] of input.stages.entries()) {
+        const stage = await findOrCreateStage(stageInput.name);
+        await createProjectStage(project.id, stage, index, index === input.stages.length - 1);
+      }
 
-			for (const typeName of DEFAULT_TYPES) {
-				const type = await findOrCreateType(typeName);
+      for (const typeName of DEFAULT_TYPES) {
+        const type = await findOrCreateType(typeName);
 
-				await createProjectType(project.id, type.id);
-			}
-		},
-	);
+        await createProjectType(project.id, type.id);
+      }
+    },
+  );
 
-	return project;
+  return project;
 };
 
 export const getProjectById = (id: string) => db.projects.get(id);
 
-export const getAllProjects = async (
-	includeArchived = false,
-): Promise<ProjectRow[]> => {
-	const all = await db.projects.orderBy("createdAt").reverse().toArray();
+export const getAllProjects = async (includeArchived = false): Promise<ProjectRow[]> => {
+  const all = await db.projects.orderBy('createdAt').reverse().toArray();
 
-	return includeArchived ? all : all.filter((p) => !p.isArchived);
+  return includeArchived ? all : all.filter((p) => !p.isArchived);
 };
