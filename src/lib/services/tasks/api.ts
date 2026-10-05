@@ -8,7 +8,7 @@ import {
 } from '@/lib/db/dbFunctions/taskFunctions';
 
 import type { ApiResponse } from '../types';
-import type { CreateTaskInput, Task, UpdateTaskInput } from './types';
+import type { CreateTaskInput, Task, TaskWithStage, UpdateTaskInput } from './types';
 
 export const createNewTask = async (input: CreateTaskInput): Promise<ApiResponse<Task>> => {
   try {
@@ -30,7 +30,9 @@ export const createNewTask = async (input: CreateTaskInput): Promise<ApiResponse
   }
 };
 
-export const getAllProjectTasks = async (projectId: string): Promise<ApiResponse<Task[]>> => {
+export const getAllProjectTasks = async (
+  projectId: string,
+): Promise<ApiResponse<TaskWithStage[]>> => {
   try {
     const tasks = await getAllTasksByProject(projectId);
 

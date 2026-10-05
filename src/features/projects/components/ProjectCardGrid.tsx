@@ -6,42 +6,24 @@ import AvatarGroup from '@/components/avatar/AvatarGroups';
 import Avatar from '@/components/avatar/Avatar';
 import Chip from '@/components/chips/Chip';
 import ProgressBar from '@/components/progressBar/ProgressBar';
+import type { Project, ProjectMember } from '@/lib/services/projects/types';
+import { useMapProjectToCard } from '@/hooks/useMapProjectToCard';
 
-type ProjectUser = {
-  userName: string;
-  variant: 'blue' | 'amber' | 'purple' | 'rose';
-};
+interface ProjectCardGridProps {
+  project: Project;
+  members?: ProjectMember[];
+}
 
-type ProjectCardProps = {
-  id: string;
-  initials: string;
-  title: string;
-  description: string;
-  date: string;
-  openCount: number;
-  progress: number;
-  progressText: string;
-  users: ProjectUser[];
-};
-
-const ProjectCardGrid = ({
-  id,
-  initials,
-  title,
-  description,
-  date,
-  openCount,
-  progress,
-  progressText,
-  users,
-}: ProjectCardProps) => {
-  const visibleUsers = users.slice(0, 3);
-  const extraUsers = Math.max(users.length - 3, 0);
-
+const ProjectCardGrid = ({ project, members = [] }: ProjectCardGridProps) => {
   const navigate = useNavigate();
 
+  const card = useMapProjectToCard(project, members);
+
+  const visibleUsers = card.users.slice(0, 3);
+  const extraUsers = Math.max(card.users.length - 3, 0);
+
   const clickingProjectCard = () => {
-    navigate(`/project/${id}/board`);
+    navigate(`/project/${card.id}/board`);
   };
 
   return (
@@ -53,31 +35,31 @@ const ProjectCardGrid = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="flex h-8 w-8 items-center justify-center rounded-md bg-accent-tint text-accent text-type-h2">
-            {initials}
+            {card.initials}
           </span>
 
-          <Text variant="h1" className="text-xl text-ink font-medium">
-            {title}
+          <Text variant="h1" className="text-xl font-medium text-ink" maxLines={1}>
+            {card.title}
           </Text>
         </div>
 
         <Ellipsis size={17} strokeWidth={1.5} className="text-ink-fades-ghost-rows" />
       </div>
 
-      <Text className="w-full text-left text-ink-2">{description}</Text>
+      <Text className="w-full text-left text-ink-2">{card.description}</Text>
 
       <div className="flex gap-2">
-        <Chip text={date} variant="primary" bgColor="bg-accent-tint" textColor="text-accent" />
+        <Chip text={card.date} variant="primary" bgColor="bg-accent-tint" textColor="text-accent" />
 
         <Chip
-          text={`${openCount} open`}
+          text={`${card.openCount} open`}
           variant="secondary"
           borderColor="border-lines-control"
           textColor="text-ink-2"
         />
       </div>
 
-      <ProgressBar progress={progress} color="bg-accent" />
+      <ProgressBar progress={card.progress} color="bg-accent" />
 
       <div className="flex items-center gap-2">
         <AvatarGroup>
@@ -89,7 +71,7 @@ const ProjectCardGrid = ({
         </AvatarGroup>
 
         <Text variant="body-sm" className="text-ink-2">
-          {progressText}
+          {card.progressText}
         </Text>
       </div>
     </Button>

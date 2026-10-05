@@ -36,6 +36,14 @@ export interface TaskWithUsers extends Task {
   assignees: User[];
 }
 
+export interface TaskWithStage extends Task {
+  stage: ProjectStageRow;
+}
+
+export interface TaskWithStageAndUsers extends TaskWithStage {
+  assignees: User[];
+}
+
 export interface CycleTaskWithUsers extends TaskWithUsers {
   taskCycleId?: string;
   stage: ProjectStageRow;

@@ -4,7 +4,6 @@ import { isFeatureEnabled } from '@/config/features';
 import EmptyTaskCard from '@/features/projects/components/EmptyTaskCard';
 import ProjectCardGrid from '@/features/projects/components/ProjectCardGrid';
 import ProjectCardGridSkeleton from '@/features/projects/components/skeletons/ProjectCardGridSkeleton';
-import { mapProjectToCard } from '@/lib/mapProjectToCard';
 import { projectMembersQuery, useGetAllProjects } from '@/lib/services/projects/hooks';
 import { useQueries } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -75,7 +74,8 @@ const AllProjectsPage = () => {
           {projects.map((project, index) => (
             <ProjectCardGrid
               key={project.id}
-              {...mapProjectToCard(project, memberQueries[index]?.data ?? [])}
+              project={project}
+              members={memberQueries[index]?.data ?? []}
             />
           ))}
 
