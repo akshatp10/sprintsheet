@@ -6,7 +6,7 @@ import {
   updateCycle,
 } from '@/lib/db/dbFunctions/cycleFunctions';
 
-import type { ApiResponse } from '../types';
+import { errorMessage, type ApiResponse } from '../types';
 
 import type { Cycle, CreateCycleInput, UpdateCycleInput } from './types';
 
@@ -22,9 +22,9 @@ export const createNewCycle = async (input: CreateCycleInput): Promise<ApiRespon
     };
   } catch (error) {
     return {
-      status: 400,
+      status: 500,
       success: false,
-      message: error instanceof Error ? error.message : 'Failed to create cycle',
+      message: errorMessage(error),
       data: null,
     };
   }
@@ -49,11 +49,11 @@ export const getCycle = async (id: string): Promise<ApiResponse<Cycle>> => {
       message: 'Successfully fetched cycle',
       data: cycle,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error),
       data: null,
     };
   }
@@ -69,11 +69,11 @@ export const getProjectCycles = async (projectId: string): Promise<ApiResponse<C
       message: 'Successfully fetched cycles',
       data: cycles,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error),
       data: null,
     };
   }
@@ -101,11 +101,11 @@ export const updateExistingCycle = async (
       message: 'Successfully updated cycle',
       data: cycle,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error),
       data: null,
     };
   }
@@ -132,11 +132,11 @@ export const deleteExistingCycle = async (id: string): Promise<ApiResponse<null>
       message: 'Successfully deleted cycle',
       data: null,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error),
       data: null,
     };
   }

@@ -18,6 +18,7 @@ const AppLayout = ({ dynamicSidebar, dynamicTopBar, usersPanel }: AppLayoutProps
         closeOnClick
         limit={5}
         pauseOnFocusLoss={false}
+        pauseOnHover={false}
       />
 
       <div className="grid h-dvh w-dvw grid-cols-[18rem_minmax(0,1fr)] bg-surface text-ink">
