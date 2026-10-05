@@ -20,11 +20,11 @@ export const createNewCycle = async (input: CreateCycleInput): Promise<ApiRespon
       message: 'Successfully created cycle',
       data: cycle,
     };
-  } catch {
+  } catch (error) {
     return {
-      status: 500,
+      status: 400,
       success: false,
-      message: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'Failed to create cycle',
       data: null,
     };
   }

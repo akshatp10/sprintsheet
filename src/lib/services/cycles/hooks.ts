@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
+import { toast } from 'react-toastify';
 import {
   createNewCycle,
   deleteExistingCycle,
@@ -88,6 +88,10 @@ export const useCreateCycle = () => {
       });
 
       return cycle;
+    },
+
+    onError: (error) => {
+      toast.error(error.message || 'Failed to create cycle');
     },
   });
 };
