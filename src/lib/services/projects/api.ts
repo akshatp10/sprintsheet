@@ -3,8 +3,10 @@ import {
   getAllProjects,
   getProjectById,
 } from '@/lib/db/dbFunctions/projectFunctions';
-import type { ApiResponse } from '../types';
 import { getProjectMemberRows, getUsersByIds } from '@/lib/db/dbFunctions/userFunctions';
+
+import { errorMessage, type ApiResponse } from '../types';
+
 import type { CreateProjectInput, Project, ProjectMember } from './types';
 
 export const createNewProject = async (
@@ -19,11 +21,11 @@ export const createNewProject = async (
       message: 'Successfully created project',
       data: project,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error),
       data: null,
     };
   }
@@ -48,11 +50,11 @@ export const getProject = async (id: string): Promise<ApiResponse<Project>> => {
       message: 'Successfully fetched project',
       data: project,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error),
       data: null,
     };
   }
@@ -68,11 +70,11 @@ export const getProjects = async (includeArchived = false): Promise<ApiResponse<
       message: 'Successfully fetched projects',
       data: projects,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error),
       data: null,
     };
   }
@@ -100,11 +102,11 @@ export const getProjectMembers = async (
       message: 'Successfully fetched members',
       data,
     };
-  } catch {
+  } catch (error) {
     return {
       status: 500,
       success: false,
-      message: 'Internal Server Error',
+      message: errorMessage(error),
       data: null,
     };
   }
