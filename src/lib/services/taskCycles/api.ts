@@ -1,5 +1,6 @@
 import {
   createTaskCycle,
+  deleteTaskCycle,
   getTaskCyclesByCycle,
   getTaskCyclesByProject,
   getTaskCyclesByTask,
@@ -12,7 +13,12 @@ import {
 import type { Task } from '../tasks/types';
 import { errorMessage, type ApiResponse } from '../types';
 
-import type { CreateTaskCycleInput, TaskCycle, TaskDestination } from './types';
+import type {
+  CreateTaskCycleInput,
+  DeleteTaskCycleResult,
+  TaskCycle,
+  TaskDestination,
+} from './types';
 
 export const createNewTaskCycle = async (
   input: CreateTaskCycleInput,
@@ -190,6 +196,31 @@ export const getAllTaskCyclesByProject = async (
       status: 500,
       success: false,
       message: errorMessage(error, 'Failed to fetch task cycles for project'),
+      data: null,
+    };
+  }
+};
+
+export const deleteTaskCycleById = async (
+  taskId: string,
+  taskCycleId: string | null,
+): Promise<ApiResponse<DeleteTaskCycleResult>> => {
+  try {
+    const result = await deleteTaskCycle(taskId, taskCycleId);
+
+    return {
+      status: 200,
+      success: true,
+      message: taskCycleId
+        ? 'Successfully removed task from cycle'
+        : 'Successfully deleted backlog task',
+      data: result,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      success: false,
+      message: errorMessage(error, 'Failed to delete task'),
       data: null,
     };
   }
