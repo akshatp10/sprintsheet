@@ -25,3 +25,15 @@ export interface MoveTasksVariables {
   tasks: { taskId: string; fromCycleId: string | null }[];
   to: TaskDestination;
 }
+
+export interface DeleteTaskCycleVariables {
+  taskId: string;
+  taskCycleId: string | null;
+}
+
+export interface DeleteTaskCycleResult {
+  taskId: string;
+  taskCycleId: string | null;
+  cycleId: string | null;
+  projectId: string;
+}

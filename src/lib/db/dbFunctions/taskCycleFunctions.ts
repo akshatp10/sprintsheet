@@ -190,3 +190,66 @@ export const getTaskCyclesByProject = async (projectId: string): Promise<TaskCyc
 
   return taskCycles.flat();
 };
+
+export interface DeleteTaskCycleResult {
+  taskId: string;
+  taskCycleId: string | null;
+  cycleId: string | null;
+  projectId: string;
+}
+
+export const deleteTaskCycle = async (
+  taskId: string,
+  taskCycleId: string | null,
+): Promise<DeleteTaskCycleResult> => {
+  return db.transaction('rw', [db.tasks, db.taskCycles], async () => {
+    const task = await db.tasks.get(taskId);
+
+    if (!task) {
+      throw new Error('Task not found');
+    }
+
+    // Backlog task → delete the task itself.
+    if (!taskCycleId) {
+      await db.tasks.delete(taskId);
+
+      return {
+        taskId,
+        taskCycleId: null,
+        cycleId: null,
+        projectId: task.projectId,
+      };
+    }
+
+    const taskCycle = await db.taskCycles.get(taskCycleId);
+
+    if (!taskCycle) {
+      throw new Error('Task cycle not found');
+    }
+
+    if (taskCycle.taskId !== taskId) {
+      throw new Error('Task cycle does not belong to this task');
+    }
+
+    const cycleId = taskCycle.cycleId;
+
+    await db.taskCycles.delete(taskCycleId);
+
+    // If this was the task's last cycle, move it back to backlog.
+    const remainingTaskCycle = await db.taskCycles.where('taskId').equals(taskId).first();
+
+    if (!remainingTaskCycle) {
+      await db.tasks.update(taskId, {
+        isBacklog: 1,
+        updatedAt: Date.now(),
+      });
+    }
+
+    return {
+      taskId,
+      taskCycleId,
+      cycleId,
+      projectId: task.projectId,
+    };
+  });
+};
