@@ -166,6 +166,9 @@ export const moveMultipleTasksAcrossCycle = async (
   });
 };
 
+export const getTaskCyclesUsingId = async (id: string): Promise<TaskCycleRow | undefined> => {
+  return db.taskCycles.get(id);
+};
 export const getTaskCyclesByCycle = async (cycleId: string): Promise<TaskCycleRow[]> => {
   return db.taskCycles.where('cycleId').equals(cycleId).toArray();
 };
