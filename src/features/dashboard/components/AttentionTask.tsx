@@ -16,13 +16,13 @@ const AttentionTask = ({ completeTask }: AttentionTaskProps) => {
   return (
     <div className="flex items-center gap-4 min-h-9 border-b border-lines-hairline last:border-b-0">
       {/* Task key */}
-      <Text className="w-14 shrink-0 text-ink-3" variant="mono">
-        {task.key}
+      <Text className="w-20 shrink-0 text-ink-3" variant="mono">
+        {task?.key}
       </Text>
 
       {/* Task name */}
       <Text className="flex-1 min-w-0 text-ink font-medium" variant="body-sm" maxLines={1}>
-        {task.name}
+        {task?.name}
       </Text>
 
       {/* Stage */}
@@ -37,9 +37,9 @@ const AttentionTask = ({ completeTask }: AttentionTaskProps) => {
       <div className="w-20 shrink-0 text-center">
         <Text
           variant="caption"
-          className={reason.type === 'overdue' ? 'text-red-500 font-medium' : 'text-ink-3'}
+          className={reason?.type === 'overdue' ? 'text-red-500 font-medium' : 'text-ink-3'}
         >
-          {reason.type === 'blocked' ? `-` : reason.label}
+          {reason?.type === 'blocked' ? `-` : reason?.label}
         </Text>
       </div>
     </div>
