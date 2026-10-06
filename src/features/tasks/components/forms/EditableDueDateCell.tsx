@@ -6,9 +6,10 @@ import { useState } from 'react';
 interface EditableDueDateCellProps {
   dueDate: string | null;
   onChange: (dueDate: string | null) => void;
+  isDone?: boolean;
 }
 
-const EditableDueDateCell = ({ dueDate, onChange }: EditableDueDateCellProps) => {
+const EditableDueDateCell = ({ dueDate, onChange, isDone }: EditableDueDateCellProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const handleChange = (nextDueDate: string) => {
@@ -32,7 +33,7 @@ const EditableDueDateCell = ({ dueDate, onChange }: EditableDueDateCellProps) =>
   return (
     <Button
       variant="tertiary"
-      className="w-full justify-start border-none p-0"
+      className={`w-full justify-start border-none p-0 ${isDone ? 'opacity-50' : ''}`}
       onClick={() => {
         setIsEditing(true);
       }}

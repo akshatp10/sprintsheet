@@ -76,7 +76,7 @@ export function AssigneeSelect({
   const renderRow = (member: (typeof members)[number]) => (
     <label
       key={member.userId}
-      className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 hover:bg-surface-page"
+      className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5"
     >
       <Checkbox
         checked={value.includes(member.userId)}
