@@ -54,7 +54,7 @@ const TableWrapper = ({
   const gridTemplateColumns = columns.map((column) => column.width).join(' ');
 
   return (
-    <div className={cn('w-full overflow-y-auto', className)}>
+    <div className={cn('w-full h-full overflow-y-auto', className)}>
       {showHeader && (
         <TableHeader
           columns={columns}

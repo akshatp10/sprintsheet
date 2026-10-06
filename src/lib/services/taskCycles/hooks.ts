@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createNewTaskCycle,
   getAllTaskCyclesByProject,
+  getCycleTaskById,
   getCycleTaskCycles,
   getTaskTaskCycles,
   moveMultipleTasksToDestination,
@@ -30,11 +31,31 @@ export interface MoveTaskVariables {
 export const taskCycleQueryKeys = {
   all: ['taskCycles'] as const,
 
+  id: (taskCycleId: string) => [...taskCycleQueryKeys.all, 'id', taskCycleId] as const,
+
   cycle: (cycleId: string) => [...taskCycleQueryKeys.all, 'cycle', cycleId] as const,
 
   task: (taskId: string) => [...taskCycleQueryKeys.all, 'task', taskId] as const,
 
   project: (projectId: string) => [...taskCycleQueryKeys.all, 'project', projectId] as const,
+};
+
+export const useGetTaskCyclesById = (id: string) => {
+  return useQuery({
+    queryKey: taskCycleQueryKeys.id(id),
+
+    queryFn: async () => {
+      const response = await getCycleTaskById(id);
+
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+
+      return response.data ?? null;
+    },
+
+    enabled: !!id,
+  });
 };
 
 export const useGetTaskCyclesByCycle = (cycleId: string) => {
@@ -167,6 +188,7 @@ export const useUpdateTaskCycleStage = () => {
 
       queryClient.invalidateQueries({ queryKey: context.queryKey });
       queryClient.invalidateQueries({ queryKey: taskCycleQueryKeys.all });
+      queryClient.invalidateQueries({ queryKey: taskQueryKeys.all });
     },
 
     onSuccess: (taskCycle) => {

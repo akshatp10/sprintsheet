@@ -1,15 +1,18 @@
-import Avatar from '@/components/avatar/Avatar';
-import AvatarGroup from '@/components/avatar/AvatarGroups';
 import Chip from '@/components/chips/Chip';
 import Text from '@/components/common/Text';
-import { cn } from '@/lib/cn';
 
+import type { Stage } from '@/lib/services/stages/type';
 import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+
 import { useTypeById } from '@/lib/services/types/hooks';
-import { stageConfig, StageName } from '@/lib/stageConfig';
-import { formatDate } from '@/lib/utils';
 import useTaskDetailStore from '@/store/taskDetailStore';
 import { GripVertical } from 'lucide-react';
+import EditableStageCell from '../forms/EditableStageCell';
+import { useTaskStageEditor } from '../../hooks/useTaskStageEditor';
+import { useSearchParams } from 'react-router-dom';
+import { useTaskEditor } from '../../hooks/useTaskEditor';
+import EditableAssigneeCell from '../forms/EditableAssigneeCell';
+import EditableDueDateCell from '../forms/EditableDueDateCell';
 
 interface TaskListElementProps {
   gridTemplateColumns: string;
@@ -17,6 +20,7 @@ interface TaskListElementProps {
   taskNumber: number;
   isDone: boolean;
   isOverlay?: boolean;
+  stages: Stage[];
 }
 
 const TaskListElement = ({
@@ -24,16 +28,35 @@ const TaskListElement = ({
   task,
   taskNumber,
   isDone,
+  stages,
   isOverlay = false,
 }: TaskListElementProps) => {
   const { data: curType } = useTypeById(task.typeId);
 
+  const [searchParams] = useSearchParams();
+  const cycleId = searchParams.get('cycle') ?? '';
+
   const openTask = useTaskDetailStore((state) => state.openTask);
 
-  const visibleUsers = task.assignees.slice(0, 3);
-  const extraUsers = task.assignees.length - 3;
+  const { updateField } = useTaskEditor(task);
 
-  const { chip } = stageConfig[task.stage.name as StageName];
+  const handleAssigneeChange = (assigneeIds: string[]) => {
+    updateField('assigneeIds', assigneeIds);
+  };
+
+  const handleDueDateChange = (dueDate: string | null) => {
+    updateField('dueDate', dueDate);
+  };
+
+  const { updateStage } = useTaskStageEditor({
+    taskCycleId: task.taskCycleId,
+    cycleId,
+    currentStageId: task.stage.id,
+  });
+
+  const handleStageChange = (nextStageId: string) => {
+    updateStage(nextStageId);
+  };
 
   return (
     <div
@@ -44,7 +67,6 @@ const TaskListElement = ({
 				border-lines-hairline
 				text-sm
 				bg-surface-page
-				${isDone ? 'opacity-50' : ''}
 				${isOverlay ? 'opacity-75' : ''}
 			`}
       style={{ gridTemplateColumns }}
@@ -54,7 +76,9 @@ const TaskListElement = ({
       }}
     >
       {/* Number */}
-      <div className="flex items-center border-r border-lines-hairline px-3 bg-surface-desk">
+      <div
+        className={`flex items-center border-r border-lines-hairline px-3 bg-surface-desk ${isDone ? 'opacity-50' : ''}`}
+      >
         {isOverlay ? (
           <GripVertical strokeWidth={1.5} size={15} className="text-ink-3" />
         ) : (
@@ -65,7 +89,9 @@ const TaskListElement = ({
       </div>
 
       {/* Type */}
-      <div className="flex items-center border-r border-lines-hairline px-3">
+      <div
+        className={`flex items-center border-r border-lines-hairline px-3 ${isDone ? 'opacity-50' : ''}`}
+      >
         <Chip
           variant="secondary"
           text={curType?.name ?? ''}
@@ -74,58 +100,54 @@ const TaskListElement = ({
         />
       </div>
       {/* Title */}
-      <div className="flex min-w-0 items-center border-r border-lines-hairline px-3">
+      <div
+        className={`flex min-w-0 items-center border-r border-lines-hairline px-3 ${isDone ? 'opacity-50' : ''}`}
+      >
         <Text variant="body" maxLines={1} className={`${isDone ? 'line-through' : ''}`}>
           {task.name}
         </Text>
       </div>
 
       {/* Assignee */}
-      <div className="flex min-w-0 items-center border-r border-lines-hairline px-3">
-        {!!task?.assignees.length ? (
-          <div className="flex min-w-0 items-center gap-2">
-            <AvatarGroup>
-              {visibleUsers.map((assignee) => (
-                <Avatar key={assignee.id} userName={assignee.name} />
-              ))}
-
-              {extraUsers > 0 && <Avatar extraUsers={extraUsers} />}
-            </AvatarGroup>
-          </div>
-        ) : (
-          <div className="flex items-center gap-1">
-            <Avatar />
-
-            <Text variant="caption" className="text-ink-2">
-              Unassigned
-            </Text>
-          </div>
-        )}
+      <div
+        className="flex min-w-0 items-center border-r border-lines-hairline px-3"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <EditableAssigneeCell
+          task={task}
+          onChange={handleAssigneeChange}
+          projectId={task?.projectId}
+          isDone={isDone}
+        />
       </div>
 
       {/* Status */}
-      <div className="flex items-center border-r border-lines-hairline px-3">
-        <Chip
-          variant="secondary"
-          text={task.stage.name}
-          textType="text-type-caption"
-          className={cn('px-1 py-0', chip)}
+      <div
+        className="flex items-center border-r border-lines-hairline px-3"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <EditableStageCell
+          stage={task.stage}
+          stages={stages}
+          onChange={handleStageChange}
+          isDone={isDone}
         />
       </div>
 
       {/* Due */}
-      <div className="flex items-center border-r border-lines-hairline px-3">
-        {task.dueDate ? (
-          <Text variant="mono">{formatDate(task.dueDate)}</Text>
-        ) : (
-          <Text variant="mono" className="text-ink-3">
-            —
-          </Text>
-        )}
+      <div
+        className="flex min-w-0 items-center border-r border-lines-hairline px-3"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <EditableDueDateCell
+          dueDate={task.dueDate}
+          onChange={handleDueDateChange}
+          isDone={isDone}
+        />
       </div>
 
       {/* Tags */}
-      <div className="flex min-w-0 items-center gap-1 px-3">
+      <div className={`flex min-w-0 items-center gap-1 px-3 ${isDone ? 'opacity-50' : ''}`}>
         {!!task.tags?.length ? (
           task.tags.map((tag) => (
             <Chip

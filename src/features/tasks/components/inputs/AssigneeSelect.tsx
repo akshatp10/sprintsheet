@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
 
 import Avatar from '@/components/avatar/Avatar';
 import AvatarGroup from '@/components/avatar/AvatarGroups';
 import Button from '@/components/button/Button';
-import Checkbox from '@/components/inputs/Checkbox'; // adjust to your actual path
+import Checkbox from '@/components/inputs/Checkbox';
 import Text from '@/components/common/Text';
 import UserPanel from '@/components/sidebar/UserPanel';
 import { cn } from '@/lib/cn';
@@ -14,17 +14,43 @@ interface AssigneeSelectProps {
   projectId: string;
   value: string[];
   onChange: (ids: string[]) => void;
+  onClose?: () => void;
 }
 
-export function AssigneeSelect({ projectId, value, onChange }: AssigneeSelectProps) {
-  const { data: members = [], isLoading } = useGetProjectMembers(projectId);
-  const [open, setOpen] = useState(false);
+const DROPDOWN_HEIGHT = 208;
+const DROPDOWN_OFFSET = 6;
 
-  //For already selected users
+export function AssigneeSelect({
+  projectId,
+  value,
+  onChange,
+  onClose = () => {},
+}: AssigneeSelectProps) {
+  const { data: members = [], isLoading } = useGetProjectMembers(projectId);
+
+  const [open, setOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
+
+  const triggerRef = useRef<HTMLDivElement>(null);
+
   const [pinnedIds, setPinnedIds] = useState<string[]>([]);
 
   const handleToggleOpen = () => {
-    if (!open) setPinnedIds(value);
+    if (!open) {
+      setPinnedIds(value);
+
+      const rect = triggerRef.current?.getBoundingClientRect();
+
+      if (rect) {
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+
+        setOpenUpward(spaceBelow < DROPDOWN_HEIGHT + DROPDOWN_OFFSET && spaceAbove > spaceBelow);
+      }
+    } else {
+      onClose();
+    }
+
     setOpen((prev) => !prev);
   };
 
@@ -47,13 +73,10 @@ export function AssigneeSelect({ projectId, value, onChange }: AssigneeSelectPro
     };
   }, [members, pinnedIds]);
 
-  const commonClass =
-    'flex items-center gap-1 rounded-md border border-lines-hairline bg-surface-2 pl-1 pr-2 py-0.5';
-
   const renderRow = (member: (typeof members)[number]) => (
-    <div
+    <label
       key={member.userId}
-      className="flex w-full items-center gap-2 px-3 py-1.5 hover:bg-surface-page"
+      className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5"
     >
       <Checkbox
         checked={value.includes(member.userId)}
@@ -61,17 +84,18 @@ export function AssigneeSelect({ projectId, value, onChange }: AssigneeSelectPro
       />
 
       <UserPanel userName={member.name} textVariant="body-sm" textColor="text-ink" />
-    </div>
+    </label>
   );
 
   return (
-    <div className="relative">
-      <div className="flex flex-wrap items-center gap-1.5">
+    <div className="relative" ref={triggerRef}>
+      <div className="flex min-w-0 items-center gap-1">
         {selectedMembers.length ? (
           <AvatarGroup>
             {selectedMembers.slice(0, 3).map((member) => (
-              <Avatar userName={member.name} key={member.id} />
+              <Avatar key={member.id} userName={member.name} />
             ))}
+
             {selectedMembers.length > 3 && <Avatar extraUsers={selectedMembers.length - 3} />}
           </AvatarGroup>
         ) : (
@@ -82,16 +106,26 @@ export function AssigneeSelect({ projectId, value, onChange }: AssigneeSelectPro
           variant="tertiary"
           type="button"
           onClick={handleToggleOpen}
-          className={cn(commonClass, 'border-dashed text-ink-3 hover:text-ink-2')}
+          className="
+      h-8 w-8 shrink-0
+      rounded-md
+      border border-lines-hairline
+      p-0
+      text-ink-3
+      flex items-center justify-center
+    "
         >
-          <Plus className="h-3 w-3" />
-
-          <Text variant="body-sm">{selectedMembers.length === 0 ? 'Assignee' : 'Add'}</Text>
+          <Plus className="h-3.5 w-3.5" strokeWidth={1.75} />
         </Button>
       </div>
 
       {open && (
-        <div className="absolute z-10 mt-1.5 max-h-52 w-52 overflow-auto rounded-md border border-lines-hairline bg-surface py-1 shadow-md">
+        <div
+          className={cn(
+            'absolute z-10 max-h-48 w-48 overflow-auto rounded-md border border-lines-hairline bg-surface py-1 shadow-md',
+            openUpward ? 'bottom-full mb-1.5' : 'top-full mt-1.5',
+          )}
+        >
           {isLoading ? (
             <Text variant="caption" className="px-3 py-1.5 text-ink-3">
               Loading…

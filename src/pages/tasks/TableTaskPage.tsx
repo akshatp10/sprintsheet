@@ -100,6 +100,7 @@ const TableTaskPage = ({
               isOverlay
               taskNumber={0}
               gridTemplateColumns={gridTemplateColumns}
+              stages={visibleStages}
             />
           )}
         >
@@ -111,6 +112,7 @@ const TableTaskPage = ({
                 <StageListBox
                   key={stage.id}
                   stage={stage}
+                  visibleStages={visibleStages}
                   tasks={tasks}
                   isLoading={isLoading}
                   onCreateTask={handleCreateTask}

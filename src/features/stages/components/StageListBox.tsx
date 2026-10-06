@@ -17,6 +17,7 @@ interface StageListBoxProps {
   isLoading: boolean;
   isCurrentStage: boolean;
   onCreateTask: (stageId: string) => void;
+  visibleStages: Stage[];
 }
 
 const StageListBox = ({
@@ -26,6 +27,7 @@ const StageListBox = ({
   isLoading,
   isCurrentStage,
   onCreateTask,
+  visibleStages,
 }: StageListBoxProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -77,6 +79,7 @@ const StageListBox = ({
                 taskNumber={1 + index}
                 isDone={stage.isTerminal}
                 gridTemplateColumns={gridTemplateColumns}
+                visibleStages={visibleStages}
               />
             ))
           ) : (
