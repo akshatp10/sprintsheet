@@ -51,9 +51,9 @@ export function AssigneeSelect({ projectId, value, onChange }: AssigneeSelectPro
     'flex items-center gap-1 rounded-md border border-lines-hairline bg-surface-2 pl-1 pr-2 py-0.5';
 
   const renderRow = (member: (typeof members)[number]) => (
-    <div
+    <label
       key={member.userId}
-      className="flex w-full items-center gap-2 px-3 py-1.5 hover:bg-surface-page"
+      className="flex w-full items-center gap-2 px-3 py-1.5 hover:bg-surface-page cursor-pointer"
     >
       <Checkbox
         checked={value.includes(member.userId)}
@@ -61,7 +61,7 @@ export function AssigneeSelect({ projectId, value, onChange }: AssigneeSelectPro
       />
 
       <UserPanel userName={member.name} textVariant="body-sm" textColor="text-ink" />
-    </div>
+    </label>
   );
 
   return (
