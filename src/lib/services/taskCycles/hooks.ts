@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import {
   createNewTaskCycle,
+  deleteTaskCycleById,
   getAllTaskCyclesByProject,
   getCycleTaskById,
   getCycleTaskCycles,
@@ -11,7 +12,12 @@ import {
   updateExistingTaskCycleStage,
 } from './api';
 
-import type { CreateTaskCycleInput, MoveTasksVariables, TaskDestination } from './types';
+import type {
+  CreateTaskCycleInput,
+  DeleteTaskCycleVariables,
+  MoveTasksVariables,
+  TaskDestination,
+} from './types';
 import { taskQueryKeys } from '../tasks/hooks';
 import type { CycleTaskWithUsers } from '../tasks/types';
 
@@ -286,6 +292,56 @@ export const useMoveTasksAcrossCycle = () => {
         queryKey: taskQueryKeys.backlog(projectId),
       });
       queryClient.invalidateQueries({ queryKey: taskQueryKeys.all });
+    },
+  });
+};
+
+export const useDeleteTaskCycle = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ taskId, taskCycleId }: DeleteTaskCycleVariables) => {
+      const response = await deleteTaskCycleById(taskId, taskCycleId);
+
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+
+      return response.data;
+    },
+
+    onSettled: (result) => {
+      if (!result) {
+        return;
+      }
+
+      const { taskId, taskCycleId, cycleId, projectId } = result;
+
+      if (taskCycleId && cycleId) {
+        queryClient.invalidateQueries({
+          queryKey: taskQueryKeys.cycleByStage(cycleId),
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: taskCycleQueryKeys.id(taskCycleId),
+        });
+      }
+
+      queryClient.invalidateQueries({
+        queryKey: taskCycleQueryKeys.task(taskId),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: taskCycleQueryKeys.all,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: taskQueryKeys.backlog(projectId),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: taskQueryKeys.all,
+      });
     },
   });
 };
