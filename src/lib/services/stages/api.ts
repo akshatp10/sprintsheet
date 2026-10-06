@@ -3,13 +3,11 @@ import {
   getProjectStages,
   getTerminalStageId,
 } from '@/lib/db/dbFunctions/stageFunctions';
-import type { ProjectStageRow } from '@/lib/db/db';
 
 import { errorMessage, type ApiResponse } from '../types';
+import type { Stage } from './type';
 
-export const getStagesForProject = async (
-  projectId: string,
-): Promise<ApiResponse<ProjectStageRow[]>> => {
+export const getStagesForProject = async (projectId: string): Promise<ApiResponse<Stage[]>> => {
   try {
     const stages = await getProjectStages(projectId);
 
