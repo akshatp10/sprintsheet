@@ -50,6 +50,8 @@ const DashboardPage = () => {
     ),
   );
 
+  const today = getToday();
+
   const { tasksByUsers, unassignedTasks, needsAttentionTasks } = useMemo(() => {
     const cycleTasks = Object.values(tasksByStage).flat();
 
@@ -144,6 +146,8 @@ const DashboardPage = () => {
         cycleName={currentCycle?.name}
         cycleLength={cycleLength}
         currentDay={currentDay}
+        members={users?.length}
+        isActive={today >= (currentCycle?.startDate ?? '') && today < (currentCycle?.endDate ?? '')}
       />
 
       <StageSummary stages={visibleStages} tasksByStage={tasksByStage} />
