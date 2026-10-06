@@ -67,7 +67,6 @@ const TaskListElement = ({
 				border-lines-hairline
 				text-sm
 				bg-surface-page
-				${isDone ? 'opacity-50' : ''}
 				${isOverlay ? 'opacity-75' : ''}
 			`}
       style={{ gridTemplateColumns }}
@@ -77,7 +76,9 @@ const TaskListElement = ({
       }}
     >
       {/* Number */}
-      <div className="flex items-center border-r border-lines-hairline px-3 bg-surface-desk">
+      <div
+        className={`flex items-center border-r border-lines-hairline px-3 bg-surface-desk ${isDone ? 'opacity-50' : ''}`}
+      >
         {isOverlay ? (
           <GripVertical strokeWidth={1.5} size={15} className="text-ink-3" />
         ) : (
@@ -88,7 +89,9 @@ const TaskListElement = ({
       </div>
 
       {/* Type */}
-      <div className="flex items-center border-r border-lines-hairline px-3">
+      <div
+        className={`flex items-center border-r border-lines-hairline px-3 ${isDone ? 'opacity-50' : ''}`}
+      >
         <Chip
           variant="secondary"
           text={curType?.name ?? ''}
@@ -97,7 +100,9 @@ const TaskListElement = ({
         />
       </div>
       {/* Title */}
-      <div className="flex min-w-0 items-center border-r border-lines-hairline px-3">
+      <div
+        className={`flex min-w-0 items-center border-r border-lines-hairline px-3 ${isDone ? 'opacity-50' : ''}`}
+      >
         <Text variant="body" maxLines={1} className={`${isDone ? 'line-through' : ''}`}>
           {task.name}
         </Text>
@@ -112,6 +117,7 @@ const TaskListElement = ({
           task={task}
           onChange={handleAssigneeChange}
           projectId={task?.projectId}
+          isDone={isDone}
         />
       </div>
 
@@ -120,7 +126,12 @@ const TaskListElement = ({
         className="flex items-center border-r border-lines-hairline px-3"
         onClick={(e) => e.stopPropagation()}
       >
-        <EditableStageCell stage={task.stage} stages={stages} onChange={handleStageChange} />
+        <EditableStageCell
+          stage={task.stage}
+          stages={stages}
+          onChange={handleStageChange}
+          isDone={isDone}
+        />
       </div>
 
       {/* Due */}
@@ -128,11 +139,15 @@ const TaskListElement = ({
         className="flex min-w-0 items-center border-r border-lines-hairline px-3"
         onClick={(e) => e.stopPropagation()}
       >
-        <EditableDueDateCell dueDate={task.dueDate} onChange={handleDueDateChange} />
+        <EditableDueDateCell
+          dueDate={task.dueDate}
+          onChange={handleDueDateChange}
+          isDone={isDone}
+        />
       </div>
 
       {/* Tags */}
-      <div className="flex min-w-0 items-center gap-1 px-3">
+      <div className={`flex min-w-0 items-center gap-1 px-3 ${isDone ? 'opacity-50' : ''}`}>
         {!!task.tags?.length ? (
           task.tags.map((tag) => (
             <Chip

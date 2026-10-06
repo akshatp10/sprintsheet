@@ -10,9 +10,10 @@ interface EditableAssigneeCellProps {
   task: CycleTaskWithUsers;
   onChange: (assigneeIds: string[]) => void;
   projectId: string;
+  isDone?: boolean;
 }
 
-const EditableAssigneeCell = ({ task, onChange, projectId }: EditableAssigneeCellProps) => {
+const EditableAssigneeCell = ({ task, onChange, projectId, isDone }: EditableAssigneeCellProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -56,7 +57,7 @@ const EditableAssigneeCell = ({ task, onChange, projectId }: EditableAssigneeCel
   return (
     <Button
       variant="tertiary"
-      className="w-full justify-start border-none p-0"
+      className={`w-full justify-start border-none p-0 ${isDone ? 'opacity-50' : ''}`}
       onClick={() => {
         setIsEditing(true);
       }}

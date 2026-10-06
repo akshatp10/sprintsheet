@@ -9,9 +9,10 @@ interface EditableStageCellProps {
   stage: Stage;
   stages: Stage[];
   onChange: (stageId: string) => void;
+  isDone?: boolean;
 }
 
-const EditableStageCell = ({ stage, stages, onChange }: EditableStageCellProps) => {
+const EditableStageCell = ({ stage, stages, onChange, isDone }: EditableStageCellProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const { chip } = stageConfig[stage.name as StageName];
@@ -45,7 +46,7 @@ const EditableStageCell = ({ stage, stages, onChange }: EditableStageCellProps) 
   return (
     <Button
       variant="tertiary"
-      className="p-0 border-none w-full"
+      className={`p-0 border-none w-full ${isDone ? 'opacity-50' : ''}`}
       onClick={() => {
         setIsEditing(true);
       }}
