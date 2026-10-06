@@ -125,7 +125,7 @@ const TaskListElement = ({
 
       {/* Due */}
       <div
-        className="flex items-center border-r border-lines-hairline px-3"
+        className="flex min-w-0 items-center border-r border-lines-hairline px-3"
         onClick={(e) => e.stopPropagation()}
       >
         <EditableDueDateCell dueDate={task.dueDate} onChange={handleDueDateChange} />
