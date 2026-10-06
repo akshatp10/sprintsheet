@@ -1,6 +1,7 @@
 import CycleHeaderElement from '@/features/cycles/components/CycleHeaderElement';
 import AllTaskListItem from '@/features/tasks/components/listView/AllTaskListItem';
 import type { Cycle } from '@/lib/services/cycles/types';
+import { useGetStagesPerProject } from '@/lib/services/stages/hooks';
 import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
 
 interface CycleTaskSectionProps {
@@ -22,6 +23,10 @@ const CycleTaskSection = ({
 }: CycleTaskSectionProps) => {
   const doneTasks = tasks ? tasks.filter((task) => task.stage.isTerminal === true).length : 0;
 
+  const { data: stages = [] } = useGetStagesPerProject(tasks?.[0]?.projectId ?? '');
+
+  const visibleStages = stages.filter((stage) => stage.name !== 'Backlog');
+
   return (
     <>
       <CycleHeaderElement
@@ -39,6 +44,8 @@ const CycleTaskSection = ({
           isDone={false}
           onSelectionChange={onSelectionChange}
           selectedTaskIds={selectedTaskIds}
+          cycleId={cycle.id}
+          visibleStages={visibleStages}
         />
       ))}
     </>

@@ -45,7 +45,7 @@ const EditableStageCell = ({ stage, stages, onChange }: EditableStageCellProps) 
   return (
     <Button
       variant="tertiary"
-      className="p-0 border-none"
+      className="p-0 border-none w-full"
       onClick={() => {
         setIsEditing(true);
       }}

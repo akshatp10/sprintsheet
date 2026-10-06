@@ -42,7 +42,14 @@ const EditableAssigneeCell = ({ task, onChange, projectId }: EditableAssigneeCel
 
   if (isEditing) {
     return (
-      <AssigneeSelect projectId={projectId} value={task.assigneeIds} onChange={handleChange} />
+      <AssigneeSelect
+        projectId={projectId}
+        value={task.assigneeIds}
+        onChange={handleChange}
+        onClose={() => {
+          setIsEditing(false);
+        }}
+      />
     );
   }
 
