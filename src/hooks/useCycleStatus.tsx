@@ -20,12 +20,12 @@ export const useCycleStatus = (cycles: Cycle[]) => {
     const planned = [];
 
     for (const cycle of cycles) {
-      if (cycle.endDate < today) {
-        closed.push(cycle);
+      if (cycle.startDate <= today && cycle.endDate > today) {
+        active.push(cycle);
       } else if (cycle.startDate > today) {
         planned.push(cycle);
       } else {
-        active.push(cycle);
+        closed.push(cycle);
       }
     }
 
