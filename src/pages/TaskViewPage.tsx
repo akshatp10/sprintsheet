@@ -52,7 +52,7 @@ const TaskViewPage = () => {
       const startDate = new Date(cycle.startDate);
       const endDate = new Date(cycle.endDate);
 
-      return now >= startDate && now <= endDate;
+      return now >= startDate && now < endDate;
     });
 
     if (!currentCycle) return;
