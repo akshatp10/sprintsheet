@@ -3,7 +3,6 @@ import { ArrowUpRight, Link2, MoreHorizontal, Send } from 'lucide-react';
 
 import Drawer from '@/components/drawer/Drawer';
 import Avatar from '@/components/avatar/Avatar';
-import Chip from '@/components/chips/Chip';
 import Text from '@/components/common/Text';
 import Button from '@/components/button/Button';
 import Input from '@/components/inputs/Input';
@@ -11,12 +10,15 @@ import TextArea from '@/components/inputs/TextArea';
 import { AssigneeSelect } from '@/features/tasks/components/inputs/AssigneeSelect';
 import { useProjectTypes } from '@/lib/services/types/hooks';
 import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
-import { stageConfig, type StageName } from '@/lib/stageConfig';
 import { formatDate } from '@/lib/utils';
 import { cn } from '@/lib/cn';
 import { useTaskEditor } from '../../hooks/useTaskEditor';
-import { useGetStagesPerProject } from '@/lib/services/stages/hooks';
+import { useGetBacklogStagePerProject, useGetStagesPerProject } from '@/lib/services/stages/hooks';
 import { useParams } from 'react-router-dom';
+import { useGetTaskCyclesById } from '@/lib/services/taskCycles/hooks';
+import { useTaskStageEditor } from '@/features/tasks/hooks/useTaskStageEditor';
+import Chip from '@/components/chips/Chip';
+import { stageConfig, StageName } from '@/lib/stageConfig';
 
 interface TaskDetailFormProps {
   className?: string;
@@ -45,9 +47,24 @@ const getTaskFormValues = (task: CycleTaskWithUsers): TaskFormValues => ({
 const TaskDetailForm = ({ task, className, onClose }: TaskDetailFormProps) => {
   const { projectid } = useParams<{ projectid: string }>();
   const { data: stages = [] } = useGetStagesPerProject(projectid ?? '');
+  const { data: taskCycleData } = useGetTaskCyclesById(task?.taskCycleId ?? '');
+  const { data: backlogStageId } = useGetBacklogStagePerProject(projectid ?? '');
+
+  const visibleStages = stages.filter((stage) => stage.id !== backlogStageId);
 
   const { register, setValue, watch } = useForm<TaskFormValues>({
     defaultValues: getTaskFormValues(task),
+  });
+
+  const stageId = watch('stageId');
+
+  const { updateStage } = useTaskStageEditor({
+    taskCycleId: task.taskCycleId,
+    cycleId: taskCycleData?.cycleId,
+    currentStageId: stageId,
+    onStageChange: (nextStageId) => {
+      setValue('stageId', nextStageId);
+    },
   });
 
   const { updateField, updateFieldDebounced } = useTaskEditor(task, {
@@ -61,7 +78,6 @@ const TaskDetailForm = ({ task, className, onClose }: TaskDetailFormProps) => {
 
   const stageName = task.stage?.name as StageName;
   const stageDot = stageConfig[stageName]?.dot ?? '';
-
   return (
     <Drawer
       onClose={onClose}
@@ -76,7 +92,7 @@ const TaskDetailForm = ({ task, className, onClose }: TaskDetailFormProps) => {
           </Text>
         </div>
       }
-      width="30dvw"
+      width="40dvw"
       className={cn('z-50 h-full bg-surface-sunken', className)}
     >
       <div className="flex h-full min-h-0 flex-col">
@@ -127,26 +143,31 @@ const TaskDetailForm = ({ task, className, onClose }: TaskDetailFormProps) => {
 
           {/* Metadata */}
           <div className="mt-3 flex flex-wrap items-center gap-1.5">
-            {/* Stage */}
-            <select
-              {...register('stageId')}
-              className="h-8 rounded-md border border-lines-hairline bg-surface px-2.5 text-type-caption text-ink-2 outline-none transition-colors hover:border-lines focus:border-lines-strong"
-            >
-              {stages.map((stage) => (
-                <option key={stage.stageId} value={stage.id}>
-                  <Chip
-                    text={
-                      <>
-                        <span className={cn('h-2 w-2 shrink-0 rounded-full', stageDot)} />
-                        {stage?.name}
-                      </>
-                    }
-                    variant="secondary"
-                    className="flex items-center gap-2 rounded-md border-lines-hairline bg-surface"
-                  />
-                </option>
-              ))}
-            </select>
+            {/* Stage - only change state if not backlog */}
+            {stageId === backlogStageId ? (
+              <Chip
+                text={
+                  <>
+                    <span className={cn('h-2 w-2 shrink-0 rounded-full', stageDot)} />
+                    {'Backlog'}
+                  </>
+                }
+                variant="secondary"
+                className="flex items-center gap-2 rounded-md border-lines-hairline bg-surface"
+              />
+            ) : (
+              <select
+                value={stageId}
+                onChange={(e) => updateStage(e.target.value)}
+                className="h-8 rounded-md border border-lines-hairline bg-surface px-2.5 text-type-caption text-ink-2 outline-none transition-colors hover:border-lines focus:border-lines-strong"
+              >
+                {visibleStages.map((stage) => (
+                  <option key={stage.stageId} value={stage.id}>
+                    {stage.name}
+                  </option>
+                ))}
+              </select>
+            )}
 
             {/* Assignees */}
             <AssigneeSelect

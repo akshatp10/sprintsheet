@@ -3,6 +3,7 @@ import {
   getTaskCyclesByCycle,
   getTaskCyclesByProject,
   getTaskCyclesByTask,
+  getTaskCyclesUsingId,
   moveMultipleTasksAcrossCycle,
   moveTaskAcrossCycle,
   updateTaskCycleStage,
@@ -104,6 +105,34 @@ export const moveMultipleTasksToDestination = async (
   }
 };
 
+export const getCycleTaskById = async (id: string): Promise<ApiResponse<TaskCycle>> => {
+  try {
+    const taskCycles = await getTaskCyclesUsingId(id);
+
+    if (!taskCycles) {
+      return {
+        status: 404,
+        success: false,
+        message: 'TaskCycle not found',
+        data: null,
+      };
+    }
+
+    return {
+      status: 200,
+      success: true,
+      message: 'Successfully fetched cycle task relationships',
+      data: taskCycles,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      success: false,
+      message: errorMessage(error, 'Failed to fetch task cycles for cycle'),
+      data: null,
+    };
+  }
+};
 export const getCycleTaskCycles = async (cycleId: string): Promise<ApiResponse<TaskCycle[]>> => {
   try {
     const taskCycles = await getTaskCyclesByCycle(cycleId);
