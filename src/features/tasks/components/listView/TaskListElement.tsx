@@ -1,5 +1,3 @@
-import Avatar from '@/components/avatar/Avatar';
-import AvatarGroup from '@/components/avatar/AvatarGroups';
 import Chip from '@/components/chips/Chip';
 import Text from '@/components/common/Text';
 
@@ -7,12 +5,14 @@ import type { Stage } from '@/lib/services/stages/type';
 import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
 
 import { useTypeById } from '@/lib/services/types/hooks';
-import { formatDate } from '@/lib/utils';
 import useTaskDetailStore from '@/store/taskDetailStore';
 import { GripVertical } from 'lucide-react';
 import EditableStageCell from '../forms/EditableStageCell';
 import { useTaskStageEditor } from '../../hooks/useTaskStageEditor';
 import { useSearchParams } from 'react-router-dom';
+import { useTaskEditor } from '../../hooks/useTaskEditor';
+import EditableAssigneeCell from '../forms/EditableAssigneeCell';
+import EditableDueDateCell from '../forms/EditableDueDateCell';
 
 interface TaskListElementProps {
   gridTemplateColumns: string;
@@ -38,8 +38,15 @@ const TaskListElement = ({
 
   const openTask = useTaskDetailStore((state) => state.openTask);
 
-  const visibleUsers = task.assignees.slice(0, 3);
-  const extraUsers = task.assignees.length - 3;
+  const { updateField } = useTaskEditor(task);
+
+  const handleAssigneeChange = (assigneeIds: string[]) => {
+    updateField('assigneeIds', assigneeIds);
+  };
+
+  const handleDueDateChange = (dueDate: string | null) => {
+    updateField('dueDate', dueDate);
+  };
 
   const { updateStage } = useTaskStageEditor({
     taskCycleId: task.taskCycleId,
@@ -101,25 +108,11 @@ const TaskListElement = ({
         className="flex min-w-0 items-center border-r border-lines-hairline px-3"
         onClick={(e) => e.stopPropagation()}
       >
-        {!!task?.assignees.length ? (
-          <div className="flex min-w-0 items-center gap-2">
-            <AvatarGroup>
-              {visibleUsers.map((assignee) => (
-                <Avatar key={assignee.id} userName={assignee.name} />
-              ))}
-
-              {extraUsers > 0 && <Avatar extraUsers={extraUsers} />}
-            </AvatarGroup>
-          </div>
-        ) : (
-          <div className="flex items-center gap-1">
-            <Avatar />
-
-            <Text variant="caption" className="text-ink-2">
-              Unassigned
-            </Text>
-          </div>
-        )}
+        <EditableAssigneeCell
+          task={task}
+          onChange={handleAssigneeChange}
+          projectId={task?.projectId}
+        />
       </div>
 
       {/* Status */}
@@ -135,13 +128,7 @@ const TaskListElement = ({
         className="flex items-center border-r border-lines-hairline px-3"
         onClick={(e) => e.stopPropagation()}
       >
-        {task.dueDate ? (
-          <Text variant="mono">{formatDate(task.dueDate)}</Text>
-        ) : (
-          <Text variant="mono" className="text-ink-3">
-            —
-          </Text>
-        )}
+        <EditableDueDateCell dueDate={task.dueDate} onChange={handleDueDateChange} />
       </div>
 
       {/* Tags */}
