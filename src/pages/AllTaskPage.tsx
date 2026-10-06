@@ -154,6 +154,7 @@ const AllTaskPage = () => {
               isDone={false}
               onSelectionChange={handleTaskSelection}
               selectedTaskIds={selectedTaskIds}
+              fromBacklog
             />
           ))}
 
