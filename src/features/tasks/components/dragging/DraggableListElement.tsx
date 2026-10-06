@@ -3,6 +3,7 @@ import { useDraggable } from '@dnd-kit/react';
 import { GripVertical } from 'lucide-react';
 import TaskListElement from '../listView/TaskListElement';
 import TaskListPlaceholder from '../listView/TaskListPlaceholder';
+import type { Stage } from '@/lib/services/stages/type';
 
 interface DraggableTaskListElementProps {
   task: CycleTaskWithUsers;
@@ -10,6 +11,7 @@ interface DraggableTaskListElementProps {
   isDone: boolean;
   isOverlay?: boolean;
   gridTemplateColumns: string;
+  visibleStages: Stage[];
 }
 
 const DraggableTaskListElement = ({
@@ -18,6 +20,7 @@ const DraggableTaskListElement = ({
   isDone,
   isOverlay = false,
   gridTemplateColumns,
+  visibleStages,
 }: DraggableTaskListElementProps) => {
   const { ref, isDragging } = useDraggable({
     id: task.id,
@@ -45,6 +48,7 @@ const DraggableTaskListElement = ({
         isDone={isDone}
         isOverlay={isOverlay}
         gridTemplateColumns={gridTemplateColumns}
+        stages={visibleStages}
       />
     </div>
   );

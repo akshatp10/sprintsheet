@@ -2,14 +2,17 @@ import Avatar from '@/components/avatar/Avatar';
 import AvatarGroup from '@/components/avatar/AvatarGroups';
 import Chip from '@/components/chips/Chip';
 import Text from '@/components/common/Text';
-import { cn } from '@/lib/cn';
 
+import type { Stage } from '@/lib/services/stages/type';
 import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+
 import { useTypeById } from '@/lib/services/types/hooks';
-import { stageConfig, StageName } from '@/lib/stageConfig';
 import { formatDate } from '@/lib/utils';
 import useTaskDetailStore from '@/store/taskDetailStore';
 import { GripVertical } from 'lucide-react';
+import EditableStageCell from '../forms/EditableStageCell';
+import { useTaskStageEditor } from '../../hooks/useTaskStageEditor';
+import { useSearchParams } from 'react-router-dom';
 
 interface TaskListElementProps {
   gridTemplateColumns: string;
@@ -17,6 +20,7 @@ interface TaskListElementProps {
   taskNumber: number;
   isDone: boolean;
   isOverlay?: boolean;
+  stages: Stage[];
 }
 
 const TaskListElement = ({
@@ -24,16 +28,28 @@ const TaskListElement = ({
   task,
   taskNumber,
   isDone,
+  stages,
   isOverlay = false,
 }: TaskListElementProps) => {
   const { data: curType } = useTypeById(task.typeId);
+
+  const [searchParams] = useSearchParams();
+  const cycleId = searchParams.get('cycle') ?? '';
 
   const openTask = useTaskDetailStore((state) => state.openTask);
 
   const visibleUsers = task.assignees.slice(0, 3);
   const extraUsers = task.assignees.length - 3;
 
-  const { chip } = stageConfig[task.stage.name as StageName];
+  const { updateStage } = useTaskStageEditor({
+    taskCycleId: task.taskCycleId,
+    cycleId,
+    currentStageId: task.stage.id,
+  });
+
+  const handleStageChange = (nextStageId: string) => {
+    updateStage(nextStageId);
+  };
 
   return (
     <div
@@ -81,7 +97,10 @@ const TaskListElement = ({
       </div>
 
       {/* Assignee */}
-      <div className="flex min-w-0 items-center border-r border-lines-hairline px-3">
+      <div
+        className="flex min-w-0 items-center border-r border-lines-hairline px-3"
+        onClick={(e) => e.stopPropagation()}
+      >
         {!!task?.assignees.length ? (
           <div className="flex min-w-0 items-center gap-2">
             <AvatarGroup>
@@ -104,17 +123,18 @@ const TaskListElement = ({
       </div>
 
       {/* Status */}
-      <div className="flex items-center border-r border-lines-hairline px-3">
-        <Chip
-          variant="secondary"
-          text={task.stage.name}
-          textType="text-type-caption"
-          className={cn('px-1 py-0', chip)}
-        />
+      <div
+        className="flex items-center border-r border-lines-hairline px-3"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <EditableStageCell stage={task.stage} stages={stages} onChange={handleStageChange} />
       </div>
 
       {/* Due */}
-      <div className="flex items-center border-r border-lines-hairline px-3">
+      <div
+        className="flex items-center border-r border-lines-hairline px-3"
+        onClick={(e) => e.stopPropagation()}
+      >
         {task.dueDate ? (
           <Text variant="mono">{formatDate(task.dueDate)}</Text>
         ) : (
