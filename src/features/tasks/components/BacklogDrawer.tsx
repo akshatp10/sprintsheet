@@ -113,7 +113,7 @@ const BacklogDrawer = ({ handleClose, backlogTasks, currentCycleId }: BacklogDra
             + New Task - Stays in the backlog
           </Button>
         </div>
-        <div className="w-full px-4 flex flex-col flex-1 gap-2 min-h-0 overflow-y-auto">
+        <div className="w-full px-4 flex flex-col flex-1 gap-2 min-h-0 overflow-y-auto pb-4">
           {backlogTasks?.length > 0 ? (
             backlogTasks.map((backlogTask) => (
               <BacklogTaskCard
