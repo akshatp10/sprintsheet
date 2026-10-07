@@ -113,7 +113,7 @@ const BacklogDrawer = ({ handleClose, backlogTasks, currentCycleId }: BacklogDra
             + New Task - Stays in the backlog
           </Button>
         </div>
-        <div className="w-full px-4 flex flex-col flex-1 gap-2 min-h-0 overflow-y-auto pb-4">
+        <div className="w-full px-4 flex flex-col flex-1 gap-2 min-h-0 overflow-y-auto">
           {backlogTasks?.length > 0 ? (
             backlogTasks.map((backlogTask) => (
               <BacklogTaskCard
@@ -134,7 +134,7 @@ const BacklogDrawer = ({ handleClose, backlogTasks, currentCycleId }: BacklogDra
         </div>
 
         {/* Footer */}
-        <div className="shrink-0 p-4 bg-surface-sunken border-t border-lines-hairline flex flex-col gap-2">
+        <div className="shrink-0 p-4 bg-surface-sunken border-t border-lines-hairline flex flex-col gap-2 mt-4">
           <Text className="text-ink-3">
             Adds to
             <Text as="span" className="font-medium mx-1 text-ink">
