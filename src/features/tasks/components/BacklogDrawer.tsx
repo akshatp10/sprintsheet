@@ -156,7 +156,7 @@ const BacklogDrawer = ({ handleClose, backlogTasks, currentCycleId }: BacklogDra
               variant="secondary"
               className={`text-ink border flex items-center gap-1 flex-1 justify-center disabled:cursor-not-allowed disabled:bg-ink-fades-disabled disabled:border-ink-fades-disabled disabled:text-ink-fades-disabled disabled:shadow-ink-fades-disabled`}
               onClick={handleMoveSelectedToCycle}
-              disabled={!!!currentCycleId}
+              disabled={!!!currentCycleId || !!!selectedTaskIds.length}
             >
               {!!!currentCycleId ? (
                 'No Cycle Selected'
