@@ -16,7 +16,6 @@ import {
   type TaskFormData,
 } from '@/features/tasks/types/taskFormData';
 import { AssigneeSelect } from '@/features/tasks/components/inputs/AssigneeSelect';
-// import { TagInput } from "../inputs/TagInput";
 
 interface TaskCreateFormProps {
   projectId: string;
@@ -32,7 +31,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCre
     watch,
     setValue,
     reset,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, isSubmitting },
   } = useForm<TaskFormData>({
     resolver: zodResolver(taskFormSchema),
     mode: 'onChange',
@@ -48,7 +47,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCre
   const { data: projectTypes = [] } = useProjectTypes(projectId);
   const { mutate: createNewTask } = useCreateTask();
 
-  const handleFormSubmit = (data: TaskFormData) => {
+  const handleFormSubmit = (data: TaskFormData, shouldContinue: boolean) => {
     const newTask: CreateTaskInput = {
       projectId,
       name: data.name,
@@ -67,15 +66,25 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCre
         : {}),
     };
 
-    createNewTask(newTask);
-    reset();
-    onClose();
+    createNewTask(newTask, {
+      onSuccess: () => {
+        if (shouldContinue) {
+          reset({
+            ...defaultValues,
+            stage: defaultStageId ?? defaultValues.stage,
+          });
+        } else {
+          reset();
+          onClose();
+        }
+      },
+    });
   };
 
   return (
     <PopupModal label="Create Task" onClose={onClose} alert={isDirty}>
       <form
-        onSubmit={handleSubmit(handleFormSubmit)}
+        onSubmit={handleSubmit((data) => handleFormSubmit(data, false))}
         className="flex min-h-0 flex-1 flex-col px-4 pb-6 gap-1"
       >
         {/* Main content */}
@@ -108,7 +117,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCre
         </div>
 
         {/* Bottom toolbar */}
-        <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+        <div className="mt-auto flex flex-col justify-between gap-5 pt-4">
           <div className="flex min-w-0 items-center gap-2">
             {/* Stage */}
             <FormInputBox error={errors.stage?.message}>
@@ -169,11 +178,32 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCre
                             })
                         }
                     /> */}
-          <Button type="submit" variant="primary" className="shrink-0">
-            <Text variant="body-sm" className="font-medium">
-              Create Task
-            </Text>
-          </Button>
+          <div className="flex gap-2 justify-end">
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full sm:w-auto"
+              onClick={() => {
+                handleSubmit((data) => handleFormSubmit(data, true))();
+              }}
+              disabled={isSubmitting}
+            >
+              <Text variant="body-sm" className="font-medium">
+                Save and Continue
+              </Text>
+            </Button>
+
+            <Button
+              type="submit"
+              variant="primary"
+              className="w-full sm:w-auto"
+              disabled={isSubmitting}
+            >
+              <Text variant="body-sm" className="font-medium">
+                Create Task
+              </Text>
+            </Button>
+          </div>
         </div>
       </form>
     </PopupModal>
