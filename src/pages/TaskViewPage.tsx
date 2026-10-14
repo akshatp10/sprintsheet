@@ -150,9 +150,8 @@ const TaskViewPage = () => {
       {createCycle && (
         <CreateCycleForm
           projectId={projectid ?? ''}
-          onClose={(cycleId?: string) => {
+          onClose={() => {
             setCreateCycle(false);
-            if (cycleId) handleCycleChange(cycleId);
           }}
         />
       )}

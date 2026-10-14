@@ -13,6 +13,7 @@ import type { CreateCycleInput } from '@/lib/services/cycles/types';
 import { cycleFormSchema, defaultValues, type CycleFormData } from '../types/cycleFormData';
 import { formatCycleDate } from '@/lib/utils';
 import ToggleButton from '@/components/inputs/ToggleButton';
+import { useSearchParams } from 'react-router-dom';
 
 interface CreateCycleFormProps {
   projectId: string;
@@ -30,6 +31,8 @@ const CreateCycleForm = ({ projectId, onClose }: CreateCycleFormProps) => {
     defaultValues,
   });
 
+  const [, setSearchParams] = useSearchParams();
+
   const { mutate } = useCreateCycle();
 
   const handleFormSubmit = (data: CycleFormData) => {
@@ -46,7 +49,11 @@ const CreateCycleForm = ({ projectId, onClose }: CreateCycleFormProps) => {
     mutate(newCycle, {
       onSuccess: (cycle) => {
         reset();
-        onClose(cycle?.id);
+        setSearchParams((prev) => {
+          prev.set('cycle', cycle?.id ?? '');
+          return prev;
+        });
+        onClose();
       },
     });
   };
