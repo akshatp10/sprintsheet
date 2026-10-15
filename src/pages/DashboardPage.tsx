@@ -15,6 +15,7 @@ import { useGetProjectUsers } from '@/lib/services/users/hooks';
 import { useMemo } from 'react';
 import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
 import type { TaskNeedingAttention } from '@/features/dashboard/types/types';
+import { getCurrentCycleDay, getCycleLength } from '@/lib/utils';
 
 const DashboardPage = () => {
   const [searchParams] = useSearchParams();
@@ -34,21 +35,9 @@ const DashboardPage = () => {
     0,
   );
 
-  const cycleLength =
-    (new Date(currentCycle?.endDate ?? '').getTime() -
-      new Date(currentCycle?.startDate ?? '').getTime()) /
-    (1000 * 60 * 60 * 24);
+  const cycleLength = getCycleLength(currentCycle?.startDate, currentCycle?.endDate);
 
-  const currentDay = Math.min(
-    cycleLength,
-    Math.max(
-      1,
-      Math.floor(
-        (new Date(getToday()).getTime() - new Date(currentCycle?.startDate ?? '').getTime()) /
-          (1000 * 60 * 60 * 24),
-      ) + 1,
-    ),
-  );
+  const currentDay = getCurrentCycleDay(currentCycle?.startDate, currentCycle?.endDate);
 
   const today = getToday();
 
