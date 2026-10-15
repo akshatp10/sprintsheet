@@ -161,9 +161,9 @@ const BacklogDrawer = ({ handleClose, backlogTasks, currentCycleId }: BacklogDra
               {!!!currentCycleId ? (
                 'No Cycle Selected'
               ) : (
-                <>
+                <Text className="flex gap-2 items-center justify-center">
                   <ArrowUpToLine strokeWidth={1.5} size={15} /> Add to {cycle?.name}
-                </>
+                </Text>
               )}
             </Button>
           </div>
