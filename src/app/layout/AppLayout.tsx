@@ -10,7 +10,7 @@ interface AppLayoutProps {
 
 const AppLayout = ({ dynamicSidebar, dynamicTopBar, usersPanel }: AppLayoutProps) => {
   return (
-    <>
+    <div>
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -37,7 +37,7 @@ const AppLayout = ({ dynamicSidebar, dynamicTopBar, usersPanel }: AppLayoutProps
           </main>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
