@@ -1,9 +1,9 @@
-import { Loader2 } from 'lucide-react';
+import Mascot from '@/components/common/Mascot';
 
 const LoadingPage = () => {
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <Loader2 size={24} strokeWidth={1.5} className="animate-spin text-ink-3" />
+      <Mascot expression="loading" renderAnimation size={200} />
     </div>
   );
 };
