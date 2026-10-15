@@ -40,8 +40,10 @@ export const useTaskEditor = (
   }, [task]);
 
   useEffect(() => {
+    const currentTimers = timers.current;
+
     return () => {
-      Object.values(timers.current).forEach((timer) => {
+      Object.values(currentTimers).forEach((timer) => {
         if (timer) clearTimeout(timer);
       });
     };
