@@ -30,9 +30,9 @@ export const useCycleStatus = (cycles: Cycle[]) => {
     }
 
     return {
-      active,
-      closed,
-      planned,
+      active: active.reverse(),
+      closed: closed.reverse(),
+      planned: planned.reverse(),
     };
   }, [cycles, today]);
 };
