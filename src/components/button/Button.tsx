@@ -5,9 +5,6 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Content displayed inside the button. */
   children: React.ReactNode;
 
-  /** Callback invoked when the button is clicked. */
-  onClick?: () => void;
-
   /**
    * Visual style variant applied to the button:
    *
