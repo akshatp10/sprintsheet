@@ -196,7 +196,6 @@ export default function Select(props: SelectProps) {
     setSearch('');
   }
 
-  // Explicit placement is derived directly from props.
   const openUpward =
     dropdownPlacement === 'top' ? true : dropdownPlacement === 'bottom' ? false : autoOpenUpward;
 

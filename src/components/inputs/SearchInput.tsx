@@ -28,6 +28,7 @@ const SearchInput = ({
   className,
   placeholder = 'Search',
   autoFocus = false,
+  searchElementId,
 }: SearchInputProps) => {
   return (
     <div className="relative">
@@ -43,7 +44,7 @@ const SearchInput = ({
         placeholder={placeholder}
         className={cn('w-64 py-1 pl-8 placeholder:font-medium', className)}
         autoFocus={autoFocus}
-        id="search"
+        id={searchElementId}
       />
     </div>
   );
