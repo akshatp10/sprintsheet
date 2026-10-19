@@ -106,8 +106,6 @@ export function AssigneeSelect({
         </div>
       )}
       renderOption={(option, selected) => {
-        const member = members.find((item) => item.userId === option.value);
-
         return (
           <div className="flex items-center gap-2 cursor-pointer">
             <span
@@ -119,12 +117,7 @@ export function AssigneeSelect({
             >
               {selected && <Check size={12} />}
             </span>
-
-            {member ? (
-              <UserPanel userName={member.name} textVariant="body-sm" textColor="text-ink" />
-            ) : (
-              <span>{option.label}</span>
-            )}
+            <UserPanel userName={option.label} textVariant="body-sm" textColor="text-ink" />
           </div>
         );
       }}
