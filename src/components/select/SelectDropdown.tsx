@@ -62,6 +62,9 @@ type SelectDropdownProps = {
 
   /** Returns additional CSS classes for an option based on its selected state. */
   getOptionClassName?: (option: SelectOption, selected: boolean) => string;
+
+  /** Placeholder displayed when no value is selected or when searching. */
+  placeholder?: string;
 };
 
 export function SelectDropdown({
@@ -85,6 +88,7 @@ export function SelectDropdown({
   renderOption,
   renderValue,
   getOptionClassName,
+  placeholder,
 }: SelectDropdownProps) {
   const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(search.trim().toLowerCase()),
@@ -104,7 +108,7 @@ export function SelectDropdown({
           <SearchInput
             value={search}
             onChange={onSearchChange}
-            placeholder="Search options..."
+            placeholder={!!placeholder ? placeholder : 'Search options...'}
             searchElementId="select-search"
             className="w-full"
           />
