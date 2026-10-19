@@ -30,7 +30,7 @@ const CycleTaskSection = ({
   return (
     <>
       <CycleHeaderElement
-        variant={status === 'active' ? 'active' : 'other'}
+        variant={status}
         cycle={cycle}
         taskCount={tasks?.length}
         doneTasks={doneTasks}
