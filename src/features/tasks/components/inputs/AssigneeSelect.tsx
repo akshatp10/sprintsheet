@@ -1,13 +1,13 @@
-import { useMemo, useRef, useState } from 'react';
-import { Plus } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Check, Plus } from 'lucide-react';
 
 import Avatar from '@/components/avatar/Avatar';
 import AvatarGroup from '@/components/avatar/AvatarGroups';
 import Button from '@/components/button/Button';
-import Checkbox from '@/components/inputs/Checkbox';
+import Select, { type SelectOption } from '@/components/select/Select';
 import Text from '@/components/common/Text';
 import UserPanel from '@/components/sidebar/UserPanel';
-import { cn } from '@/lib/cn';
+
 import { useGetProjectMembers } from '@/lib/services/projects/hooks';
 
 interface AssigneeSelectProps {
@@ -17,9 +17,6 @@ interface AssigneeSelectProps {
   onClose?: () => void;
 }
 
-const DROPDOWN_HEIGHT = 208;
-const DROPDOWN_OFFSET = 6;
-
 export function AssigneeSelect({
   projectId,
   value,
@@ -28,120 +25,109 @@ export function AssigneeSelect({
 }: AssigneeSelectProps) {
   const { data: members = [], isLoading } = useGetProjectMembers(projectId);
 
-  const [open, setOpen] = useState(false);
-  const [openUpward, setOpenUpward] = useState(false);
-
-  const triggerRef = useRef<HTMLDivElement>(null);
-
   const [pinnedIds, setPinnedIds] = useState<string[]>([]);
 
-  const handleToggleOpen = () => {
+  const memberOptions = useMemo<SelectOption[]>(() => {
+    const pinned = new Set(pinnedIds);
+
+    const orderedMembers = [
+      ...members.filter((member) => pinned.has(member.userId)),
+      ...members.filter((member) => !pinned.has(member.userId)),
+    ];
+
+    return orderedMembers.map((member) => ({
+      label: member.name,
+      value: member.userId,
+    }));
+  }, [members, pinnedIds]);
+
+  const selectedMembers = members.filter((member) => value.includes(member.userId));
+
+  const handleToggleOpen = (open: boolean, toggleOpen: () => void) => {
     if (!open) {
       setPinnedIds(value);
-
-      const rect = triggerRef.current?.getBoundingClientRect();
-
-      if (rect) {
-        const spaceBelow = window.innerHeight - rect.bottom;
-        const spaceAbove = rect.top;
-
-        setOpenUpward(spaceBelow < DROPDOWN_HEIGHT + DROPDOWN_OFFSET && spaceAbove > spaceBelow);
-      }
     } else {
       onClose();
     }
 
-    setOpen((prev) => !prev);
+    toggleOpen();
   };
-
-  const toggleAssignee = (userId: string) => {
-    const nextValue = value.includes(userId)
-      ? value.filter((id) => id !== userId)
-      : [...value, userId];
-
-    onChange(nextValue);
-  };
-
-  const selectedMembers = members.filter((member) => value.includes(member.userId));
-
-  const { pinnedMembers, otherMembers } = useMemo(() => {
-    const pinned = new Set(pinnedIds);
-
-    return {
-      pinnedMembers: members.filter((m) => pinned.has(m.userId)),
-      otherMembers: members.filter((m) => !pinned.has(m.userId)),
-    };
-  }, [members, pinnedIds]);
-
-  const renderRow = (member: (typeof members)[number]) => (
-    <label
-      key={member.userId}
-      className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5"
-    >
-      <Checkbox
-        checked={value.includes(member.userId)}
-        onChange={() => toggleAssignee(member.userId)}
-      />
-
-      <UserPanel userName={member.name} textVariant="body-sm" textColor="text-ink" />
-    </label>
-  );
 
   return (
-    <div className="relative" ref={triggerRef}>
-      <div className="flex min-w-0 items-center gap-1">
-        {selectedMembers.length ? (
-          <AvatarGroup>
-            {selectedMembers.slice(0, 3).map((member) => (
-              <Avatar key={member.id} userName={member.name} />
-            ))}
+    <Select
+      mode="multiple"
+      options={memberOptions}
+      value={value}
+      onChange={onChange}
+      placeholder="Search members..."
+      searchable
+      loading={isLoading}
+      loadingContent={
+        <Text variant="caption" className="px-3 py-1.5 text-ink-3">
+          Loading…
+        </Text>
+      }
+      emptyContent={
+        <Text variant="caption" className="px-3 py-1.5 text-ink-3">
+          No members found
+        </Text>
+      }
+      clearable
+      className="w-fit"
+      listClassName="w-48"
+      itemClassName="px-3 py-1.5 hover:bg-accent-tint"
+      selectedItemClassName="bg-accent-tint"
+      renderTrigger={({ open, toggleOpen }) => (
+        <div className="flex min-w-0 items-center gap-1">
+          {selectedMembers.length > 0 ? (
+            <AvatarGroup>
+              {selectedMembers.slice(0, 3).map((member) => (
+                <Avatar key={member.id} userName={member.name} />
+              ))}
 
-            {selectedMembers.length > 3 && <Avatar extraUsers={selectedMembers.length - 3} />}
-          </AvatarGroup>
-        ) : (
-          <Avatar />
-        )}
-
-        <Button
-          variant="tertiary"
-          type="button"
-          onClick={handleToggleOpen}
-          className="
-      h-8 w-8 shrink-0
-      rounded-md
-      border border-lines-hairline
-      p-0
-      text-ink-3
-      flex items-center justify-center
-    "
-        >
-          <Plus className="h-3.5 w-3.5" strokeWidth={1.75} />
-        </Button>
-      </div>
-
-      {open && (
-        <div
-          className={cn(
-            'absolute z-10 max-h-48 w-48 overflow-auto rounded-md border border-lines-hairline bg-surface py-1 shadow-md',
-            openUpward ? 'bottom-full mb-1.5' : 'top-full mt-1.5',
-          )}
-        >
-          {isLoading ? (
-            <Text variant="caption" className="px-3 py-1.5 text-ink-3">
-              Loading…
-            </Text>
-          ) : members.length === 0 ? (
-            <Text variant="caption" className="px-3 py-1.5 text-ink-3">
-              No members found
-            </Text>
+              {selectedMembers.length > 3 && <Avatar extraUsers={selectedMembers.length - 3} />}
+            </AvatarGroup>
           ) : (
-            <>
-              {pinnedMembers.map(renderRow)}
-              {otherMembers.map(renderRow)}
-            </>
+            <Avatar />
           )}
+
+          <Button
+            variant="tertiary"
+            type="button"
+            onClick={() => handleToggleOpen(open, toggleOpen)}
+            className="
+              flex h-8 w-8 shrink-0 items-center justify-center
+              rounded-md border border-lines-hairline
+              p-0 text-ink-3
+            "
+          >
+            <Plus className="h-3.5 w-3.5" strokeWidth={1.75} />
+          </Button>
         </div>
       )}
-    </div>
+      renderOption={(option, selected) => {
+        const member = members.find((item) => item.userId === option.value);
+
+        return (
+          <div className="flex items-center gap-2 cursor-pointer">
+            <span
+              className={`
+                flex h-4 w-4 shrink-0 items-center justify-center
+                rounded-sm border
+                ${selected ? 'border-accent bg-accent-wash-selected text-accent-deep' : 'border-lines-control bg-accent-tint'}
+              `}
+            >
+              {selected && <Check size={12} />}
+            </span>
+
+            {member ? (
+              <UserPanel userName={member.name} textVariant="body-sm" textColor="text-ink" />
+            ) : (
+              <span>{option.label}</span>
+            )}
+          </div>
+        );
+      }}
+    />
   );
 }
