@@ -19,7 +19,7 @@ const DashboardTopbar = () => {
 
     if (cycles.length === 0) return;
 
-    const currentCycle = activeCycles[0] ?? closedCycles[closedCycles.length - 1];
+    const currentCycle = activeCycles[0] ?? closedCycles[0];
 
     if (!currentCycle) return;
 
