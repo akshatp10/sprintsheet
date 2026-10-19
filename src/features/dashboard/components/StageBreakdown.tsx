@@ -2,7 +2,7 @@ import Text from '@/components/common/Text';
 import StageProgressItem from './StageProgressItem';
 import UserTaskData from './UserTaskData';
 
-import type { User } from '@/lib/services/users/types';
+import type { UserSummary } from '@/lib/services/users/types';
 import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
 
 interface StageBreakdownProps {
@@ -13,7 +13,7 @@ interface StageBreakdownProps {
   tasksByStage: Record<string, unknown[]>;
   totalTasks: number;
   tasksByUsers: {
-    user: User;
+    user: UserSummary;
     tasks: CycleTaskWithUsers[];
   }[];
   unassignedTasks: CycleTaskWithUsers[];
