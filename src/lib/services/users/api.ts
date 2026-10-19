@@ -1,14 +1,20 @@
 import {
-  getProjectMemberRows,
+  getCurrentUser,
   getUserById,
   getUsersByIds,
+  getUsersByProject,
 } from '@/lib/db/dbFunctions/userFunctions';
 
 import { errorMessage, type ApiResponse } from '../types';
 
-import type { User } from './types';
+import type {
+  GetCurrentUserResponse,
+  GetProjectUsersResponse,
+  GetUserResponse,
+  GetUsersResponse,
+} from './types';
 
-export const getUser = async (id: string): Promise<ApiResponse<User>> => {
+export const getUser = async (id: string): Promise<ApiResponse<GetUserResponse>> => {
   try {
     const user = await getUserById(id);
 
@@ -37,7 +43,22 @@ export const getUser = async (id: string): Promise<ApiResponse<User>> => {
   }
 };
 
-export const getUsers = async (ids: string[]): Promise<ApiResponse<User[]>> => {
+export const getCurrent = async (): Promise<ApiResponse<GetCurrentUserResponse>> => {
+  try {
+    const user = await getCurrentUser();
+
+    return { status: 200, success: true, message: 'Successfully fetched current user', data: user };
+  } catch (error) {
+    return {
+      status: 500,
+      success: false,
+      message: errorMessage(error, 'Failed to fetch current user'),
+      data: null,
+    };
+  }
+};
+
+export const getUsers = async (ids: string[]): Promise<ApiResponse<GetUsersResponse>> => {
   try {
     const users = await getUsersByIds(ids);
 
@@ -57,22 +78,11 @@ export const getUsers = async (ids: string[]): Promise<ApiResponse<User[]>> => {
   }
 };
 
-export const getProjectUsers = async (projectId: string): Promise<ApiResponse<User[]>> => {
+export const getProjectUsers = async (
+  projectId: string,
+): Promise<ApiResponse<GetProjectUsersResponse>> => {
   try {
-    const members = await getProjectMemberRows(projectId);
-
-    const userIds = members.map((member) => member.userId);
-
-    if (userIds.length === 0) {
-      return {
-        status: 200,
-        success: true,
-        message: 'Successfully fetched project users',
-        data: [],
-      };
-    }
-
-    const users = await getUsersByIds(userIds);
+    const users = await getUsersByProject(projectId);
 
     return {
       status: 200,

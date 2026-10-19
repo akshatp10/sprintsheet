@@ -93,7 +93,7 @@ export const getProjectMembers = async (
       userId: m.userId,
       role: m.role,
       name: users[i]?.name ?? '',
-      email: users[i]?.email ?? '',
+      email: '',
     }));
 
     return {

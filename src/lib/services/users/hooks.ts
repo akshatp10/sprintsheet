@@ -1,15 +1,29 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getProjectUsers, getUser, getUsers } from './api';
+import { getCurrent, getProjectUsers, getUser, getUsers } from './api';
 
 export const userQueryKeys = {
   all: ['users'] as const,
-
+  current: () => [...userQueryKeys.all, 'current'] as const,
   detail: (id: string) => [...userQueryKeys.all, 'detail', id] as const,
-
   byIds: (ids: string[]) => [...userQueryKeys.all, 'by-ids', ...ids] as const,
-
   project: (projectId: string) => [...userQueryKeys.all, 'project', projectId] as const,
+};
+
+export const useGetCurrentUser = () => {
+  return useQuery({
+    queryKey: userQueryKeys.current(),
+
+    queryFn: async () => {
+      const response = await getCurrent();
+
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+
+      return response.data;
+    },
+  });
 };
 
 export const useGetUser = (id: string) => {
