@@ -67,8 +67,6 @@ type SharedProps = {
   dropdownOffset?: number;
   /** Name attribute applied to the default input element. */
   name?: string;
-  /** Accessible label applied to the default input element. */
-  'aria-label'?: string;
   /** Custom renderer for the trigger. */
   renderTrigger?: (context: TriggerContext) => ReactNode;
   /** Custom renderer for each dropdown option. */
@@ -133,58 +131,49 @@ export default function Select(props: SelectProps) {
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const [autoOpenUpward, setAutoOpenUpward] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   const selectedValues =
     props.mode === 'multiple' ? props.value : props.value === null ? [] : [props.value];
 
-  const selectedOptions = options.filter((option) => selectedValues.includes(option.value));
+  const selectedOptions = options.filter(({ value }) => selectedValues.includes(value));
 
-  const selectedLabel = selectedOptions.map((option) => option.label).join(', ');
+  const selectedLabel = selectedOptions.map(({ label }) => label).join(', ');
 
-  function closeDropdown() {
+  const close = () => {
     setOpen(false);
     setSearch('');
-  }
+  };
 
-  function openDropdown() {
-    if (disabled) return;
-
-    setSearch('');
-    setOpen(true);
-  }
-
-  function toggleOpen() {
+  const toggleOpen = () => {
     if (disabled) return;
 
     if (open) {
-      closeDropdown();
+      close();
     } else {
-      openDropdown();
+      setSearch('');
+      setOpen(true);
     }
-  }
+  };
 
-  function selectOption(option: SelectOption) {
+  const selectOption = (option: SelectOption) => {
     if (disabled || option.disabled) return;
 
     if (props.mode === 'multiple') {
-      const isSelected = props.value.includes(option.value);
-
-      const nextValue = isSelected
-        ? props.value.filter((value) => value !== option.value)
-        : [...props.value, option.value];
-
-      props.onChange(nextValue);
-      return;
+      props.onChange(
+        props.value.includes(option.value)
+          ? props.value.filter((value) => value !== option.value)
+          : [...props.value, option.value],
+      );
+    } else {
+      props.onChange(option.value);
+      close();
     }
+  };
 
-    props.onChange(option.value);
-    closeDropdown();
-  }
-
-  function clearSelection() {
+  const clearSelection = () => {
     if (disabled) return;
 
     if (props.mode === 'multiple') {
@@ -194,28 +183,22 @@ export default function Select(props: SelectProps) {
     }
 
     setSearch('');
-  }
+  };
 
-  const openUpward =
-    dropdownPlacement === 'top' ? true : dropdownPlacement === 'bottom' ? false : autoOpenUpward;
-
-  // Measure only when automatic placement is requested.
   useEffect(() => {
     if (!open || dropdownPlacement !== 'auto') return;
 
-    const element = containerRef.current;
-    if (!element) return;
-
     const updatePlacement = () => {
-      const rect = element.getBoundingClientRect();
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+
       const spaceBelow = window.innerHeight - rect.bottom;
       const spaceAbove = rect.top;
 
-      setAutoOpenUpward(spaceBelow < dropdownHeight + dropdownOffset && spaceAbove > spaceBelow);
+      setOpenUpward(spaceBelow < dropdownHeight + dropdownOffset && spaceAbove > spaceBelow);
     };
 
     updatePlacement();
-
     window.addEventListener('resize', updatePlacement);
     window.addEventListener('scroll', updatePlacement, true);
 
@@ -225,22 +208,20 @@ export default function Select(props: SelectProps) {
     };
   }, [open, dropdownPlacement, dropdownHeight, dropdownOffset]);
 
-  // Close when clicking outside the component.
   useEffect(() => {
     if (!open) return;
 
-    function handleOutsideClick(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        closeDropdown();
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (!containerRef.current?.contains(event.target as Node)) {
+        close();
       }
-    }
+    };
 
     document.addEventListener('mousedown', handleOutsideClick);
-
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, [open]);
+
+  const openAbove = dropdownPlacement === 'top' || (dropdownPlacement === 'auto' && openUpward);
 
   return (
     <div
@@ -248,21 +229,16 @@ export default function Select(props: SelectProps) {
       className={cn('relative min-w-0', className)}
       style={width === 'auto' ? undefined : { width }}
     >
-      {/* Trigger */}
       {renderTrigger ? (
         <div className={triggerClassName}>
-          {renderTrigger({
-            open,
-            selectedOptions,
-            toggleOpen,
-          })}
+          {renderTrigger({ open, selectedOptions, toggleOpen })}
         </div>
       ) : (
         <div
           className={cn(
             'flex w-full min-w-0 items-center gap-1 rounded-md',
-            'border border-lines-hairline bg-surface',
-            'px-2 py-0.5 font-medium text-type-body-sm',
+            'border border-lines-hairline bg-surface px-2 py-0.5',
+            'font-medium text-type-body-sm',
             disabled && 'cursor-not-allowed opacity-50',
             triggerClassName,
           )}
@@ -270,7 +246,6 @@ export default function Select(props: SelectProps) {
         >
           <input
             name={name}
-            aria-label={props['aria-label']}
             autoComplete="off"
             disabled={disabled}
             readOnly={!searchable}
@@ -278,20 +253,18 @@ export default function Select(props: SelectProps) {
             value={open && searchable ? search : selectedLabel}
             onChange={(event) => {
               setSearch(event.target.value);
-
-              if (!open) {
-                setOpen(true);
-              }
+              if (!open) setOpen(true);
             }}
             onFocus={() => {
-              if (disabled || open) return;
-              openDropdown();
+              if (!disabled && !open) {
+                setSearch('');
+                setOpen(true);
+              }
             }}
             className={cn(
               'h-full w-full min-w-0 flex-1 bg-transparent',
               'border-none p-0 text-inherit outline-none',
-              'placeholder:text-ink-fades-placeholders',
-              'focus:outline-none focus:ring-0',
+              'placeholder:text-ink-fades-placeholders focus:outline-none focus:ring-0',
               inputClassName,
             )}
           />
@@ -321,13 +294,12 @@ export default function Select(props: SelectProps) {
         </div>
       )}
 
-      {/* Dropdown */}
       {open && !disabled && (
         <div
-          className={cn('absolute z-50 w-full', openUpward ? 'bottom-full' : 'top-full')}
+          className={cn('absolute z-50 w-full', openAbove ? 'bottom-full' : 'top-full')}
           style={{
-            marginTop: openUpward ? 0 : dropdownOffset,
-            marginBottom: openUpward ? dropdownOffset : 0,
+            marginTop: openAbove ? 0 : dropdownOffset,
+            marginBottom: openAbove ? dropdownOffset : 0,
           }}
         >
           <SelectDropdown
@@ -350,6 +322,7 @@ export default function Select(props: SelectProps) {
             renderOption={renderOption}
             renderValue={renderValue}
             getOptionClassName={getOptionClassName}
+            placeholder={placeholder}
           />
         </div>
       )}
