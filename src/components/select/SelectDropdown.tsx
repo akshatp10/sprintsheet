@@ -133,7 +133,7 @@ export function SelectDropdown({
                     aria-pressed={selected}
                     onClick={() => onSelect(option)}
                     className={cn(
-                      'flex w-full items-center gap-2 rounded-sm px-2 py-1.5',
+                      'flex w-full items-center gap-2 rounded-sm px-2 py-1.5 cursor-pointer',
                       'text-left text-type-body-sm',
                       'hover:bg-surface-raised',
                       selected && 'bg-surface-raised',
