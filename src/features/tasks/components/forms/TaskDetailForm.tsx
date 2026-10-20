@@ -21,6 +21,7 @@ import { useTaskStageEditor } from '@/features/tasks/hooks/useTaskStageEditor';
 import Chip from '@/components/chips/Chip';
 import { stageConfig, StageName } from '@/lib/stageConfig';
 import ExitAlert from '@/components/popupModals/ExitAlert';
+import TypeSelect from '../inputs/TypeSelect';
 
 interface TaskDetailFormProps {
   className?: string;
@@ -59,6 +60,7 @@ const TaskDetailForm = ({ task, className, onClose }: TaskDetailFormProps) => {
   });
 
   const stageId = watch('stageId');
+  const typeId = watch('typeId');
 
   const { updateStage } = useTaskStageEditor({
     taskCycleId: task.taskCycleId,
@@ -208,21 +210,16 @@ const TaskDetailForm = ({ task, className, onClose }: TaskDetailFormProps) => {
               />
 
               {/* Type */}
-              <select
-                aria-label="Task type"
-                className="h-8 rounded-md border border-lines-hairline bg-surface px-2.5 text-type-caption text-ink-2 outline-none transition-colors hover:border-lines focus:border-lines-strong"
-                {...register('typeId', {
-                  onChange: (e) => {
-                    updateField('typeId', e.target.value);
-                  },
-                })}
-              >
-                {projectTypes.map((type) => (
-                  <option key={type.id} value={type.id}>
-                    {type.name}
-                  </option>
-                ))}
-              </select>
+              <TypeSelect
+                projectTypes={projectTypes}
+                value={typeId || null}
+                onChange={(value) => {
+                  const nextValue = value ?? '';
+
+                  setValue('typeId', nextValue);
+                  updateField('typeId', nextValue);
+                }}
+              />
             </div>
           </div>
 
