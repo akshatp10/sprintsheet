@@ -6,21 +6,20 @@ import AvatarGroup from '@/components/avatar/AvatarGroups';
 import Avatar from '@/components/avatar/Avatar';
 import Chip from '@/components/chips/Chip';
 import ProgressBar from '@/components/progressBar/ProgressBar';
-import type { Project, ProjectMember } from '@/lib/services/projects/types';
+import type { ProjectWithMembers } from '@/lib/services/projects/types';
 import { useMapProjectToCard } from '@/hooks/useMapProjectToCard';
 
 interface ProjectCardGridProps {
-  project: Project;
-  members?: ProjectMember[];
+  project: ProjectWithMembers;
 }
 
-const ProjectCardGrid = ({ project, members = [] }: ProjectCardGridProps) => {
+const ProjectCardGrid = ({ project }: ProjectCardGridProps) => {
   const navigate = useNavigate();
 
-  const card = useMapProjectToCard(project, members);
+  const card = useMapProjectToCard(project);
 
-  const visibleUsers = card.users.slice(0, 3);
-  const extraUsers = Math.max(card.users.length - 3, 0);
+  const visibleUsers = card.members.slice(0, 3);
+  const extraUsers = Math.max(card.members.length - 3, 0);
 
   const clickingProjectCard = () => {
     navigate(`/project/${card.id}/board`);
@@ -64,7 +63,7 @@ const ProjectCardGrid = ({ project, members = [] }: ProjectCardGridProps) => {
       <div className="flex items-center gap-2">
         <AvatarGroup>
           {visibleUsers.map((user) => (
-            <Avatar key={user.userName} userName={user.userName} />
+            <Avatar key={user.id} userName={user.name} />
           ))}
 
           {extraUsers > 0 && <Avatar extraUsers={extraUsers} />}
