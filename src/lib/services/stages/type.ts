@@ -1,3 +1,5 @@
+export const BACKLOG_STAGE_NAME = 'Backlog';
+
 export interface Stage {
   id: string;
   projectId: string;
@@ -8,3 +10,6 @@ export interface Stage {
   createdAt: number;
   updatedAt: number;
 }
+
+// Responses
+export type GetStagesResponse = Stage[];
