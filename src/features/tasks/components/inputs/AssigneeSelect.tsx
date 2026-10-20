@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Check, Plus } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 import Avatar from '@/components/avatar/Avatar';
 import AvatarGroup from '@/components/avatar/AvatarGroups';
@@ -15,6 +15,7 @@ interface AssigneeSelectProps {
   value: string[];
   onChange: (ids: string[]) => void;
   onClose?: () => void;
+  isDone?: boolean;
 }
 
 export function AssigneeSelect({
@@ -22,6 +23,7 @@ export function AssigneeSelect({
   value,
   onChange,
   onClose = () => {},
+  isDone = false,
 }: AssigneeSelectProps) {
   const { data: members = [], isLoading } = useGetProjectMembers(projectId);
 
@@ -78,7 +80,11 @@ export function AssigneeSelect({
       itemClassName="px-3 py-1.5 hover:bg-accent-tint"
       selectedItemClassName="bg-accent-tint"
       renderTrigger={({ open, toggleOpen }) => (
-        <div className="flex min-w-0 items-center gap-1">
+        <Button
+          variant="tertiary"
+          className={`flex min-w-0 items-center gap-1 cursor-pointer border-0 p-0 ${isDone && 'opacity-50'}`}
+          onClick={() => handleToggleOpen(open, toggleOpen)}
+        >
           {selectedMembers.length > 0 ? (
             <AvatarGroup>
               {selectedMembers.slice(0, 3).map((member) => (
@@ -88,22 +94,14 @@ export function AssigneeSelect({
               {selectedMembers.length > 3 && <Avatar extraUsers={selectedMembers.length - 3} />}
             </AvatarGroup>
           ) : (
-            <Avatar />
+            <>
+              <Avatar />
+              <Text variant="caption" className="text-ink-2">
+                Unassigned
+              </Text>
+            </>
           )}
-
-          <Button
-            variant="tertiary"
-            type="button"
-            onClick={() => handleToggleOpen(open, toggleOpen)}
-            className="
-              flex h-8 w-8 shrink-0 items-center justify-center
-              rounded-md border border-lines-hairline
-              p-0 text-ink-3
-            "
-          >
-            <Plus className="h-3.5 w-3.5" strokeWidth={1.75} />
-          </Button>
-        </div>
+        </Button>
       )}
       renderOption={(option, selected) => {
         return (
