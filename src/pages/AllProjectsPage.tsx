@@ -4,8 +4,7 @@ import { isFeatureEnabled } from '@/config/features';
 import EmptyTaskCard from '@/features/projects/components/EmptyTaskCard';
 import ProjectCardGrid from '@/features/projects/components/ProjectCardGrid';
 import ProjectCardGridSkeleton from '@/features/projects/components/skeletons/ProjectCardGridSkeleton';
-import { projectMembersQuery, useGetAllProjects } from '@/lib/services/projects/hooks';
-import { useQueries } from '@tanstack/react-query';
+import { useGetAllProjects } from '@/lib/services/projects/hooks';
 import { useState } from 'react';
 
 const AllProjectsPage = () => {
@@ -18,10 +17,6 @@ const AllProjectsPage = () => {
   const [projectsView, setProjectsView] = useState<ProjectsView>('grid');
 
   const { data: projects = [], isLoading, isError, error } = useGetAllProjects(false);
-
-  const memberQueries = useQueries({
-    queries: projects.map((project) => projectMembersQuery(project.id)),
-  });
 
   const activeCount = projects.filter((p) => !p.isArchived).length;
   const archivedCount = projects.length - activeCount;
@@ -71,12 +66,8 @@ const AllProjectsPage = () => {
 
       {projectsView === 'grid' ? (
         <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, index) => (
-            <ProjectCardGrid
-              key={project.id}
-              project={project}
-              members={memberQueries[index]?.data ?? []}
-            />
+          {projects.map((project) => (
+            <ProjectCardGrid key={project.id} project={project} />
           ))}
 
           <EmptyTaskCard />

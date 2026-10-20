@@ -1,17 +1,23 @@
 import {
   createProject,
   getAllProjects,
-  getProjectById,
+  getProjectDetailsById,
+  getProjectMembersByProject,
 } from '@/lib/db/dbFunctions/projectFunctions';
-import { getProjectMemberRows, getUsersByIds } from '@/lib/db/dbFunctions/userFunctions';
 
 import { errorMessage, type ApiResponse } from '../types';
 
-import type { CreateProjectInput, Project, ProjectMember } from './types';
+import type {
+  CreateProjectRequest,
+  CreateProjectResponse,
+  GetProjectDetailsResponse,
+  GetProjectMembersResponse,
+  GetProjectsResponse,
+} from './types';
 
 export const createNewProject = async (
-  input: CreateProjectInput,
-): Promise<ApiResponse<Project>> => {
+  input: CreateProjectRequest,
+): Promise<ApiResponse<CreateProjectResponse>> => {
   try {
     const project = await createProject(input);
 
@@ -25,15 +31,17 @@ export const createNewProject = async (
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to create project'),
       data: null,
     };
   }
 };
 
-export const getProject = async (id: string): Promise<ApiResponse<Project>> => {
+export const getProjectDetails = async (
+  id: string,
+): Promise<ApiResponse<GetProjectDetailsResponse>> => {
   try {
-    const project = await getProjectById(id);
+    const project = await getProjectDetailsById(id);
 
     if (!project) {
       return {
@@ -54,13 +62,15 @@ export const getProject = async (id: string): Promise<ApiResponse<Project>> => {
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to fetch project'),
       data: null,
     };
   }
 };
 
-export const getProjects = async (includeArchived = false): Promise<ApiResponse<Project[]>> => {
+export const getProjects = async (
+  includeArchived = false,
+): Promise<ApiResponse<GetProjectsResponse>> => {
   try {
     const projects = await getAllProjects(includeArchived);
 
@@ -74,7 +84,7 @@ export const getProjects = async (includeArchived = false): Promise<ApiResponse<
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to fetch projects'),
       data: null,
     };
   }
@@ -82,31 +92,21 @@ export const getProjects = async (includeArchived = false): Promise<ApiResponse<
 
 export const getProjectMembers = async (
   projectId: string,
-): Promise<ApiResponse<ProjectMember[]>> => {
+): Promise<ApiResponse<GetProjectMembersResponse>> => {
   try {
-    const members = await getProjectMemberRows(projectId);
-    const users = await getUsersByIds(members.map((m) => m.userId));
-
-    const data: ProjectMember[] = members.map((m, i) => ({
-      id: m.id,
-      projectId: m.projectId,
-      userId: m.userId,
-      role: m.role,
-      name: users[i]?.name ?? '',
-      email: '',
-    }));
+    const members = await getProjectMembersByProject(projectId);
 
     return {
       status: 200,
       success: true,
       message: 'Successfully fetched members',
-      data,
+      data: members,
     };
   } catch (error) {
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to fetch members'),
       data: null,
     };
   }

@@ -1,14 +1,15 @@
-// lib/services/projects/hooks.ts
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createNewProject, getProject, getProjectMembers, getProjects } from './api';
-import type { CreateProjectInput } from './types';
+
+import { createNewProject, getProjectDetails, getProjectMembers, getProjects } from './api';
+
+import type { CreateProjectRequest } from './types';
 
 export const projectQueryKeys = {
   all: ['projects'] as const,
 
-  list: (includeArchived: boolean) => [...projectQueryKeys.all, includeArchived] as const,
+  list: (includeArchived: boolean) => [...projectQueryKeys.all, 'list', includeArchived] as const,
 
-  detail: (projectId: string) => [...projectQueryKeys.all, projectId] as const,
+  detail: (projectId: string) => [...projectQueryKeys.all, 'detail', projectId] as const,
 
   members: (projectId: string) => [...projectQueryKeys.all, 'members', projectId] as const,
 };
@@ -28,11 +29,11 @@ export const useGetAllProjects = (includeArchived: boolean = false) => {
   });
 };
 
-export const useGetProjectById = (projectId: string) => {
+export const useGetProjectDetails = (projectId: string) => {
   return useQuery({
     queryKey: projectQueryKeys.detail(projectId),
     queryFn: async () => {
-      const response = await getProject(projectId);
+      const response = await getProjectDetails(projectId);
 
       if (!response.success) {
         throw new Error(response.message);
@@ -40,6 +41,7 @@ export const useGetProjectById = (projectId: string) => {
 
       return response.data;
     },
+    enabled: !!projectId,
   });
 };
 
@@ -65,7 +67,7 @@ export const useCreateProject = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (input: CreateProjectInput) => {
+    mutationFn: async (input: CreateProjectRequest) => {
       const response = await createNewProject(input);
       if (!response.success) throw new Error(response.message);
       return response.data;
