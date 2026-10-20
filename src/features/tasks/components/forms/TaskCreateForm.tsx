@@ -17,6 +17,7 @@ import {
 } from '@/features/tasks/types/taskFormData';
 import { AssigneeSelect } from '@/features/tasks/components/inputs/AssigneeSelect';
 import TypeSelect from '../inputs/TypeSelect';
+import StageSelect from '../inputs/StageSelect';
 
 interface TaskCreateFormProps {
   projectId: string;
@@ -122,18 +123,17 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCre
           <div className="flex min-w-0 items-center gap-2">
             {/* Stage */}
             <FormInputBox error={errors.stage?.message}>
-              <select
-                {...register('stage')}
-                className="h-8 rounded-md border border-lines-hairline bg-surface px-2.5 text-type-caption text-ink-2 outline-none transition-colors hover:border-lines focus:border-lines-strong"
-              >
-                <option value="">Stage</option>
-
-                {stages.map((stage) => (
-                  <option key={stage.stageId} value={stage.id}>
-                    {stage.name}
-                  </option>
-                ))}
-              </select>
+              <StageSelect
+                stages={stages}
+                value={watch('stage')}
+                onChange={(value) => {
+                  setValue('stage', value, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
+                className="-mt-1"
+              />
             </FormInputBox>
 
             {/* Assignee */}

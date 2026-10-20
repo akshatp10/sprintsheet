@@ -22,6 +22,7 @@ import Chip from '@/components/chips/Chip';
 import { stageConfig, StageName } from '@/lib/stageConfig';
 import ExitAlert from '@/components/popupModals/ExitAlert';
 import TypeSelect from '../inputs/TypeSelect';
+import StageSelect from '../inputs/StageSelect';
 
 interface TaskDetailFormProps {
   className?: string;
@@ -173,17 +174,16 @@ const TaskDetailForm = ({ task, className, onClose }: TaskDetailFormProps) => {
                   className="flex items-center gap-2 rounded-md border-lines-hairline bg-surface"
                 />
               ) : (
-                <select
+                <StageSelect
+                  stages={visibleStages}
                   value={stageId}
-                  onChange={(e) => updateStage(e.target.value)}
-                  className="h-8 rounded-md border border-lines-hairline bg-surface px-2.5 text-type-caption text-ink-2 outline-none transition-colors hover:border-lines focus:border-lines-strong"
-                >
-                  {visibleStages.map((stage) => (
-                    <option key={stage.stageId} value={stage.id}>
-                      {stage.name}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(value) => {
+                    const nextValue = value ?? '';
+
+                    setValue('stageId', nextValue);
+                    updateStage(nextValue);
+                  }}
+                />
               )}
 
               {/* Assignees */}
