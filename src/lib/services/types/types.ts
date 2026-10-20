@@ -4,3 +4,7 @@ export interface Type {
   createdAt: number;
   updatedAt: number;
 }
+
+// Responses
+export type GetProjectTypesResponse = Type[];
+export type GetTypeResponse = Type;

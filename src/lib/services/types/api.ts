@@ -2,9 +2,11 @@ import { getAllTypesByProject, getType } from '@/lib/db/dbFunctions/typeFunction
 
 import { errorMessage, type ApiResponse } from '../types';
 
-import type { Type } from './types';
+import type { GetProjectTypesResponse, GetTypeResponse } from './types';
 
-export const getProjectTypesById = async (projectId: string): Promise<ApiResponse<Type[]>> => {
+export const getProjectTypesById = async (
+  projectId: string,
+): Promise<ApiResponse<GetProjectTypesResponse>> => {
   try {
     const types = await getAllTypesByProject(projectId);
 
@@ -24,7 +26,7 @@ export const getProjectTypesById = async (projectId: string): Promise<ApiRespons
   }
 };
 
-export const getTypeById = async (typeId: string): Promise<ApiResponse<Type>> => {
+export const getTypeById = async (typeId: string): Promise<ApiResponse<GetTypeResponse>> => {
   try {
     const type = await getType(typeId);
 

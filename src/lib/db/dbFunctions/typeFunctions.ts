@@ -1,6 +1,6 @@
 import db from '../db';
-
-import type { TypeRow, ProjectTypeRow } from '../db';
+import type { ProjectTypeRow, TypeRow } from '../db';
+import type { Type } from '@/lib/services/types/types';
 
 export const DEFAULT_TYPES = [
   'task',
@@ -52,16 +52,14 @@ export const createProjectType = async (
   return projectType;
 };
 
-export const getAllTypesByProject = async (projectId: string): Promise<TypeRow[]> => {
-  const projectTypes = await db.projectTypes.where('projectId').equals(projectId).toArray();
+export const getAllTypesByProject = (projectId: string): Promise<Type[]> =>
+  db.transaction('r', [db.projectTypes, db.types], async () => {
+    const projectTypes = await db.projectTypes.where('projectId').equals(projectId).toArray();
+    const rows = await db.types.bulkGet(projectTypes.map((projectType) => projectType.typeId));
 
-  const types = await Promise.all(
-    projectTypes.map((projectType) => db.types.get(projectType.typeId)),
-  );
+    return rows.filter((row): row is TypeRow => row !== undefined);
+  });
 
-  return types.filter((type): type is TypeRow => type !== undefined);
-};
-
-export const getType = async (id: string): Promise<TypeRow | undefined> => {
+export const getType = (id: string): Promise<Type | undefined> => {
   return db.types.get(id);
 };
