@@ -4,7 +4,7 @@ import SearchInput from '@/components/inputs/SearchInput';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import TaskCreateForm from './forms/TaskCreateForm';
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 import { ArrowUpToLine, Inbox } from 'lucide-react';
 import Text from '@/components/common/Text';
 import BacklogTaskCard from './BacklogTaskCard';
@@ -16,7 +16,7 @@ import { useMoveTasksAcrossCycle } from '@/lib/services/taskCycles/hooks';
 
 interface BacklogDrawerProps {
   handleClose: () => void;
-  backlogTasks: CycleTaskWithUsers[];
+  backlogTasks: CycleTaskItem[];
   currentCycleId: string;
 }
 

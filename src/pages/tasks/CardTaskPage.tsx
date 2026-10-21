@@ -3,12 +3,12 @@ import TaskCreateForm from '@/features/tasks/components/forms/TaskCreateForm';
 import StageViewBox from '@/features/tasks/components/StageViewBox';
 import TaskCard from '@/features/tasks/components/TaskCard';
 import type { Stage } from '@/lib/services/stages/type';
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 import { useState } from 'react';
 
 interface CardTaskPageProps {
   stages: Stage[];
-  tasksByStage: Record<string, CycleTaskWithUsers[]>;
+  tasksByStage: Record<string, CycleTaskItem[]>;
   isLoading: boolean;
   projectId: string;
   cycleId: string;

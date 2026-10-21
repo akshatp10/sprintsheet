@@ -1,9 +1,9 @@
 import { useUpdateTask } from '@/lib/services/tasks/hooks';
-import type { CycleTaskWithUsers, UpdateTaskInput } from '@/lib/services/tasks/types';
+import type { CycleTaskItem, UpdateTaskFields } from '@/lib/services/tasks/types';
 import { useCallback, useEffect, useRef } from 'react';
 
 type EditableTask = Pick<
-  CycleTaskWithUsers,
+  CycleTaskItem,
   'name' | 'description' | 'dueDate' | 'assigneeIds' | 'typeId'
 >;
 
@@ -14,7 +14,7 @@ interface UseTaskEditorOptions {
 }
 
 export const useTaskEditor = (
-  task: CycleTaskWithUsers,
+  task: CycleTaskItem,
   { debounceMs = 1000 }: UseTaskEditorOptions = {},
 ) => {
   const { mutate: updateTask } = useUpdateTask();
@@ -65,7 +65,7 @@ export const useTaskEditor = (
           projectId: task.projectId,
           updates: {
             [field]: value,
-          } as UpdateTaskInput,
+          } as UpdateTaskFields,
         },
         {
           onError: () => {

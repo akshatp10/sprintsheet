@@ -2,12 +2,12 @@ import Avatar from '@/components/avatar/Avatar';
 import AvatarGroup from '@/components/avatar/AvatarGroups';
 import Button from '@/components/button/Button';
 import Text from '@/components/common/Text';
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 import { useEffect, useRef, useState } from 'react';
 import { AssigneeSelect } from '../inputs/AssigneeSelect';
 
 interface EditableAssigneeCellProps {
-  task: CycleTaskWithUsers;
+  task: CycleTaskItem;
   onChange: (assigneeIds: string[]) => void;
   projectId: string;
   isDone?: boolean;

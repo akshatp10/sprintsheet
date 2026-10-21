@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 
 interface TaskDetailStates {
-  currentTask: CycleTaskWithUsers | null;
+  currentTask: CycleTaskItem | null;
 }
 
 interface TaskDetailActions {
-  openTask: (task: CycleTaskWithUsers) => void;
+  openTask: (task: CycleTaskItem) => void;
   closeTask: () => void;
 }
 

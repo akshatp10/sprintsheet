@@ -10,7 +10,7 @@ import Input from '@/components/inputs/Input';
 import TextArea from '@/components/inputs/TextArea';
 import { AssigneeSelect } from '@/features/tasks/components/inputs/AssigneeSelect';
 import { useProjectTypes } from '@/lib/services/types/hooks';
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 import { formatDate } from '@/lib/utils';
 import { cn } from '@/lib/cn';
 import { useTaskEditor } from '../../hooks/useTaskEditor';
@@ -24,7 +24,7 @@ import ExitAlert from '@/components/popupModals/ExitAlert';
 
 interface TaskDetailFormProps {
   className?: string;
-  task: CycleTaskWithUsers;
+  task: CycleTaskItem;
   onClose: () => void;
 }
 
@@ -37,7 +37,7 @@ interface TaskFormValues {
   stageId: string;
 }
 
-const getTaskFormValues = (task: CycleTaskWithUsers): TaskFormValues => ({
+const getTaskFormValues = (task: CycleTaskItem): TaskFormValues => ({
   name: task.name,
   description: task.description,
   dueDate: task.dueDate?.slice(0, 10) ?? '',

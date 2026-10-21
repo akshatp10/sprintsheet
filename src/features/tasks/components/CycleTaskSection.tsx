@@ -2,12 +2,12 @@ import CycleHeaderElement from '@/features/cycles/components/CycleHeaderElement'
 import AllTaskListItem from '@/features/tasks/components/listView/AllTaskListItem';
 import type { Cycle } from '@/lib/services/cycles/types';
 import { useGetStagesPerProject } from '@/lib/services/stages/hooks';
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 
 interface CycleTaskSectionProps {
   cycle: Cycle;
   status: 'active' | 'closed' | 'planned';
-  tasks: CycleTaskWithUsers[];
+  tasks: CycleTaskItem[];
   gridTemplateColumns: string;
   onSelectionChange: (taskId: string, selected: boolean) => void;
   selectedTaskIds: string[];

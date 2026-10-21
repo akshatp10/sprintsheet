@@ -2,16 +2,15 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { DragDropProvider, DragOverlay } from '@dnd-kit/react';
 
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 
 interface TaskDragDropProps {
   children:
-    | ReactNode
-    | ((state: { dragging: boolean; draggedTask: CycleTaskWithUsers | null }) => ReactNode);
-  tasksByStage: Record<string, CycleTaskWithUsers[]>;
+    ReactNode | ((state: { dragging: boolean; draggedTask: CycleTaskItem | null }) => ReactNode);
+  tasksByStage: Record<string, CycleTaskItem[]>;
   onDraggingChange: (isDragging: boolean) => void;
   onUpdateTaskStage: (taskId: string, stageId: string) => void;
-  renderOverlay: (task: CycleTaskWithUsers) => ReactNode;
+  renderOverlay: (task: CycleTaskItem) => ReactNode;
 }
 
 const TaskDragDrop = ({
@@ -23,7 +22,7 @@ const TaskDragDrop = ({
 }: TaskDragDropProps) => {
   const [dragging, setDragging] = useState(false);
 
-  const [draggedTask, setDraggedTask] = useState<CycleTaskWithUsers | null>(null);
+  const [draggedTask, setDraggedTask] = useState<CycleTaskItem | null>(null);
 
   const getTaskById = (taskId: string) => {
     return Object.values(tasksByStage)

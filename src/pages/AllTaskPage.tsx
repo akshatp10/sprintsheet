@@ -12,7 +12,7 @@ import { useMoveTasksAcrossCycle } from '@/lib/services/taskCycles/hooks';
 import {
   useBacklogTasks,
   useGetAllTasksByProject,
-  useGetTasksByCycle,
+  useTasksGroupedByCycle,
 } from '@/lib/services/tasks/hooks';
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -45,7 +45,7 @@ const AllTaskPage = () => {
   const [selectedTaskIds, setSelectedTaskIds] = useState<string[]>([]);
 
   const { data: allCycles = [] } = useGetAllCyclesByProject(projectid ?? '');
-  const { data: tasksByCycle = {} } = useGetTasksByCycle(projectid ?? '');
+  const { data: tasksByCycle = {} } = useTasksGroupedByCycle(projectid ?? '');
   const { data: allBacklogTasks } = useBacklogTasks(projectid ?? '');
   const { data: allTasks } = useGetAllTasksByProject(projectid ?? '');
   const { data: stages = [] } = useGetStagesPerProject(projectid ?? '');

@@ -90,7 +90,7 @@ export const useTasksByStage = (cycleId: string) => {
   return useQuery({ ...cycleTasksQueryOptions(cycleId), select: groupByStage });
 };
 
-// Was useGetTasksByCycle(projectId): one db call instead of cycles + N task queries + users.
+// Was useGetTasksByCycle(projectId)
 export const useTasksGroupedByCycle = (projectId: string) => {
   return useQuery({
     queryKey: taskQueryKeys.projectCycles(projectId),

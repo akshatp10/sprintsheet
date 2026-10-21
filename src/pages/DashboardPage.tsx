@@ -13,7 +13,7 @@ import { useTasksByStage } from '@/lib/services/tasks/hooks';
 import NoCycleActive from '@/features/cycles/components/NoCycleActive';
 import { useGetProjectUsers } from '@/lib/services/users/hooks';
 import { useMemo } from 'react';
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 import type { TaskNeedingAttention } from '@/features/dashboard/types/types';
 import { getCurrentCycleDay, getCycleLength } from '@/lib/utils';
 
@@ -44,13 +44,13 @@ const DashboardPage = () => {
   const { tasksByUsers, unassignedTasks, needsAttentionTasks } = useMemo(() => {
     const cycleTasks = Object.values(tasksByStage).flat();
 
-    const userTasksMap = new Map<string, CycleTaskWithUsers[]>();
+    const userTasksMap = new Map<string, CycleTaskItem[]>();
 
     users.forEach((user) => {
       userTasksMap.set(user.id, []);
     });
 
-    const unassignedTasks: CycleTaskWithUsers[] = [];
+    const unassignedTasks: CycleTaskItem[] = [];
     const needsAttentionTasks: TaskNeedingAttention[] = [];
 
     const today = new Date();
