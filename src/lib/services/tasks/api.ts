@@ -2,16 +2,27 @@ import {
   createTask,
   getAllTasksByProject,
   getBacklogTasksByProject,
+  getCycleTasksByProject,
   getTasksByCycle,
   updateTask,
-  type CycleTaskRow,
 } from '@/lib/db/dbFunctions/taskFunctions';
 
 import { errorMessage, type ApiResponse } from '../types';
 
-import type { CreateTaskInput, Task, TaskWithStage, UpdateTaskInput } from './types';
+import type {
+  CreateTaskRequest,
+  CreateTaskResponse,
+  GetBacklogTasksResponse,
+  GetCycleTasksResponse,
+  GetProjectCycleTasksResponse,
+  GetProjectTasksResponse,
+  UpdateTaskRequest,
+  UpdateTaskResponse,
+} from './types';
 
-export const createNewTask = async (input: CreateTaskInput): Promise<ApiResponse<Task>> => {
+export const createNewTask = async (
+  input: CreateTaskRequest,
+): Promise<ApiResponse<CreateTaskResponse>> => {
   try {
     const task = await createTask(input);
 
@@ -33,7 +44,7 @@ export const createNewTask = async (input: CreateTaskInput): Promise<ApiResponse
 
 export const getAllProjectTasks = async (
   projectId: string,
-): Promise<ApiResponse<TaskWithStage[]>> => {
+): Promise<ApiResponse<GetProjectTasksResponse>> => {
   try {
     const tasks = await getAllTasksByProject(projectId);
 
@@ -55,7 +66,7 @@ export const getAllProjectTasks = async (
 
 export const getAllProjectBacklogTasks = async (
   projectId: string,
-): Promise<ApiResponse<Task[]>> => {
+): Promise<ApiResponse<GetBacklogTasksResponse>> => {
   try {
     const tasks = await getBacklogTasksByProject(projectId);
 
@@ -75,7 +86,9 @@ export const getAllProjectBacklogTasks = async (
   }
 };
 
-export const getAllCycleTasks = async (cycleId: string): Promise<ApiResponse<CycleTaskRow[]>> => {
+export const getAllCycleTasks = async (
+  cycleId: string,
+): Promise<ApiResponse<GetCycleTasksResponse>> => {
   try {
     const tasks = await getTasksByCycle(cycleId);
 
@@ -95,12 +108,34 @@ export const getAllCycleTasks = async (cycleId: string): Promise<ApiResponse<Cyc
   }
 };
 
-export const updateExistingTask = async (
-  id: string,
-  input: UpdateTaskInput,
-): Promise<ApiResponse<Task>> => {
+export const getAllProjectCycleTasks = async (
+  projectId: string,
+): Promise<ApiResponse<GetProjectCycleTasksResponse>> => {
   try {
-    const task = await updateTask(id, input);
+    const tasks = await getCycleTasksByProject(projectId);
+
+    return {
+      status: 200,
+      success: true,
+      message: 'Successfully fetched cycle tasks',
+      data: tasks,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      success: false,
+      message: errorMessage(error, 'Failed to fetch cycle tasks for project'),
+      data: null,
+    };
+  }
+};
+
+export const updateExistingTask = async ({
+  id,
+  updates,
+}: UpdateTaskRequest): Promise<ApiResponse<UpdateTaskResponse>> => {
+  try {
+    const task = await updateTask(id, updates);
 
     if (!task) {
       return {

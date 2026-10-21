@@ -1,3 +1,6 @@
+import type { Stage } from '../stages/type';
+import type { UserSummary } from '../users/types';
+
 export interface Task {
   id: string;
   key: string;
@@ -13,7 +16,18 @@ export interface Task {
   updatedAt: number;
 }
 
-export interface CreateTaskInput {
+export interface TaskItem extends Task {
+  stage: Stage;
+  assignees: UserSummary[];
+}
+
+export interface CycleTaskItem extends TaskItem {
+  taskCycleId: string;
+  cycleId: string;
+}
+
+// Requests
+export interface CreateTaskRequest {
   projectId: string;
   name: string;
   description?: string;
@@ -27,30 +41,20 @@ export interface CreateTaskInput {
   };
 }
 
-export type UpdateTaskInput = Partial<Omit<Task, 'id' | 'createdAt' | 'updatedAt'>>;
+export type UpdateTaskFields = Partial<
+  Pick<Task, 'name' | 'description' | 'assigneeIds' | 'dueDate' | 'tags' | 'typeId'>
+>;
 
-import type { ProjectStageRow } from '@/lib/db/db';
-import type { User } from '../users/types';
-
-export interface TaskWithUsers extends Task {
-  assignees: User[];
-}
-
-export interface TaskWithStage extends Task {
-  stage: ProjectStageRow;
-}
-
-export interface TaskWithStageAndUsers extends TaskWithStage {
-  assignees: User[];
-}
-
-export interface CycleTaskWithUsers extends TaskWithUsers {
-  taskCycleId?: string;
-  stage: ProjectStageRow;
-}
-
-export interface UpdateTaskVariables {
+export interface UpdateTaskRequest {
   id: string;
   projectId: string;
-  updates: UpdateTaskInput;
+  updates: UpdateTaskFields;
 }
+
+// Responses
+export type CreateTaskResponse = Task;
+export type UpdateTaskResponse = Task;
+export type GetProjectTasksResponse = TaskItem[];
+export type GetBacklogTasksResponse = CycleTaskItem[];
+export type GetCycleTasksResponse = CycleTaskItem[];
+export type GetProjectCycleTasksResponse = CycleTaskItem[];

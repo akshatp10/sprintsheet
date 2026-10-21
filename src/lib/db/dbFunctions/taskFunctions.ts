@@ -1,33 +1,72 @@
 import db from '../db';
-
 import type { ProjectStageRow, TaskCycleRow, TaskRow } from '../db';
-type UpdateTaskInput = Partial<Omit<TaskRow, 'id' | 'createdAt' | 'updatedAt'>>;
+import type {
+  CreateTaskRequest,
+  CycleTaskItem,
+  Task,
+  TaskItem,
+  UpdateTaskFields,
+} from '@/lib/services/tasks/types';
 
-interface CreateTaskRow {
-  projectId: string;
-  name: string;
-  description?: string;
-  assigneeIds?: string[];
-  dueDate?: string | null;
-  typeId: string;
-  tags?: string[];
-  cycle?: {
-    id: string;
-    stageId: string;
-  };
-}
+import { applyTaskPlacement } from './taskCycleFunctions';
+import { toUserSummary } from './userFunctions';
+import { BACKLOG_STAGE_NAME } from '@/lib/services/stages/type';
 
-export interface CycleTaskRow extends TaskRow {
-  taskCycleId: string;
-  stage: ProjectStageRow;
-}
+// bulkGet results (with undefined for missing rows) → Map by id
+const mapById = <T extends { id: string }>(rows: (T | undefined)[]) =>
+  new Map(rows.flatMap((row) => (row ? [[row.id, row] as const] : [])));
 
-export interface TaskWithStageRow extends TaskRow {
-  stage: ProjectStageRow;
-}
+const findBacklogStage = async (projectId: string): Promise<ProjectStageRow> => {
+  const stage = await db.projectStages
+    .where('projectId')
+    .equals(projectId)
+    .filter((projectStage) => projectStage.name === BACKLOG_STAGE_NAME)
+    .first();
 
-export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
-  return db.transaction(
+  if (!stage) {
+    throw new Error('Backlog stage not found');
+  }
+
+  return stage;
+};
+
+// Needs db.users. Assignees are summaries (id + name only).
+const attachAssignees = async (tasks: TaskRow[]) => {
+  const users = mapById(await db.users.bulkGet([...new Set(tasks.flatMap((t) => t.assigneeIds))]));
+
+  return tasks.map((task) => ({
+    ...task,
+    assignees: task.assigneeIds.flatMap((id) => {
+      const user = users.get(id);
+      return user ? [toUserSummary(user)] : [];
+    }),
+  }));
+};
+
+// Needs tasks, projectStages, users. One item per taskCycle row.
+const buildCycleTaskItems = async (taskCycles: TaskCycleRow[]): Promise<CycleTaskItem[]> => {
+  const [tasks, stages] = await Promise.all([
+    db.tasks.bulkGet(taskCycles.map((taskCycle) => taskCycle.taskId)),
+    db.projectStages.bulkGet(taskCycles.map((taskCycle) => taskCycle.stageId)),
+  ]);
+
+  const tasksById = mapById(await attachAssignees(tasks.flatMap((task) => task ?? [])));
+  const stagesById = mapById(stages);
+
+  return taskCycles
+    .flatMap((taskCycle) => {
+      const task = tasksById.get(taskCycle.taskId);
+      const stage = stagesById.get(taskCycle.stageId);
+
+      return task && stage
+        ? [{ ...task, stage, taskCycleId: taskCycle.id, cycleId: taskCycle.cycleId }]
+        : [];
+    })
+    .sort((a, b) => a.key.localeCompare(b.key, undefined, { numeric: true }));
+};
+
+export const createTask = (input: CreateTaskRequest): Promise<Task> =>
+  db.transaction(
     'rw',
     [db.projects, db.projectTypes, db.tasks, db.cycles, db.projectStages, db.taskCycles],
     async () => {
@@ -46,38 +85,6 @@ export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
         throw new Error('Type is not available in this project');
       }
 
-      // Resolve the stage first, since it decides backlog vs cycle
-      let isBacklogStage = false;
-
-      if (input.cycle) {
-        const projectStage = await db.projectStages.get(input.cycle.stageId);
-
-        if (!projectStage) {
-          throw new Error('Project stage not found');
-        }
-
-        if (projectStage.projectId !== input.projectId) {
-          throw new Error('Stage does not belong to this project');
-        }
-
-        isBacklogStage = projectStage.name === 'Backlog';
-
-        // Cycle only matters when the task actually goes into it
-        if (!isBacklogStage) {
-          const cycle = await db.cycles.get(input.cycle.id);
-
-          if (!cycle) {
-            throw new Error('Cycle not found');
-          }
-
-          if (cycle.projectId !== input.projectId) {
-            throw new Error('Cycle does not belong to this project');
-          }
-        }
-      }
-
-      const cycleInput = input.cycle && !isBacklogStage ? input.cycle : null;
-
       const taskNumber = project.nextTaskNumber;
       const now = Date.now();
 
@@ -91,171 +98,123 @@ export const createTask = async (input: CreateTaskRow): Promise<TaskRow> => {
         dueDate: input.dueDate ?? null,
         typeId: input.typeId,
         tags: input.tags ?? [],
-        isBacklog: cycleInput ? 0 : 1,
+        isBacklog: 1,
         createdAt: now,
         updatedAt: now,
       };
 
       await db.tasks.add(task);
 
-      await db.projects.update(project.id, {
-        nextTaskNumber: taskNumber + 1,
-        updatedAt: now,
-      });
+      await db.projects.update(project.id, { nextTaskNumber: taskNumber + 1, updatedAt: now });
 
-      if (cycleInput) {
-        const newTaskCycle: TaskCycleRow = {
-          id: crypto.randomUUID(),
-          taskId: task.id,
-          cycleId: cycleInput.id,
-          stageId: cycleInput.stageId,
-          createdAt: now,
-          updatedAt: now,
-        };
-
-        await db.taskCycles.add(newTaskCycle);
+      // Cycle placement goes through the same validation as every move.
+      if (input.cycle) {
+        await applyTaskPlacement(
+          task.id,
+          null,
+          { type: 'cycle', cycleId: input.cycle.id, stageId: input.cycle.stageId },
+          now,
+        );
       }
 
-      return task;
+      return (await db.tasks.get(task.id))!;
     },
   );
-};
 
-export const getAllTasksByProject = async (projectId: string): Promise<TaskWithStageRow[]> => {
-  const tasks = await db.tasks.where('projectId').equals(projectId).sortBy('createdAt');
+export const updateTask = (id: string, updates: UpdateTaskFields): Promise<Task | undefined> =>
+  db.transaction('rw', [db.tasks, db.projectTypes], async () => {
+    const task = await db.tasks.get(id);
 
-  if (tasks.length === 0) {
-    return [];
-  }
-
-  const backlogStage = await db.projectStages
-    .where('projectId')
-    .equals(projectId)
-    .filter((stage) => stage.name === 'Backlog')
-    .first();
-
-  if (!backlogStage) {
-    throw new Error('Backlog stage not found');
-  }
-
-  const nonBacklogTasks = tasks.filter((task) => !task.isBacklog);
-
-  const taskCycles = await db.taskCycles
-    .where('taskId')
-    .anyOf(nonBacklogTasks.map((task) => task.id))
-    .toArray();
-
-  const latestTaskCycleByTaskId = new Map<string, TaskCycleRow>();
-
-  for (const taskCycle of taskCycles) {
-    const existing = latestTaskCycleByTaskId.get(taskCycle.taskId);
-
-    if (!existing || taskCycle.updatedAt > existing.updatedAt) {
-      latestTaskCycleByTaskId.set(taskCycle.taskId, taskCycle);
-    }
-  }
-
-  const stageIds = [...new Set(taskCycles.map((taskCycle) => taskCycle.stageId))];
-
-  const stages = await db.projectStages.bulkGet(stageIds);
-
-  const stagesById = new Map(
-    stages
-      .filter((stage): stage is ProjectStageRow => stage !== undefined)
-      .map((stage) => [stage.id, stage]),
-  );
-
-  return tasks.flatMap((task) => {
-    if (task.isBacklog) {
-      return [
-        {
-          ...task,
-          stage: backlogStage,
-        },
-      ];
+    if (!task) {
+      return undefined;
     }
 
-    const taskCycle = latestTaskCycleByTaskId.get(task.id);
+    if (updates.typeId && updates.typeId !== task.typeId) {
+      const projectType = await db.projectTypes
+        .where('[projectId+typeId]')
+        .equals([task.projectId, updates.typeId])
+        .first();
 
-    if (!taskCycle) {
-      return [];
+      if (!projectType) {
+        throw new Error('Type is not available in this project');
+      }
     }
 
-    const stage = stagesById.get(taskCycle.stageId);
+    await db.tasks.update(id, { ...updates, updatedAt: Date.now() });
 
-    if (!stage) {
-      return [];
-    }
-
-    return [
-      {
-        ...task,
-        stage,
-      },
-    ];
+    return db.tasks.get(id);
   });
-};
 
-export const getBacklogTasksByProject = async (projectId: string): Promise<TaskRow[]> => {
-  return db.tasks.where('[projectId+isBacklog]').equals([projectId, 1]).sortBy('createdAt');
-};
+// Every task with its current stage. A task can be in several cycles; its current stage comes from its most recently updated taskCycle. Backlog tasks get the Backlog stage.
+export const getAllTasksByProject = (projectId: string): Promise<TaskItem[]> =>
+  db.transaction('r', [db.tasks, db.projectStages, db.taskCycles, db.users], async () => {
+    const tasks = await db.tasks.where('projectId').equals(projectId).sortBy('createdAt');
 
-export const getTasksByCycle = async (cycleId: string): Promise<CycleTaskRow[]> => {
-  const taskCycles = await db.taskCycles.where('cycleId').equals(cycleId).toArray();
+    if (tasks.length === 0) {
+      return [];
+    }
 
-  if (taskCycles.length === 0) {
-    return [];
-  }
+    const backlogStage = await findBacklogStage(projectId);
 
-  const taskIds = taskCycles.map((taskCycle) => taskCycle.taskId);
+    const placedTaskIds = tasks.filter((task) => !task.isBacklog).map((task) => task.id);
+    const taskCycles = await db.taskCycles.where('taskId').anyOf(placedTaskIds).toArray();
 
-  const stageIds = taskCycles.map((taskCycle) => taskCycle.stageId);
+    // Sorted oldest → newest, so the latest taskCycle of each task overwrites the earlier ones.
+    const latestByTaskId = new Map(
+      taskCycles
+        .sort((a, b) => a.updatedAt - b.updatedAt || a.createdAt - b.createdAt)
+        .map((taskCycle) => [taskCycle.taskId, taskCycle] as const),
+    );
 
-  const [tasks, stages] = await Promise.all([
-    db.tasks.bulkGet(taskIds),
-    db.projectStages.bulkGet(stageIds),
-  ]);
+    const stagesById = mapById(
+      await db.projectStages.bulkGet([...latestByTaskId.values()].map((tc) => tc.stageId)),
+    );
 
-  const tasksById = new Map(
-    tasks.filter((task): task is TaskRow => task !== undefined).map((task) => [task.id, task]),
-  );
-
-  const stagesById = new Map(
-    stages
-      .filter((stage): stage is ProjectStageRow => stage !== undefined)
-      .map((stage) => [stage.id, stage]),
-  );
-
-  return taskCycles
-    .flatMap((taskCycle) => {
-      const task = tasksById.get(taskCycle.taskId);
-      const stage = stagesById.get(taskCycle.stageId);
-
-      if (!task || !stage) {
-        return [];
+    return (await attachAssignees(tasks)).flatMap((task) => {
+      if (task.isBacklog) {
+        return [{ ...task, stage: backlogStage }];
       }
 
-      return [
-        {
-          ...task,
-          taskCycleId: taskCycle.id,
-          stage,
-        },
-      ];
-    })
-    .sort((a, b) => a.key.localeCompare(b.key));
-};
+      const taskCycle = latestByTaskId.get(task.id);
+      const stage = taskCycle && stagesById.get(taskCycle.stageId);
 
-export const updateTask = async (
-  id: string,
-  updates: UpdateTaskInput,
-): Promise<TaskRow | undefined> => {
-  const updatedAt = Date.now();
-
-  await db.tasks.update(id, {
-    ...updates,
-    updatedAt,
+      return stage ? [{ ...task, stage }] : [];
+    });
   });
 
-  return db.tasks.get(id);
-};
+export const getBacklogTasksByProject = (projectId: string): Promise<CycleTaskItem[]> =>
+  db.transaction('r', [db.tasks, db.projectStages, db.users], async () => {
+    const backlogStage = await findBacklogStage(projectId);
+
+    const tasks = await db.tasks
+      .where('[projectId+isBacklog]')
+      .equals([projectId, 1])
+      .sortBy('createdAt');
+
+    return (await attachAssignees(tasks)).map((task) => ({
+      ...task,
+      stage: backlogStage,
+      taskCycleId: '',
+      cycleId: '',
+    }));
+  });
+
+export const getTasksByCycle = (cycleId: string): Promise<CycleTaskItem[]> =>
+  db.transaction('r', [db.taskCycles, db.tasks, db.projectStages, db.users], async () => {
+    const taskCycles = await db.taskCycles.where('cycleId').equals(cycleId).toArray();
+
+    return buildCycleTaskItems(taskCycles);
+  });
+
+// All cycle tasks of a project in one call.
+export const getCycleTasksByProject = (projectId: string): Promise<CycleTaskItem[]> =>
+  db.transaction(
+    'r',
+    [db.cycles, db.taskCycles, db.tasks, db.projectStages, db.users],
+    async () => {
+      const cycleIds = await db.cycles.where('projectId').equals(projectId).primaryKeys();
+      const taskCycles = await db.taskCycles.where('cycleId').anyOf(cycleIds).toArray();
+
+      return buildCycleTaskItems(taskCycles);
+    },
+  );

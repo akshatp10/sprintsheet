@@ -1,224 +1,237 @@
-import type { TaskDestination } from '@/lib/services/taskCycles/types';
+import { BACKLOG_STAGE_NAME } from '@/lib/services/stages/type';
 import db from '../db';
-
 import type { TaskCycleRow, TaskRow } from '../db';
+import type {
+  CreateTaskCycleRequest,
+  DeleteTaskCycleResponse,
+  MoveTasksRequest,
+  TaskCycle,
+  TaskDestination,
+} from '@/lib/services/taskCycles/types';
+import type { Task } from '@/lib/services/tasks/types';
 
-interface CreateTaskCycleInput {
-  taskId: string;
-  cycleId: string;
-  stageId: string;
-}
+// Applies placement changes. Call inside a transaction covering all four tables.
+// Backlog means the task has no taskCycles rows.
+export const applyTaskPlacement = async (
+  taskId: string,
+  fromCycleId: string | null,
+  destination: TaskDestination,
+  now = Date.now(),
+): Promise<{ task: TaskRow; taskCycle: TaskCycleRow | null }> => {
+  const task = await db.tasks.get(taskId);
 
-export const createTaskCycle = async (input: CreateTaskCycleInput): Promise<TaskCycleRow> => {
-  return db.transaction('rw', [db.tasks, db.cycles, db.projectStages, db.taskCycles], async () => {
-    const [task, cycle, projectStage] = await Promise.all([
-      db.tasks.get(input.taskId),
-      db.cycles.get(input.cycleId),
-      db.projectStages.get(input.stageId),
-    ]);
+  if (!task) {
+    throw new Error('Task not found');
+  }
 
-    if (!task) {
-      throw new Error('Task not found');
-    }
+  let target: Extract<TaskDestination, { type: 'cycle' }> | null = null;
 
-    if (!cycle) {
-      throw new Error('Cycle not found');
-    }
+  if (destination.type === 'cycle') {
+    const stage = await db.projectStages.get(destination.stageId);
 
-    if (!projectStage) {
+    if (!stage) {
       throw new Error('Project stage not found');
     }
 
-    if (task.projectId !== cycle.projectId) {
-      throw new Error('Task and cycle belong to different projects');
+    if (stage.projectId !== task.projectId) {
+      throw new Error('Stage does not belong to this project');
     }
 
-    if (projectStage.projectId !== cycle.projectId) {
-      throw new Error('Stage does not belong to cycle project');
+    // The Backlog stage means actual backlog placement, not a cycle assignment.
+    if (stage.name !== BACKLOG_STAGE_NAME) {
+      const cycle = await db.cycles.get(destination.cycleId);
+
+      if (!cycle) {
+        throw new Error('Cycle not found');
+      }
+
+      if (cycle.projectId !== task.projectId) {
+        throw new Error('Cycle does not belong to this project');
+      }
+
+      target = destination;
+    }
+  }
+
+  const rows = await db.taskCycles.where('taskId').equals(taskId).toArray();
+
+  const source = fromCycleId ? rows.find((row) => row.cycleId === fromCycleId) : undefined;
+
+  // Backlog: remove every cycle assignment.
+  if (!target) {
+    await db.taskCycles.where('taskId').equals(taskId).delete();
+
+    await db.tasks.update(taskId, {
+      isBacklog: 1,
+      updatedAt: now,
+    });
+
+    return {
+      task: (await db.tasks.get(taskId))!,
+      taskCycle: null,
+    };
+  }
+
+  const { cycleId, stageId } = target;
+  const existingTarget = rows.find((row) => row.cycleId === cycleId);
+
+  let taskCycle: TaskCycleRow;
+
+  if (existingTarget) {
+    // Reuse the destination assignment.
+    await db.taskCycles.update(existingTarget.id, {
+      stageId,
+      updatedAt: now,
+    });
+
+    // Remove the source assignment if it differs from the destination.
+    if (source && source.id !== existingTarget.id) {
+      await db.taskCycles.delete(source.id);
     }
 
-    const existing = await db.taskCycles
-      .where('[cycleId+taskId]')
-      .equals([input.cycleId, input.taskId])
-      .first();
+    taskCycle = (await db.taskCycles.get(existingTarget.id))!;
+  } else if (source) {
+    // Move the source assignment to the destination cycle.
+    await db.taskCycles.update(source.id, {
+      cycleId,
+      stageId,
+      updatedAt: now,
+    });
 
-    if (existing) {
-      return existing;
-    }
-
-    const now = Date.now();
-
-    const taskCycle: TaskCycleRow = {
+    taskCycle = (await db.taskCycles.get(source.id))!;
+  } else {
+    // No source assignment: create a new cycle assignment.
+    taskCycle = {
       id: crypto.randomUUID(),
-      taskId: input.taskId,
-      cycleId: input.cycleId,
-      stageId: input.stageId,
+      taskId,
+      cycleId,
+      stageId,
       createdAt: now,
       updatedAt: now,
     };
 
     await db.taskCycles.add(taskCycle);
+  }
 
-    await db.tasks.update(task.id, {
-      isBacklog: 0,
-      updatedAt: now,
+  await db.tasks.update(taskId, {
+    isBacklog: 0,
+    updatedAt: now,
+  });
+
+  return {
+    task: (await db.tasks.get(taskId))!,
+    taskCycle,
+  };
+};
+
+// Creates a cycle assignment, or places the task in the backlog
+// if the requested stage is Backlog.
+export const createTaskCycle = (input: CreateTaskCycleRequest): Promise<TaskCycle | null> =>
+  db.transaction('rw', [db.tasks, db.cycles, db.projectStages, db.taskCycles], async () => {
+    const { taskCycle } = await applyTaskPlacement(input.taskId, null, {
+      type: 'cycle',
+      cycleId: input.cycleId,
+      stageId: input.stageId,
     });
 
     return taskCycle;
   });
-};
 
-// Stage change within a cycle (existing function, with a project check added)
-export const updateTaskCycleStage = async (
-  taskCycleId: string,
-  stageId: string,
-): Promise<TaskCycleRow> => {
-  return db.transaction('rw', [db.taskCycles, db.cycles, db.projectStages], async () => {
+// Changes the stage within a cycle.
+export const updateTaskCycleStage = (taskCycleId: string, stageId: string): Promise<TaskCycle> =>
+  db.transaction('rw', [db.taskCycles, db.cycles, db.projectStages], async () => {
     const taskCycle = await db.taskCycles.get(taskCycleId);
-    if (!taskCycle) throw new Error('Task cycle not found');
+
+    if (!taskCycle) {
+      throw new Error('Task cycle not found');
+    }
 
     const [cycle, stage] = await Promise.all([
       db.cycles.get(taskCycle.cycleId),
       db.projectStages.get(stageId),
     ]);
-    if (!cycle) throw new Error('Cycle not found');
+
+    if (!cycle) {
+      throw new Error('Cycle not found');
+    }
+
     if (!stage || stage.projectId !== cycle.projectId) {
       throw new Error('Stage does not belong to this project');
     }
 
-    await db.taskCycles.update(taskCycleId, {
-      stageId,
-      updatedAt: Date.now(),
-    });
+    await db.taskCycles.update(taskCycleId, { stageId, updatedAt: Date.now() });
 
     return (await db.taskCycles.get(taskCycleId))!;
   });
-};
 
-// Move between cycles / backlog
-export const moveTaskAcrossCycle = async (
+// Moves a task between cycles or into the backlog.
+export const moveTaskAcrossCycle = (
   taskId: string,
+  fromCycleId: string | null,
   destination: TaskDestination,
-): Promise<TaskRow> => {
-  return db.transaction('rw', [db.tasks, db.cycles, db.projectStages, db.taskCycles], async () => {
-    const task = await db.tasks.get(taskId);
-    if (!task) throw new Error('Task not found');
+): Promise<Task> =>
+  db.transaction('rw', [db.tasks, db.cycles, db.projectStages, db.taskCycles], async () => {
+    const { task } = await applyTaskPlacement(taskId, fromCycleId, destination);
 
-    const existing = await db.taskCycles.where('taskId').equals(taskId).first();
-
-    const now = Date.now();
-
-    if (destination.type === 'backlog') {
-      if (existing) await db.taskCycles.delete(existing.id);
-
-      await db.tasks.update(taskId, { isBacklog: 1, updatedAt: now });
-    } else {
-      const [cycle, stage] = await Promise.all([
-        db.cycles.get(destination.cycleId),
-        db.projectStages.get(destination.stageId),
-      ]);
-      if (!cycle) throw new Error('Cycle not found');
-      if (cycle.projectId !== task.projectId) {
-        throw new Error('Cycle belongs to a different project');
-      }
-      if (!stage || stage.projectId !== task.projectId) {
-        throw new Error('Stage does not belong to this project');
-      }
-
-      if (existing) {
-        // cycle -> cycle: keep the row, repoint it
-        await db.taskCycles.update(existing.id, {
-          cycleId: destination.cycleId,
-          stageId: destination.stageId,
-          updatedAt: now,
-        });
-      } else {
-        // backlog -> cycle: new row
-        await db.taskCycles.add({
-          id: crypto.randomUUID(),
-          taskId,
-          cycleId: destination.cycleId,
-          stageId: destination.stageId,
-          createdAt: now,
-          updatedAt: now,
-        });
-      }
-
-      await db.tasks.update(taskId, { isBacklog: 0, updatedAt: now });
-    }
-
-    return (await db.tasks.get(taskId))!;
+    return task as Task;
   });
-};
 
-export const moveMultipleTasksAcrossCycle = async (
-  taskIds: string[],
+// Moves multiple tasks atomically.
+export const moveMultipleTasksAcrossCycle = (
+  moves: MoveTasksRequest['tasks'],
   destination: TaskDestination,
-): Promise<TaskRow[]> => {
-  return db.transaction('rw', [db.tasks, db.cycles, db.projectStages, db.taskCycles], async () => {
-    const moved: TaskRow[] = [];
+): Promise<Task[]> =>
+  db.transaction('rw', [db.tasks, db.cycles, db.projectStages, db.taskCycles], async () => {
+    const now = Date.now();
+    const moved: Task[] = [];
 
-    for (const taskId of taskIds) {
-      moved.push(await moveTaskAcrossCycle(taskId, destination));
+    for (const { taskId, fromCycleId } of moves) {
+      const { task } = await applyTaskPlacement(taskId, fromCycleId, destination, now);
+
+      moved.push(task as Task);
     }
 
     return moved;
   });
-};
 
-export const getTaskCyclesUsingId = async (id: string): Promise<TaskCycleRow | undefined> => {
-  return db.taskCycles.get(id);
-};
-export const getTaskCyclesByCycle = async (cycleId: string): Promise<TaskCycleRow[]> => {
-  return db.taskCycles.where('cycleId').equals(cycleId).toArray();
-};
+export const getTaskCycleById = (id: string): Promise<TaskCycle | undefined> =>
+  db.taskCycles.get(id);
 
-export const getTaskCyclesByTask = async (taskId: string): Promise<TaskCycleRow[]> => {
-  return db.taskCycles.where('taskId').equals(taskId).toArray();
-};
+export const getTaskCyclesByCycle = (cycleId: string): Promise<TaskCycle[]> =>
+  db.taskCycles.where('cycleId').equals(cycleId).toArray();
 
-export const getTaskCyclesByProject = async (projectId: string): Promise<TaskCycleRow[]> => {
-  const cycles = await db.cycles.where('projectId').equals(projectId).toArray();
+export const getTaskCyclesByTask = (taskId: string): Promise<TaskCycle[]> =>
+  db.taskCycles.where('taskId').equals(taskId).toArray();
 
-  if (cycles.length === 0) {
-    return [];
-  }
+export const getTaskCyclesByProject = (projectId: string): Promise<TaskCycle[]> =>
+  db.transaction('r', [db.cycles, db.taskCycles], async () => {
+    const cycleIds = await db.cycles.where('projectId').equals(projectId).primaryKeys();
 
-  const taskCycles = await Promise.all(
-    cycles.map((cycle) => db.taskCycles.where('cycleId').equals(cycle.id).toArray()),
-  );
+    if (cycleIds.length === 0) {
+      return [];
+    }
 
-  return taskCycles.flat();
-};
+    return db.taskCycles.where('cycleId').anyOf(cycleIds).toArray();
+  });
 
-export interface DeleteTaskCycleResult {
-  taskId: string;
-  taskCycleId: string | null;
-  cycleId: string | null;
-  projectId: string;
-}
-
-export const deleteTaskCycle = async (
+// taskCycleId null → delete the (backlog) task itself
+// taskCycleId given → remove the task from that cycle; backlog only if it was its last cycle
+export const deleteTaskCycle = (
   taskId: string,
   taskCycleId: string | null,
-): Promise<DeleteTaskCycleResult> => {
-  return db.transaction('rw', [db.tasks, db.taskCycles], async () => {
+): Promise<DeleteTaskCycleResponse> =>
+  db.transaction('rw', [db.tasks, db.taskCycles], async () => {
     const task = await db.tasks.get(taskId);
 
     if (!task) {
       throw new Error('Task not found');
     }
 
-    // Backlog task → delete the task itself.
     if (!taskCycleId) {
+      await db.taskCycles.where('taskId').equals(taskId).delete(); // never leave stray rows
       await db.tasks.delete(taskId);
 
-      return {
-        taskId,
-        taskCycleId: null,
-        cycleId: null,
-        projectId: task.projectId,
-      };
+      return { taskId, taskCycleId: null, cycleId: null, projectId: task.projectId };
     }
 
     const taskCycle = await db.taskCycles.get(taskCycleId);
@@ -231,25 +244,13 @@ export const deleteTaskCycle = async (
       throw new Error('Task cycle does not belong to this task');
     }
 
-    const cycleId = taskCycle.cycleId;
-
     await db.taskCycles.delete(taskCycleId);
 
-    // If this was the task's last cycle, move it back to backlog.
-    const remainingTaskCycle = await db.taskCycles.where('taskId').equals(taskId).first();
+    const remaining = await db.taskCycles.where('taskId').equals(taskId).count();
 
-    if (!remainingTaskCycle) {
-      await db.tasks.update(taskId, {
-        isBacklog: 1,
-        updatedAt: Date.now(),
-      });
+    if (remaining === 0) {
+      await db.tasks.update(taskId, { isBacklog: 1, updatedAt: Date.now() });
     }
 
-    return {
-      taskId,
-      taskCycleId,
-      cycleId,
-      projectId: task.projectId,
-    };
+    return { taskId, taskCycleId, cycleId: taskCycle.cycleId, projectId: task.projectId };
   });
-};

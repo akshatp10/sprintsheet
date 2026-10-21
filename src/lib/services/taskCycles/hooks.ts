@@ -13,26 +13,14 @@ import {
 } from './api';
 
 import type {
-  CreateTaskCycleInput,
-  DeleteTaskCycleVariables,
-  MoveTasksVariables,
-  TaskDestination,
+  CreateTaskCycleRequest,
+  DeleteTaskCycleRequest,
+  MoveTaskRequest,
+  MoveTasksRequest,
+  UpdateTaskCycleStageRequest,
 } from './types';
 import { taskQueryKeys } from '../tasks/hooks';
-import type { CycleTaskWithUsers } from '../tasks/types';
-
-export interface UpdateTaskCycleStageVariables {
-  taskCycleId: string;
-  cycleId: string; // only for the cache key
-  stageId: string;
-}
-
-export interface MoveTaskVariables {
-  projectId: string;
-  taskId: string;
-  fromCycleId: string | null; // null = from backlog
-  to: TaskDestination;
-}
+import type { CycleTaskItem } from '../tasks/types';
 
 export const taskCycleQueryKeys = {
   all: ['taskCycles'] as const,
@@ -122,7 +110,7 @@ export const useCreateTaskCycle = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (input: CreateTaskCycleInput) => {
+    mutationFn: async (input: CreateTaskCycleRequest) => {
       const response = await createNewTaskCycle(input);
 
       if (!response.success) {
@@ -152,8 +140,8 @@ export const useUpdateTaskCycleStage = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ taskCycleId, stageId }: UpdateTaskCycleStageVariables) => {
-      const response = await updateExistingTaskCycleStage(taskCycleId, stageId);
+    mutationFn: async (variables: UpdateTaskCycleStageRequest) => {
+      const response = await updateExistingTaskCycleStage(variables);
 
       if (!response.success) {
         throw new Error(response.message);
@@ -162,20 +150,17 @@ export const useUpdateTaskCycleStage = () => {
       return response.data;
     },
 
-    onMutate: async ({ taskCycleId, cycleId, stageId }: UpdateTaskCycleStageVariables) => {
-      const queryKey = taskQueryKeys.cycleByStage(cycleId);
+    onMutate: async ({ taskCycleId, cycleId, stageId }: UpdateTaskCycleStageRequest) => {
+      const queryKey = taskQueryKeys.cycle(cycleId);
 
       await queryClient.cancelQueries({ queryKey });
 
-      const previousTasks = queryClient.getQueryData<CycleTaskWithUsers[]>(queryKey);
+      const previousTasks = queryClient.getQueryData<CycleTaskItem[]>(queryKey);
 
-      queryClient.setQueryData<CycleTaskWithUsers[]>(queryKey, (tasks) =>
+      queryClient.setQueryData<CycleTaskItem[]>(queryKey, (tasks) =>
         tasks?.map((task) =>
           task.taskCycleId === taskCycleId
-            ? {
-                ...task,
-                stage: { ...task.stage, id: stageId, stageId },
-              }
+            ? { ...task, stage: { ...task.stage, id: stageId } }
             : task,
         ),
       );
@@ -213,25 +198,28 @@ export const useMoveTaskAcrossCycle = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ taskId, to }: MoveTaskVariables) => {
-      const response = await moveTaskToDestination(taskId, to);
+    mutationFn: async (variables: MoveTaskRequest) => {
+      const response = await moveTaskToDestination(variables);
+
       if (!response.success) throw new Error(response.message);
+
       return response.data;
     },
 
-    onMutate: async ({ taskId, fromCycleId, to }: MoveTaskVariables) => {
+    onMutate: async ({ taskId, fromCycleId, to }: MoveTaskRequest) => {
       const isSameCycle = to.type === 'cycle' && to.cycleId === fromCycleId;
 
       if (!fromCycleId || isSameCycle) {
         return { sourceKey: null, previousSource: undefined };
       }
 
-      const sourceKey = taskQueryKeys.cycleByStage(fromCycleId);
+      const sourceKey = taskQueryKeys.cycle(fromCycleId);
+
       await queryClient.cancelQueries({ queryKey: sourceKey });
 
-      const previousSource = queryClient.getQueryData<CycleTaskWithUsers[]>(sourceKey);
+      const previousSource = queryClient.getQueryData<CycleTaskItem[]>(sourceKey);
 
-      queryClient.setQueryData<CycleTaskWithUsers[]>(sourceKey, (tasks) =>
+      queryClient.setQueryData<CycleTaskItem[]>(sourceKey, (tasks) =>
         tasks?.filter((t) => t.id !== taskId),
       );
 
@@ -244,21 +232,9 @@ export const useMoveTaskAcrossCycle = () => {
       }
     },
 
-    onSettled: (_, __, { projectId, fromCycleId, to }) => {
-      const cycleIds = [fromCycleId, to.type === 'cycle' ? to.cycleId : null].filter(
-        (id): id is string => !!id,
-      );
-
-      cycleIds.forEach((id) => {
-        queryClient.invalidateQueries({
-          queryKey: taskQueryKeys.cycleByStage(id),
-        });
-      });
-
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: taskQueryKeys.all });
       queryClient.invalidateQueries({ queryKey: taskCycleQueryKeys.all });
-      queryClient.invalidateQueries({
-        queryKey: taskQueryKeys.backlog(projectId),
-      });
     },
   });
 };
@@ -267,31 +243,17 @@ export const useMoveTasksAcrossCycle = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ tasks, to }: MoveTasksVariables) => {
-      const response = await moveMultipleTasksToDestination(
-        tasks.map((t) => t.taskId),
-        to,
-      );
+    mutationFn: async (variables: MoveTasksRequest) => {
+      const response = await moveMultipleTasksToDestination(variables);
+
       if (!response.success) throw new Error(response.message);
+
       return response.data;
     },
 
-    onSettled: (_, __, { projectId, tasks, to }) => {
-      const cycleIds = new Set<string>();
-      tasks.forEach((t) => t.fromCycleId && cycleIds.add(t.fromCycleId));
-      if (to.type === 'cycle') cycleIds.add(to.cycleId);
-
-      cycleIds.forEach((id) => {
-        queryClient.invalidateQueries({
-          queryKey: taskQueryKeys.cycleByStage(id),
-        });
-      });
-
-      queryClient.invalidateQueries({ queryKey: taskCycleQueryKeys.all });
-      queryClient.invalidateQueries({
-        queryKey: taskQueryKeys.backlog(projectId),
-      });
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: taskQueryKeys.all });
+      queryClient.invalidateQueries({ queryKey: taskCycleQueryKeys.all });
     },
   });
 };
@@ -300,8 +262,8 @@ export const useDeleteTaskCycle = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ taskId, taskCycleId }: DeleteTaskCycleVariables) => {
-      const response = await deleteTaskCycleById(taskId, taskCycleId);
+    mutationFn: async (variables: DeleteTaskCycleRequest) => {
+      const response = await deleteTaskCycleById(variables);
 
       if (!response.success) {
         throw new Error(response.message);
@@ -315,33 +277,12 @@ export const useDeleteTaskCycle = () => {
         return;
       }
 
-      const { taskId, taskCycleId, cycleId, projectId } = result;
-
-      if (taskCycleId && cycleId) {
-        queryClient.invalidateQueries({
-          queryKey: taskQueryKeys.cycleByStage(cycleId),
-        });
-
-        queryClient.invalidateQueries({
-          queryKey: taskCycleQueryKeys.id(taskCycleId),
-        });
+      if (result.taskCycleId) {
+        queryClient.removeQueries({ queryKey: taskCycleQueryKeys.id(result.taskCycleId) });
       }
 
-      queryClient.invalidateQueries({
-        queryKey: taskCycleQueryKeys.task(taskId),
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: taskCycleQueryKeys.all,
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: taskQueryKeys.backlog(projectId),
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: taskQueryKeys.all,
-      });
+      queryClient.invalidateQueries({ queryKey: taskCycleQueryKeys.all });
+      queryClient.invalidateQueries({ queryKey: taskQueryKeys.all });
     },
   });
 };
