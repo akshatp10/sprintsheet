@@ -15,4 +15,21 @@ export interface CreateCycleInput {
   endDate: string;
 }
 
-export type UpdateCycleInput = Partial<Omit<Cycle, 'id' | 'projectId' | 'createdAt' | 'updatedAt'>>;
+export type UpdateCycleFields = Partial<Pick<Cycle, 'name' | 'startDate' | 'endDate'>>;
+
+export interface UpdateCycleRequest {
+  id: string;
+  projectId: string;
+  updates: UpdateCycleFields;
+}
+
+export interface DeleteCycleRequest {
+  id: string;
+  projectId: string;
+}
+
+// Responses
+export type GetCycleResponse = Cycle;
+export type GetCyclesResponse = Cycle[];
+export type CreateCycleResponse = Cycle;
+export type UpdateCycleResponse = Cycle;

@@ -1,4 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { taskCycleQueryKeys } from '../taskCycles/hooks';
+import { taskQueryKeys } from '../tasks/hooks';
 import {
   createNewCycle,
   deleteExistingCycle,
@@ -7,18 +10,7 @@ import {
   updateExistingCycle,
 } from './api';
 
-import type { CreateCycleInput, UpdateCycleInput } from './types';
-
-export interface UpdateCycleVariables {
-  id: string;
-  projectId: string;
-  updates: UpdateCycleInput;
-}
-
-export interface DeleteCycleVariables {
-  id: string;
-  projectId: string;
-}
+import type { CreateCycleInput, DeleteCycleRequest, UpdateCycleRequest } from './types';
 
 export const cycleQueryKeys = {
   all: ['cycles'] as const,
@@ -28,7 +20,6 @@ export const cycleQueryKeys = {
   detail: (cycleId: string) => [...cycleQueryKeys.all, 'detail', cycleId] as const,
 };
 
-//Getting all the cycles of projects
 export const useGetAllCyclesByProject = (projectId: string) => {
   return useQuery({
     queryKey: cycleQueryKeys.project(projectId),
@@ -47,7 +38,6 @@ export const useGetAllCyclesByProject = (projectId: string) => {
   });
 };
 
-//Getting single cycle
 export const useGetCycle = (cycleId: string) => {
   return useQuery({
     queryKey: cycleQueryKeys.detail(cycleId),
@@ -66,7 +56,6 @@ export const useGetCycle = (cycleId: string) => {
   });
 };
 
-//Creating new cycle
 export const useCreateCycle = () => {
   const queryClient = useQueryClient();
 
@@ -81,23 +70,18 @@ export const useCreateCycle = () => {
       return response.data;
     },
 
-    onSuccess: (cycle, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: cycleQueryKeys.project(variables.projectId),
-      });
-
-      return cycle;
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: cycleQueryKeys.project(variables.projectId) });
     },
   });
 };
 
-//Updating a cycle
 export const useUpdateCycle = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, updates }: UpdateCycleVariables) => {
-      const response = await updateExistingCycle(id, updates);
+    mutationFn: async (variables: UpdateCycleRequest) => {
+      const response = await updateExistingCycle(variables);
 
       if (!response.success) {
         throw new Error(response.message);
@@ -107,9 +91,7 @@ export const useUpdateCycle = () => {
     },
 
     onSuccess: (cycle, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: cycleQueryKeys.project(variables.projectId),
-      });
+      queryClient.invalidateQueries({ queryKey: cycleQueryKeys.project(variables.projectId) });
 
       if (cycle) {
         queryClient.setQueryData(cycleQueryKeys.detail(cycle.id), cycle);
@@ -118,13 +100,12 @@ export const useUpdateCycle = () => {
   });
 };
 
-//Deleting a cycle
 export const useDeleteCycle = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id }: DeleteCycleVariables) => {
-      const response = await deleteExistingCycle(id);
+    mutationFn: async (variables: DeleteCycleRequest) => {
+      const response = await deleteExistingCycle(variables);
 
       if (!response.success) {
         throw new Error(response.message);
@@ -132,13 +113,12 @@ export const useDeleteCycle = () => {
     },
 
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: cycleQueryKeys.project(variables.projectId),
-      });
+      queryClient.invalidateQueries({ queryKey: cycleQueryKeys.project(variables.projectId) });
+      queryClient.removeQueries({ queryKey: cycleQueryKeys.detail(variables.id) });
 
-      queryClient.removeQueries({
-        queryKey: cycleQueryKeys.detail(variables.id),
-      });
+      // Tasks that lost their only cycle went back to the backlog.
+      queryClient.invalidateQueries({ queryKey: taskQueryKeys.all });
+      queryClient.invalidateQueries({ queryKey: taskCycleQueryKeys.all });
     },
   });
 };

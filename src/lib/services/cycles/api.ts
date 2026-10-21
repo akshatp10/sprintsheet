@@ -8,9 +8,19 @@ import {
 
 import { errorMessage, type ApiResponse } from '../types';
 
-import type { Cycle, CreateCycleInput, UpdateCycleInput } from './types';
+import type {
+  CreateCycleInput,
+  CreateCycleResponse,
+  DeleteCycleRequest,
+  GetCycleResponse,
+  GetCyclesResponse,
+  UpdateCycleRequest,
+  UpdateCycleResponse,
+} from './types';
 
-export const createNewCycle = async (input: CreateCycleInput): Promise<ApiResponse<Cycle>> => {
+export const createNewCycle = async (
+  input: CreateCycleInput,
+): Promise<ApiResponse<CreateCycleResponse>> => {
   try {
     const cycle = await createCycle(input);
 
@@ -24,13 +34,13 @@ export const createNewCycle = async (input: CreateCycleInput): Promise<ApiRespon
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to create cycle'),
       data: null,
     };
   }
 };
 
-export const getCycle = async (id: string): Promise<ApiResponse<Cycle>> => {
+export const getCycle = async (id: string): Promise<ApiResponse<GetCycleResponse>> => {
   try {
     const cycle = await getCycleById(id);
 
@@ -53,13 +63,15 @@ export const getCycle = async (id: string): Promise<ApiResponse<Cycle>> => {
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to fetch cycle'),
       data: null,
     };
   }
 };
 
-export const getProjectCycles = async (projectId: string): Promise<ApiResponse<Cycle[]>> => {
+export const getProjectCycles = async (
+  projectId: string,
+): Promise<ApiResponse<GetCyclesResponse>> => {
   try {
     const cycles = await getCyclesByProject(projectId);
 
@@ -73,18 +85,18 @@ export const getProjectCycles = async (projectId: string): Promise<ApiResponse<C
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to fetch cycles'),
       data: null,
     };
   }
 };
 
-export const updateExistingCycle = async (
-  id: string,
-  input: UpdateCycleInput,
-): Promise<ApiResponse<Cycle>> => {
+export const updateExistingCycle = async ({
+  id,
+  updates,
+}: UpdateCycleRequest): Promise<ApiResponse<UpdateCycleResponse>> => {
   try {
-    const cycle = await updateCycle(id, input);
+    const cycle = await updateCycle(id, updates);
 
     if (!cycle) {
       return {
@@ -105,17 +117,19 @@ export const updateExistingCycle = async (
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to update cycle'),
       data: null,
     };
   }
 };
 
-export const deleteExistingCycle = async (id: string): Promise<ApiResponse<null>> => {
+export const deleteExistingCycle = async ({
+  id,
+}: DeleteCycleRequest): Promise<ApiResponse<null>> => {
   try {
-    const cycle = await getCycleById(id);
+    const deleted = await deleteCycle(id);
 
-    if (!cycle) {
+    if (!deleted) {
       return {
         status: 404,
         success: false,
@@ -123,8 +137,6 @@ export const deleteExistingCycle = async (id: string): Promise<ApiResponse<null>
         data: null,
       };
     }
-
-    await deleteCycle(id);
 
     return {
       status: 200,
@@ -136,7 +148,7 @@ export const deleteExistingCycle = async (id: string): Promise<ApiResponse<null>
     return {
       status: 500,
       success: false,
-      message: errorMessage(error),
+      message: errorMessage(error, 'Failed to delete cycle'),
       data: null,
     };
   }
