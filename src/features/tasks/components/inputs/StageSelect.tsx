@@ -36,7 +36,7 @@ const StageSelect = ({ stages, value, onChange, isDone = false, className }: Sta
       searchable={false}
       className={className}
       triggerClassName="w-full"
-      listClassName="w-fit"
+      listClassName="w-24"
       renderTrigger={({ toggleOpen, open }) => (
         <Button
           variant="tertiary"
