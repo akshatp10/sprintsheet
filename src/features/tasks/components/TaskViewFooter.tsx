@@ -34,24 +34,18 @@ const TaskViewFooter = ({
   } = useCycleStatus(cycles);
 
   const active = activeCycles[0];
-
-  // Previous closed cycle.
-  const previous = closedCycles[0];
-
-  // Next two planned cycles.
-  const nextPlanned = plannedCycles.filter((cycle) => cycle.id !== currentCycleId).slice(0, 2);
+  const previous = closedCycles.slice(0, 2);
+  const nextPlanned = plannedCycles.at(-1);
 
   const visibleCycles = [
-    ...(previous ? [previous] : []),
+    ...(nextPlanned ? [nextPlanned] : []),
     ...(active ? [active] : []),
-    ...nextPlanned,
+    ...previous,
   ];
 
-  // Avoid displaying the same cycle twice.
   const uniqueVisibleCycles = visibleCycles.filter(
     (cycle, index, items) => items.findIndex((item) => item.id === cycle.id) === index,
   );
-
   const visibleIds = new Set(uniqueVisibleCycles.map((cycle) => cycle.id));
 
   const hiddenCycles = cycles.filter((cycle) => !visibleIds.has(cycle.id));
@@ -103,7 +97,7 @@ const TaskViewFooter = ({
           renderTrigger={({ open, toggleOpen }) => (
             <Button
               variant="tertiary"
-              className={`flex gap-2 items-center border-none p-1.5 hover:bg-surface-desk ${open ? 'bg-accent-tint' : ''}`}
+              className={`flex items-center gap-2 border-none p-1.5 hover:bg-surface-desk ${open && 'bg-accent-tint'}`}
               onClick={toggleOpen}
             >
               <Text variant="mono">{cycleOptions.length}</Text>
@@ -133,7 +127,7 @@ const TaskViewFooter = ({
         />
       </div>
 
-      {/* Previous, active, and next two planned cycles */}
+      {/* Previous, active, and next planned cycles */}
       <div className="flex min-w-0 flex-1 items-center overflow-hidden">
         {uniqueVisibleCycles.map((cycle) => (
           <CycleFooterTab
