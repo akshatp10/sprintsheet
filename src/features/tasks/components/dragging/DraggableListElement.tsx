@@ -1,4 +1,4 @@
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 import { useDraggable } from '@dnd-kit/react';
 import { GripVertical } from 'lucide-react';
 import TaskListElement from '../listView/TaskListElement';
@@ -6,7 +6,7 @@ import TaskListPlaceholder from '../listView/TaskListPlaceholder';
 import type { Stage } from '@/lib/services/stages/type';
 
 interface DraggableTaskListElementProps {
-  task: CycleTaskWithUsers;
+  task: CycleTaskItem;
   taskNumber: number;
   isDone: boolean;
   isOverlay?: boolean;

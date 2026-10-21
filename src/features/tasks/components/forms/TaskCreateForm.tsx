@@ -6,7 +6,7 @@ import FormInputBox from '@/components/inputs/FormInputBox';
 import Input from '@/components/inputs/Input';
 import TextArea from '@/components/inputs/TextArea';
 import PopupModal from '@/components/popupModals/PopupModal';
-import type { CreateTaskInput } from '@/lib/services/tasks/types';
+import type { CreateTaskRequest } from '@/lib/services/tasks/types';
 import { useGetStagesPerProject } from '@/lib/services/stages/hooks';
 import { useCreateTask } from '@/lib/services/tasks/hooks';
 import { useProjectTypes } from '@/lib/services/types/hooks';
@@ -48,7 +48,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCre
   const { mutate: createNewTask } = useCreateTask();
 
   const handleFormSubmit = (data: TaskFormData, shouldContinue: boolean) => {
-    const newTask: CreateTaskInput = {
+    const newTask: CreateTaskRequest = {
       projectId,
       name: data.name,
       description: data.description,

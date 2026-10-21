@@ -5,12 +5,12 @@ import Text from '@/components/common/Text';
 
 import useTaskDetailStore from '@/store/taskDetailStore';
 
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 import { useTypeById } from '@/lib/services/types/hooks';
 import { formatDate } from '@/lib/utils';
 
 interface TaskCardProps {
-  task: CycleTaskWithUsers;
+  task: CycleTaskItem;
   isDone: boolean;
   isOverlay?: boolean;
 }

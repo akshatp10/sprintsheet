@@ -2,7 +2,7 @@ import Text from '@/components/common/Text';
 import { cn } from '@/lib/cn';
 import { stageConfig, StageName } from '@/lib/stageConfig';
 import type { Stage } from '@/lib/services/stages/type';
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 import { useDroppable } from '@dnd-kit/react';
 import { useState } from 'react';
 import StageListHeader from './StageListHeader';
@@ -13,7 +13,7 @@ import TaskListSkeleton from '@/features/tasks/components/skeletons/TaskListSkel
 interface StageListBoxProps {
   gridTemplateColumns: string;
   stage: Stage;
-  tasks: CycleTaskWithUsers[];
+  tasks: CycleTaskItem[];
   isLoading: boolean;
   isCurrentStage: boolean;
   onCreateTask: (stageId: string) => void;

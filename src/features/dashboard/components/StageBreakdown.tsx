@@ -3,7 +3,7 @@ import StageProgressItem from './StageProgressItem';
 import UserTaskData from './UserTaskData';
 
 import type { UserSummary } from '@/lib/services/users/types';
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 
 interface StageBreakdownProps {
   stages: {
@@ -14,9 +14,9 @@ interface StageBreakdownProps {
   totalTasks: number;
   tasksByUsers: {
     user: UserSummary;
-    tasks: CycleTaskWithUsers[];
+    tasks: CycleTaskItem[];
   }[];
-  unassignedTasks: CycleTaskWithUsers[];
+  unassignedTasks: CycleTaskItem[];
 }
 
 const StageBreakdown = ({

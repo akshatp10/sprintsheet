@@ -4,12 +4,12 @@ import Chip from '@/components/chips/Chip';
 import Text from '@/components/common/Text';
 import Checkbox from '@/components/inputs/Checkbox';
 import { cn } from '@/lib/cn';
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 import { useTypeById } from '@/lib/services/types/hooks';
 import { GripVertical } from 'lucide-react';
 
 interface BacklogTaskCardProps {
-  backlogTask: CycleTaskWithUsers;
+  backlogTask: CycleTaskItem;
   onSelectionChange: (taskId: string, selected: boolean) => void;
   selectedTaskIds: string[];
 }

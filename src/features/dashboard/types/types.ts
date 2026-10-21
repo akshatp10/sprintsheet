@@ -1,4 +1,4 @@
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 
 export type TaskAttentionReason =
   | {
@@ -15,6 +15,6 @@ export type TaskAttentionReason =
     };
 
 export interface TaskNeedingAttention {
-  task: CycleTaskWithUsers;
+  task: CycleTaskItem;
   reason: TaskAttentionReason;
 }

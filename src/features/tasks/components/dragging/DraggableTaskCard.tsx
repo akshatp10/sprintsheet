@@ -1,9 +1,9 @@
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 import { useDraggable } from '@dnd-kit/react';
 import TaskCard from '../TaskCard';
 
 interface DraggableTaskCardProps {
-  task: CycleTaskWithUsers;
+  task: CycleTaskItem;
   isDone: boolean;
 }
 

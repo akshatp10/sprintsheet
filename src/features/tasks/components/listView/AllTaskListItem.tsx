@@ -2,7 +2,7 @@ import Chip from '@/components/chips/Chip';
 import Text from '@/components/common/Text';
 import Checkbox from '@/components/inputs/Checkbox';
 import { cn } from '@/lib/cn';
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 import { stageConfig, StageName } from '@/lib/stageConfig';
 import useTaskDetailStore from '@/store/taskDetailStore';
 import EditableStageCell from '../forms/EditableStageCell';
@@ -15,7 +15,7 @@ import EditableAssigneeCell from '../forms/EditableAssigneeCell';
 interface AllTaskListItemProps {
   gridTemplateColumns: string;
   isDone: boolean;
-  task: CycleTaskWithUsers;
+  task: CycleTaskItem;
   onSelectionChange: (taskId: string, selected: boolean) => void;
   selectedTaskIds: string[];
   fromBacklog?: boolean;

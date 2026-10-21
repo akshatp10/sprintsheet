@@ -2,11 +2,11 @@ import Text from '@/components/common/Text';
 import Avatar from '@/components/avatar/Avatar';
 import ProgressBar from '@/components/progressBar/ProgressBar';
 import { getPercentage } from '@/lib/utils';
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 
 interface UserTaskDataProps {
   label: string;
-  totalTasks: CycleTaskWithUsers[];
+  totalTasks: CycleTaskItem[];
   userName?: string;
 }
 

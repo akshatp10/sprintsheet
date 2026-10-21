@@ -2,7 +2,7 @@ import Chip from '@/components/chips/Chip';
 import Text from '@/components/common/Text';
 
 import type { Stage } from '@/lib/services/stages/type';
-import type { CycleTaskWithUsers } from '@/lib/services/tasks/types';
+import type { CycleTaskItem } from '@/lib/services/tasks/types';
 
 import { useTypeById } from '@/lib/services/types/hooks';
 import useTaskDetailStore from '@/store/taskDetailStore';
@@ -16,7 +16,7 @@ import EditableDueDateCell from '../forms/EditableDueDateCell';
 
 interface TaskListElementProps {
   gridTemplateColumns: string;
-  task: CycleTaskWithUsers;
+  task: CycleTaskItem;
   taskNumber: number;
   isDone: boolean;
   isOverlay?: boolean;
