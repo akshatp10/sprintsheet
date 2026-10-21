@@ -1,28 +1,35 @@
 import {
   createTaskCycle,
   deleteTaskCycle,
+  getTaskCycleById,
   getTaskCyclesByCycle,
   getTaskCyclesByProject,
   getTaskCyclesByTask,
-  getTaskCyclesUsingId,
   moveMultipleTasksAcrossCycle,
   moveTaskAcrossCycle,
   updateTaskCycleStage,
 } from '@/lib/db/dbFunctions/taskCycleFunctions';
 
-import type { Task } from '../tasks/types';
 import { errorMessage, type ApiResponse } from '../types';
 
 import type {
-  CreateTaskCycleInput,
-  DeleteTaskCycleResult,
-  TaskCycle,
-  TaskDestination,
+  CreateTaskCycleRequest,
+  CreateTaskCycleResponse,
+  DeleteTaskCycleRequest,
+  DeleteTaskCycleResponse,
+  GetTaskCycleResponse,
+  GetTaskCyclesResponse,
+  MoveTaskRequest,
+  MoveTaskResponse,
+  MoveTasksRequest,
+  MoveTasksResponse,
+  UpdateTaskCycleStageRequest,
+  UpdateTaskCycleStageResponse,
 } from './types';
 
 export const createNewTaskCycle = async (
-  input: CreateTaskCycleInput,
-): Promise<ApiResponse<TaskCycle>> => {
+  input: CreateTaskCycleRequest,
+): Promise<ApiResponse<CreateTaskCycleResponse>> => {
   try {
     const taskCycle = await createTaskCycle(input);
 
@@ -42,10 +49,10 @@ export const createNewTaskCycle = async (
   }
 };
 
-export const updateExistingTaskCycleStage = async (
-  taskCycleId: string,
-  stageId: string,
-): Promise<ApiResponse<TaskCycle>> => {
+export const updateExistingTaskCycleStage = async ({
+  taskCycleId,
+  stageId,
+}: UpdateTaskCycleStageRequest): Promise<ApiResponse<UpdateTaskCycleStageResponse>> => {
   try {
     const taskCycle = await updateTaskCycleStage(taskCycleId, stageId);
 
@@ -65,12 +72,13 @@ export const updateExistingTaskCycleStage = async (
   }
 };
 
-export const moveTaskToDestination = async (
-  taskId: string,
-  destination: TaskDestination,
-): Promise<ApiResponse<Task>> => {
+export const moveTaskToDestination = async ({
+  taskId,
+  fromCycleId,
+  to,
+}: MoveTaskRequest): Promise<ApiResponse<MoveTaskResponse>> => {
   try {
-    const task = await moveTaskAcrossCycle(taskId, destination);
+    const task = await moveTaskAcrossCycle(taskId, fromCycleId, to);
 
     return {
       status: 200,
@@ -88,18 +96,18 @@ export const moveTaskToDestination = async (
   }
 };
 
-export const moveMultipleTasksToDestination = async (
-  taskIds: string[],
-  destination: TaskDestination,
-): Promise<ApiResponse<Task[]>> => {
+export const moveMultipleTasksToDestination = async ({
+  tasks,
+  to,
+}: MoveTasksRequest): Promise<ApiResponse<MoveTasksResponse>> => {
   try {
-    const tasks = await moveMultipleTasksAcrossCycle(taskIds, destination);
+    const moved = await moveMultipleTasksAcrossCycle(tasks, to);
 
     return {
       status: 200,
       success: true,
       message: 'Successfully moved tasks',
-      data: tasks,
+      data: moved,
     };
   } catch (error) {
     return {
@@ -111,11 +119,11 @@ export const moveMultipleTasksToDestination = async (
   }
 };
 
-export const getCycleTaskById = async (id: string): Promise<ApiResponse<TaskCycle>> => {
+export const getCycleTaskById = async (id: string): Promise<ApiResponse<GetTaskCycleResponse>> => {
   try {
-    const taskCycles = await getTaskCyclesUsingId(id);
+    const taskCycle = await getTaskCycleById(id);
 
-    if (!taskCycles) {
+    if (!taskCycle) {
       return {
         status: 404,
         success: false,
@@ -127,26 +135,29 @@ export const getCycleTaskById = async (id: string): Promise<ApiResponse<TaskCycl
     return {
       status: 200,
       success: true,
-      message: 'Successfully fetched cycle task relationships',
-      data: taskCycles,
+      message: 'Successfully fetched task cycle',
+      data: taskCycle,
     };
   } catch (error) {
     return {
       status: 500,
       success: false,
-      message: errorMessage(error, 'Failed to fetch task cycles for cycle'),
+      message: errorMessage(error, 'Failed to fetch task cycle'),
       data: null,
     };
   }
 };
-export const getCycleTaskCycles = async (cycleId: string): Promise<ApiResponse<TaskCycle[]>> => {
+
+export const getCycleTaskCycles = async (
+  cycleId: string,
+): Promise<ApiResponse<GetTaskCyclesResponse>> => {
   try {
     const taskCycles = await getTaskCyclesByCycle(cycleId);
 
     return {
       status: 200,
       success: true,
-      message: 'Successfully fetched cycle task relationships',
+      message: 'Successfully fetched task cycles',
       data: taskCycles,
     };
   } catch (error) {
@@ -159,14 +170,16 @@ export const getCycleTaskCycles = async (cycleId: string): Promise<ApiResponse<T
   }
 };
 
-export const getTaskTaskCycles = async (taskId: string): Promise<ApiResponse<TaskCycle[]>> => {
+export const getTaskTaskCycles = async (
+  taskId: string,
+): Promise<ApiResponse<GetTaskCyclesResponse>> => {
   try {
     const taskCycles = await getTaskCyclesByTask(taskId);
 
     return {
       status: 200,
       success: true,
-      message: 'Successfully fetched task cycle relationships',
+      message: 'Successfully fetched task cycles',
       data: taskCycles,
     };
   } catch (error) {
@@ -181,15 +194,15 @@ export const getTaskTaskCycles = async (taskId: string): Promise<ApiResponse<Tas
 
 export const getAllTaskCyclesByProject = async (
   projectId: string,
-): Promise<ApiResponse<TaskCycle[]>> => {
+): Promise<ApiResponse<GetTaskCyclesResponse>> => {
   try {
-    const allTaskCycles = await getTaskCyclesByProject(projectId);
+    const taskCycles = await getTaskCyclesByProject(projectId);
 
     return {
       status: 200,
       success: true,
-      message: 'Successfully fetched task cycle relationships',
-      data: allTaskCycles,
+      message: 'Successfully fetched task cycles',
+      data: taskCycles,
     };
   } catch (error) {
     return {
@@ -201,10 +214,10 @@ export const getAllTaskCyclesByProject = async (
   }
 };
 
-export const deleteTaskCycleById = async (
-  taskId: string,
-  taskCycleId: string | null,
-): Promise<ApiResponse<DeleteTaskCycleResult>> => {
+export const deleteTaskCycleById = async ({
+  taskId,
+  taskCycleId,
+}: DeleteTaskCycleRequest): Promise<ApiResponse<DeleteTaskCycleResponse>> => {
   try {
     const result = await deleteTaskCycle(taskId, taskCycleId);
 
