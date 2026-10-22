@@ -135,6 +135,7 @@ const TaskViewFooter = ({
             cycle={cycle}
             handleClick={() => setCurrentCycleId(cycle.id)}
             isCurrent={currentCycleId === cycle.id}
+            activeCycleId={activeCycles[0].id}
           />
         ))}
       </div>
