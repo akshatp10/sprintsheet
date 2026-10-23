@@ -12,6 +12,7 @@ import {
   registerSchema,
   type RegisterFormData,
 } from '@/features/auth/types/authFormData';
+import { usePostRegister } from '@/lib/services/auth/hooks';
 
 const SignUpPage = () => {
   const {
@@ -21,9 +22,19 @@ const SignUpPage = () => {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: registerDefaultValues,
+    mode: 'onChange',
+    reValidateMode: 'onChange',
   });
 
-  const onSubmit = () => {};
+  const { mutate: handleRegisterUser } = usePostRegister();
+
+  const onSubmit = (data: RegisterFormData) => {
+    handleRegisterUser(data, {
+      onSuccess: () => {
+        console.log(data);
+      },
+    });
+  };
 
   return (
     <AuthLayout
