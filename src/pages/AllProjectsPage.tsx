@@ -75,12 +75,13 @@ const AllProjectsPage = () => {
       ) : (
         ''
       )}
-
-      <div>
-        <Text className="text-ink-2" variant="h2">
-          RECENT ACTIVITY
-        </Text>
-      </div>
+      {isFeatureEnabled('SHOW_RECENT_ACTIVITY') && (
+        <div>
+          <Text className="text-ink-2" variant="h2">
+            RECENT ACTIVITY
+          </Text>
+        </div>
+      )}
     </div>
   );
 };

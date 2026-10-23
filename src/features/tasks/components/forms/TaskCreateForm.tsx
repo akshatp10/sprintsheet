@@ -16,6 +16,8 @@ import {
   type TaskFormData,
 } from '@/features/tasks/types/taskFormData';
 import { AssigneeSelect } from '@/features/tasks/components/inputs/AssigneeSelect';
+import TypeSelect from '../inputs/TypeSelect';
+import StageSelect from '../inputs/StageSelect';
 
 interface TaskCreateFormProps {
   projectId: string;
@@ -42,6 +44,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCre
   });
 
   const assigneeIds = watch('assigneeIds') ?? [];
+  const stageId = watch('stage');
   // const tags = watch("tags") ?? [];
   const { data: stages = [] } = useGetStagesPerProject(projectId);
   const { data: projectTypes = [] } = useProjectTypes(projectId);
@@ -121,18 +124,17 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCre
           <div className="flex min-w-0 items-center gap-2">
             {/* Stage */}
             <FormInputBox error={errors.stage?.message}>
-              <select
-                {...register('stage')}
-                className="h-8 rounded-md border border-lines-hairline bg-surface px-2.5 text-type-caption text-ink-2 outline-none transition-colors hover:border-lines focus:border-lines-strong"
-              >
-                <option value="">Stage</option>
-
-                {stages.map((stage) => (
-                  <option key={stage.stageId} value={stage.id}>
-                    {stage.name}
-                  </option>
-                ))}
-              </select>
+              <StageSelect
+                stages={stages}
+                value={stageId}
+                onChange={(value) => {
+                  setValue('stage', value, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
+                className="-mt-1"
+              />
             </FormInputBox>
 
             {/* Assignee */}
@@ -156,18 +158,16 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCre
 
             {/* Type */}
             <FormInputBox error={errors.type?.message}>
-              <select
-                {...register('type')}
-                className="h-8 rounded-md border border-lines-hairline bg-surface px-2.5 text-type-caption text-ink-2 outline-none transition-colors hover:border-lines focus:border-lines-strong"
-              >
-                <option value="">Type</option>
-
-                {projectTypes.map((type) => (
-                  <option key={type.id} value={type.id}>
-                    {type.name}
-                  </option>
-                ))}
-              </select>
+              <TypeSelect
+                projectTypes={projectTypes}
+                value={watch('type') || null}
+                onChange={(value) => {
+                  setValue('type', value ?? '', {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
+              />
             </FormInputBox>
           </div>
           {/* <TagInput

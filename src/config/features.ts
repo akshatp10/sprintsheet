@@ -8,6 +8,7 @@ export const features = {
   PROJECT_CYCLES: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_CYCLES),
   HOME_PEOPLE: isEnabled(import.meta.env.VITE_FEATURE_HOME_PEOPLE),
   SHOW_BACKLOG: isEnabled(import.meta.env.VITE_FEATURE_SHOW_BACKLOG),
+  SHOW_RECENT_ACTIVITY: isEnabled(import.meta.env.VITE_FEATURE_SHOW_RECENT_ACTIVITY),
 
   // View toggles
   PROJECT_VIEW_TOGGLE: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_VIEW_TOGGLE),
