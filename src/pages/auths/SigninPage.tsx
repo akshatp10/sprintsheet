@@ -38,7 +38,7 @@ const SignInPage = () => {
       title="Sign in"
       subtitle="Use your work email. Invites land in the same place."
       footer={
-        <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <Text className="text-ink-3">
             Don't have an account?{' '}
             <Link to="/auth/register" className="text-accent-mid">
