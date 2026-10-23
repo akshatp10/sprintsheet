@@ -173,6 +173,7 @@ const AllTaskPage = () => {
       {!!selectedTaskIds.length && (
         <CycleAllTaskSelectionFooter
           activeCycle={activeCycles[0]}
+          allCycles={allCycles}
           selectedTaskLength={selectedTaskIds.length}
           onMoveToCycle={handleMoveSelectedToCycle}
           onMoveToBacklog={handleMoveSelectedToBacklog}

@@ -93,7 +93,7 @@ const CreateCycleForm = ({ projectId, onClose }: CreateCycleFormProps) => {
 
         {/* Footer */}
         <div className="mt-auto flex items-center justify-end gap-2">
-          <Button type="button" variant="secondary" onClick={onClose}>
+          <Button type="button" variant="secondary" onClick={() => onClose()}>
             <Text variant="body-sm">Cancel</Text>
           </Button>
 

@@ -16,7 +16,7 @@ type CycleHeaderElementProps = {
       cycle?: undefined;
     }
   | {
-      variant: 'active' | 'other';
+      variant: 'active' | 'closed' | 'planned';
       cycle: Cycle;
     }
 );
@@ -54,7 +54,7 @@ const CycleHeaderElement = ({ variant, cycle, taskCount, doneTasks }: CycleHeade
         'flex min-h-10 items-center border border-lines-control px-3',
         isBacklog && 'bg-surface-raised/50',
         isActive && 'border-accent bg-accent-wash-active',
-        variant === 'other' && 'bg-surface-sunken',
+        variant !== 'active' && 'bg-surface-sunken',
       )}
     >
       {/* Left section */}
@@ -70,7 +70,7 @@ const CycleHeaderElement = ({ variant, cycle, taskCount, doneTasks }: CycleHeade
         <Text maxLines={1}>{title}</Text>
 
         {!isBacklog && (
-          <Text className="shrink-0 uppercase">{isActive ? '· ACTIVE' : '· CLOSED'}</Text>
+          <Text className="shrink-0 uppercase">{isActive ? '· ACTIVE' : `· ${variant}`}</Text>
         )}
 
         <Text className="shrink-0 text-ink-3">{taskCount}</Text>
