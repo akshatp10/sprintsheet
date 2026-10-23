@@ -29,11 +29,7 @@ const SignUpPage = () => {
   const { mutate: handleRegisterUser } = usePostRegister();
 
   const onSubmit = (data: RegisterFormData) => {
-    handleRegisterUser(data, {
-      onSuccess: () => {
-        console.log(data);
-      },
-    });
+    handleRegisterUser(data);
   };
 
   return (
