@@ -30,11 +30,7 @@ const SignInPage = () => {
   const { mutate: handleLoginUser } = usePostLogin();
 
   const onSubmit = (data: LoginFormData) => {
-    handleLoginUser(data, {
-      onSuccess: () => {
-        window.location.replace('/');
-      },
-    });
+    handleLoginUser(data);
   };
 
   return (

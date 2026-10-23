@@ -1,9 +1,15 @@
 import { currentUserEmail, isFeatureEnabled } from '@/config/features';
-import ExtraOptionButton from '../button/ExtraOptionButton';
 import SettingsButton from '../button/SettingsButton';
 import UserPanel from './UserPanel';
+import Button from '../button/Button';
+import { LogOut } from 'lucide-react';
 
 const SidebarBottom = () => {
+  const handleLogOut = () => {
+    localStorage.removeItem('accessToken');
+    window.location.assign('/auth/login');
+  };
+
   return (
     <div className="flex flex-col justify-center gap-3">
       {isFeatureEnabled('VIEW_SETTING') && <SettingsButton isAdmin />}
@@ -17,8 +23,9 @@ const SidebarBottom = () => {
             textColor="text-ink-2"
           />
         </div>
-
-        <ExtraOptionButton handleClick={() => {}} />
+        <Button onClick={handleLogOut} variant="tertiary" className="border-0">
+          <LogOut size={17} strokeWidth={1.5} className="text-stage-blocked-text" />
+        </Button>
       </div>
     </div>
   );

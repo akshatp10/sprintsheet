@@ -16,5 +16,4 @@ export interface AuthData {
 }
 
 // Response types
-export type AuthRegisterResponse = ApiResponse<AuthData>;
-export type AuthLoginResponse = ApiResponse<AuthData>;
+export type AuthResponse = ApiResponse<AuthData>;
