@@ -7,6 +7,7 @@ export type AuthLoginRequest = z.infer<typeof loginSchema>;
 
 export interface AuthUser {
   id: string;
+  name: string;
   email: string;
 }
 
