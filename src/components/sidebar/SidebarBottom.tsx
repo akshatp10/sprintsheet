@@ -3,9 +3,13 @@ import SettingsButton from '../button/SettingsButton';
 import UserPanel from './UserPanel';
 import Button from '../button/Button';
 import { LogOut } from 'lucide-react';
+import useUserStore from '@/store/userStore';
 
 const SidebarBottom = () => {
+  const removeUser = useUserStore((state) => state.removeUser);
+
   const handleLogOut = () => {
+    removeUser();
     localStorage.removeItem('accessToken');
     window.location.assign('/auth/login');
   };
