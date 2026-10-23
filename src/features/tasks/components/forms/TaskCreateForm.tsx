@@ -44,6 +44,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCre
   });
 
   const assigneeIds = watch('assigneeIds') ?? [];
+  const stageId = watch('stage');
   // const tags = watch("tags") ?? [];
   const { data: stages = [] } = useGetStagesPerProject(projectId);
   const { data: projectTypes = [] } = useProjectTypes(projectId);
@@ -125,7 +126,7 @@ const TaskCreateForm = ({ projectId, onClose, defaultStageId, cycleId }: TaskCre
             <FormInputBox error={errors.stage?.message}>
               <StageSelect
                 stages={stages}
-                value={watch('stage')}
+                value={stageId}
                 onChange={(value) => {
                   setValue('stage', value, {
                     shouldValidate: true,
