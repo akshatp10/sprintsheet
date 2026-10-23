@@ -37,12 +37,14 @@ const SignUpPage = () => {
       title="Create account"
       subtitle="Use your work email so your team can find you."
       footer={
-        <Text className="text-ink-3">
-          Already have an account?{' '}
-          <Link to="/auth/login" className="text-accent-mid">
-            Sign in
-          </Link>
-        </Text>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <Text className="text-ink-3">
+            Already have an account?{' '}
+            <Link to="/auth/login" className="text-accent-mid">
+              Sign in
+            </Link>
+          </Text>
+        </div>
       }
     >
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
