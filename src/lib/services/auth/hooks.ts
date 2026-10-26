@@ -3,6 +3,17 @@ import type { AuthLoginRequest, AuthRegisterRequest, AuthResponse } from './type
 import { googleOAuthLogin, loginUser, registerUser } from './api';
 import useUserStore from '@/store/userStore';
 
+const setTokens = ({
+  accessToken,
+  refreshToken,
+}: {
+  accessToken: string;
+  refreshToken: string;
+}) => {
+  localStorage.setItem('accessToken', accessToken);
+  localStorage.setItem('refreshToken', refreshToken);
+};
+
 // Post login
 export const usePostLogin = () => {
   return useMutation({
@@ -13,7 +24,10 @@ export const usePostLogin = () => {
         throw new Error(response.message);
       }
 
-      localStorage.setItem('accessToken', response.data.token);
+      setTokens({
+        accessToken: response?.data?.token?.accessToken,
+        refreshToken: response?.data?.token?.refreshToken,
+      });
 
       return response.data;
     },
@@ -41,7 +55,10 @@ export const usePostRegister = () => {
         throw new Error(response.message);
       }
 
-      localStorage.setItem('accessToken', response.data.token);
+      setTokens({
+        accessToken: response?.data?.token?.accessToken,
+        refreshToken: response?.data?.token?.refreshToken,
+      });
 
       return response.data;
     },
@@ -69,7 +86,10 @@ export const useGoogleOAuthSignIn = () => {
         throw new Error(response.message);
       }
 
-      localStorage.setItem('accessToken', response.data.token);
+      setTokens({
+        accessToken: response?.data?.token?.accessToken,
+        refreshToken: response?.data?.token?.refreshToken,
+      });
 
       return response.data;
     },
