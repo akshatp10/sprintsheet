@@ -1,4 +1,4 @@
-import { currentUserEmail, isFeatureEnabled } from '@/config/features';
+import { isFeatureEnabled } from '@/config/features';
 import SettingsButton from '../button/SettingsButton';
 import UserPanel from './UserPanel';
 import Button from '../button/Button';
@@ -7,6 +7,7 @@ import useUserStore from '@/store/userStore';
 
 const SidebarBottom = () => {
   const removeUser = useUserStore((state) => state.removeUser);
+  const currentUserEmail = useUserStore((state) => state.userEmail) ?? '';
 
   const handleLogOut = () => {
     removeUser();
