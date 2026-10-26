@@ -7,7 +7,7 @@ import useUserStore from '@/store/userStore';
 
 const SidebarBottom = () => {
   const removeUser = useUserStore((state) => state.removeUser);
-  const currentUserEmail = useUserStore((state) => state.userEmail) ?? '';
+  const currentUserName = useUserStore((state) => state.userName) ?? '';
 
   const handleLogOut = () => {
     removeUser();
@@ -21,12 +21,7 @@ const SidebarBottom = () => {
       <hr className="text-lines-hairline" />
       <div className="flex w-full min-w-0 items-center justify-between gap-2">
         <div className="min-w-0">
-          <UserPanel
-            userName={currentUserEmail}
-            isSidebar
-            textVariant="h2"
-            textColor="text-ink-2"
-          />
+          <UserPanel userName={currentUserName} isSidebar textVariant="h2" textColor="text-ink-2" />
         </div>
         <Button onClick={handleLogOut} variant="tertiary" className="border-0">
           <LogOut size={17} strokeWidth={1.5} className="text-stage-blocked-text" />
