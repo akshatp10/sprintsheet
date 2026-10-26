@@ -8,6 +8,8 @@ const axiosInstance: AxiosInstance = axios.create({
   },
 });
 
+const isAuthRequest = (url?: string) => !!url && url.includes('/auth/');
+
 // Attach JWT token to every request
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
@@ -30,7 +32,11 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest?._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest?._retry &&
+      !isAuthRequest(originalRequest?.url)
+    ) {
       originalRequest._retry = true;
 
       try {
@@ -67,6 +73,10 @@ axiosInstance.interceptors.response.use(
       console.error('Access forbidden');
     } else if (error.response?.status >= 500) {
       console.error('Server error');
+    }
+
+    if (axios.isAxiosError(error) && error.response?.data?.message) {
+      error.message = error.response.data.message;
     }
 
     return Promise.reject(error);
