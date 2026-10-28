@@ -13,6 +13,7 @@ import {
   loginSchema,
   type LoginFormData,
 } from '@/features/auth/types/authFormData';
+import { usePostLogin } from '@/lib/services/auth/hooks';
 
 const SignInPage = () => {
   const {
@@ -22,18 +23,24 @@ const SignInPage = () => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: loginDefaultValues,
+    mode: 'onChange',
+    reValidateMode: 'onChange',
   });
 
-  const onSubmit = () => {};
+  const { mutate: handleLoginUser } = usePostLogin();
+
+  const onSubmit = (data: LoginFormData) => {
+    handleLoginUser(data);
+  };
 
   return (
     <AuthLayout
       title="Sign in"
       subtitle="Use your work email. Invites land in the same place."
       footer={
-        <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <Text className="text-ink-3">
-            Already have an account?{' '}
+            Don't have an account?{' '}
             <Link to="/auth/register" className="text-accent-mid">
               Register
             </Link>
