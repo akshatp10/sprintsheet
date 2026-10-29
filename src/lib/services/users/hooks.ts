@@ -10,7 +10,7 @@ export const userQueryKeys = {
   project: (projectId: string) => [...userQueryKeys.all, 'project', projectId] as const,
 };
 
-export const useGetCurrentUser = () => {
+export const useGetCurrentUser = (options = {}) => {
   return useQuery({
     queryKey: userQueryKeys.current(),
 
@@ -23,6 +23,7 @@ export const useGetCurrentUser = () => {
 
       return response.data;
     },
+    ...options,
   });
 };
 
