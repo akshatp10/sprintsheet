@@ -1,3 +1,4 @@
+import { getCurrent } from '@/lib/services/users/api';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
@@ -11,6 +12,7 @@ interface UserStates {
 interface UserActions {
   setUser: (userDetails: UserStates) => void;
   removeUser: () => void;
+  hydrateUser: () => Promise<void>;
 }
 
 type UserStore = UserStates & UserActions;
@@ -24,21 +26,37 @@ const initialState: UserStates = {
 
 const useUserStore = create<UserStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...initialState,
 
       setUser: (userDetails) =>
-        set(() => ({
-          userId: userDetails.userId,
-          userName: userDetails.userName,
-          userEmail: userDetails.userEmail,
-          profilePicURL: userDetails.profilePicURL,
-        })),
+        set({
+          ...userDetails,
+        }),
 
       removeUser: () =>
-        set(() => ({
+        set({
           ...initialState,
-        })),
+        }),
+
+      hydrateUser: async () => {
+        if (get().userId) return;
+
+        if (!localStorage.getItem('accessToken')) return;
+
+        const response = await getCurrent();
+
+        if (!response.success || !response.data) {
+          throw new Error(response.message);
+        }
+
+        set({
+          userId: response.data.id,
+          userName: response.data.name,
+          userEmail: response.data.email,
+          profilePicURL: null,
+        });
+      },
     }),
     {
       name: 'user-storage',

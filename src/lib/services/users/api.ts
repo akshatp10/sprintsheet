@@ -1,5 +1,5 @@
 import {
-  getCurrentUser,
+  // getCurrentUser,
   getUserById,
   getUsersByIds,
   getUsersByProject,
@@ -13,6 +13,7 @@ import type {
   GetUserResponse,
   GetUsersResponse,
 } from './types';
+import axiosInstance from '@/lib/axiosInstance';
 
 export const getUser = async (id: string): Promise<ApiResponse<GetUserResponse>> => {
   try {
@@ -45,9 +46,15 @@ export const getUser = async (id: string): Promise<ApiResponse<GetUserResponse>>
 
 export const getCurrent = async (): Promise<ApiResponse<GetCurrentUserResponse>> => {
   try {
-    const user = await getCurrentUser();
+    // const user = await getCurrentUser();
+    const response = await axiosInstance.get('/users/');
 
-    return { status: 200, success: true, message: 'Successfully fetched current user', data: user };
+    return {
+      status: 200,
+      success: true,
+      message: 'Successfully fetched current user',
+      data: response.data.user,
+    };
   } catch (error) {
     return {
       status: 500,

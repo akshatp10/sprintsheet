@@ -1,17 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import type { AuthLoginRequest, AuthRegisterRequest, AuthResponse } from './types';
-import { googleOAuthLogin, loginUser, registerUser } from './api';
+import { googleOAuthLogin, loginUser, logoutUser, registerUser } from './api';
 import useUserStore from '@/store/userStore';
 
-const setTokens = ({
-  accessToken,
-  refreshToken,
-}: {
-  accessToken: string;
-  refreshToken: string;
-}) => {
+const setTokens = ({ accessToken }: { accessToken: string }) => {
   localStorage.setItem('accessToken', accessToken);
-  localStorage.setItem('refreshToken', refreshToken);
 };
 
 // Post login
@@ -26,7 +19,6 @@ export const usePostLogin = () => {
 
       setTokens({
         accessToken: response?.data?.token?.accessToken,
-        refreshToken: response?.data?.token?.refreshToken,
       });
 
       return response.data;
@@ -57,7 +49,6 @@ export const usePostRegister = () => {
 
       setTokens({
         accessToken: response?.data?.token?.accessToken,
-        refreshToken: response?.data?.token?.refreshToken,
       });
 
       return response.data;
@@ -88,7 +79,6 @@ export const useGoogleOAuthSignIn = () => {
 
       setTokens({
         accessToken: response?.data?.token?.accessToken,
-        refreshToken: response?.data?.token?.refreshToken,
       });
 
       return response.data;
@@ -103,6 +93,26 @@ export const useGoogleOAuthSignIn = () => {
       });
 
       window.location.assign('/');
+    },
+  });
+};
+
+//Logout User
+export const useLogOutUser = () => {
+  return useMutation({
+    mutationFn: async () => {
+      const response: AuthResponse = await logoutUser();
+
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+
+      return response.data;
+    },
+    onSuccess: () => {
+      useUserStore.getState().removeUser();
+      localStorage.removeItem('accessToken');
+      window.location.replace('/auth/login');
     },
   });
 };
