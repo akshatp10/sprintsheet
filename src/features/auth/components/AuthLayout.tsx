@@ -14,7 +14,11 @@ interface AuthLayoutProps {
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const AuthLayout = ({ title, subtitle, children, footer }: AuthLayoutProps) => {
-  const { data: user } = useGetCurrentUser();
+  const token = localStorage.getItem('accessToken');
+
+  const { data: user } = useGetCurrentUser({
+    enabled: !!token,
+  });
 
   if (user) {
     window.location.assign('/');
