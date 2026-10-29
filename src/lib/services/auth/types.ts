@@ -13,7 +13,7 @@ export interface AuthUser {
 
 export interface AuthData {
   user: AuthUser;
-  token: { accessToken: string; refreshToken: string };
+  token: { accessToken: string };
 }
 
 // Response types

@@ -6,11 +6,15 @@ const axiosInstance: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 const isAuthRequest = (url?: string) => !!url && url.includes('/auth/');
 
-// Attach JWT token to every request
+type RetryableRequest = InternalAxiosRequestConfig & {
+  _retry?: boolean;
+};
+
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     if (typeof window !== 'undefined') {
@@ -26,46 +30,37 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// Handle API errors globally
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error) => {
-    const originalRequest = error.config;
+    const originalRequest = error.config as RetryableRequest | undefined;
 
     if (
       error.response?.status === 401 &&
-      !originalRequest?._retry &&
-      !isAuthRequest(originalRequest?.url)
+      originalRequest &&
+      !originalRequest._retry &&
+      !isAuthRequest(originalRequest.url)
     ) {
       originalRequest._retry = true;
 
       try {
-        const refreshToken = localStorage.getItem('refreshToken');
+        const response = await axiosInstance.post('/auth/refresh', {});
 
-        if (!refreshToken) throw new Error('No refresh token');
-
-        const response = await axios.post('/api/auth/refresh', {
-          refreshToken,
-        });
-
-        const { accessToken, refreshToken: newRefreshToken } = response.data.data;
+        const { accessToken } = response.data.data;
 
         localStorage.setItem('accessToken', accessToken);
-
-        if (newRefreshToken) {
-          localStorage.setItem('refreshToken', newRefreshToken);
-        }
 
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 
         return axiosInstance(originalRequest);
-      } catch {
+      } catch (refreshError) {
         localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
 
         if (window.location.pathname !== '/auth/login') {
           window.location.replace('/auth/login');
         }
+
+        return Promise.reject(refreshError);
       }
     }
 

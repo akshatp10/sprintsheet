@@ -29,3 +29,9 @@ export const googleOAuthLogin = async (idToken: string): Promise<AuthResponse> =
 
   return response.data;
 };
+
+export const logoutUser = async () => {
+  const response = await axiosInstance.post('/auth/logout', {});
+
+  return response.data;
+};

@@ -4,20 +4,19 @@ import UserPanel from './UserPanel';
 import Button from '../button/Button';
 import { LogOut } from 'lucide-react';
 import useUserStore from '@/store/userStore';
+import { useLogOutUser } from '@/lib/services/auth/hooks';
 
 const SidebarBottom = () => {
-  const removeUser = useUserStore((state) => state.removeUser);
   const currentUserName = useUserStore((state) => state.userName) ?? '';
+  const { mutate: logout } = useLogOutUser();
 
-  const handleLogOut = () => {
-    removeUser();
-    localStorage.removeItem('accessToken');
-    window.location.assign('/auth/login');
+  const handleLogOut = async () => {
+    logout();
   };
 
   return (
     <div className="flex flex-col justify-center gap-3">
-      {isFeatureEnabled('VIEW_SETTING') && <SettingsButton isAdmin />}
+      {isFeatureEnabled('VIEW_SETTING') && <SettingsButton />}
       <hr className="text-lines-hairline" />
       <div className="flex w-full min-w-0 items-center justify-between gap-2">
         <div className="min-w-0">
