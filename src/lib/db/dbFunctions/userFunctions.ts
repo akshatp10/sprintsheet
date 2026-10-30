@@ -4,10 +4,10 @@ import type { User, UserSummary } from '@/lib/services/users/types';
 
 const CURRENT_USER_EMAIL = import.meta.env.VITE_CURRENT_USER_EMAIL;
 
-const toUser = ({ id, name, email }: UserRow): User => ({ id, name, email });
+const toUser = ({ id, name, email }: UserRow): User => ({ userId: id, name, email });
 
 // Exported so other db functions (e.g. task assignees) can reuse it.
-export const toUserSummary = ({ id, name }: UserRow): UserSummary => ({ id, name });
+export const toUserSummary = ({ id, name }: UserRow): UserSummary => ({ userId: id, name });
 
 export const findOrCreateUser = async (email: string, name?: string): Promise<UserRow> => {
   const existing = await db.users.where('email').equals(email).first();

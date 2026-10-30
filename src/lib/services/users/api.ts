@@ -1,5 +1,5 @@
 import {
-  // getCurrentUser,
+  getCurrentUser,
   getUserById,
   getUsersByIds,
   getUsersByProject,
@@ -89,13 +89,14 @@ export const getProjectUsers = async (
   projectId: string,
 ): Promise<ApiResponse<GetProjectUsersResponse>> => {
   try {
-    const users = await getUsersByProject(projectId);
+    // const users = await getUsersByProject(projectId);
+    const response = await axiosInstance.get('/users/project', { params: { projectId } });
 
     return {
       status: 200,
       success: true,
       message: 'Successfully fetched project users',
-      data: users,
+      data: response.data.users,
     };
   } catch (error) {
     return {

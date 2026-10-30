@@ -2,11 +2,14 @@ import type { ProjectWithMembers } from '../lib/services/projects/types';
 import { useGetAllTasksByProject } from '../lib/services/tasks/hooks';
 import { getExtractedLetterFromString, getPercentage } from '../lib/utils';
 
-const formatDate = (timestamp: number) =>
-  new Date(timestamp).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-  });
+export const formatDate = (timestamp: number | string): string => {
+  return new Date(Number(timestamp))
+    .toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    })
+    .toUpperCase();
+};
 
 export const useMapProjectToCard = (project: ProjectWithMembers) => {
   const { data: tasks = [] } = useGetAllTasksByProject(project.id);

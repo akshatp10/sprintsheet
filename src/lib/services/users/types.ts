@@ -1,5 +1,5 @@
 export interface UserSummary {
-  id: string;
+  userId: string;
   name: string;
 }
 

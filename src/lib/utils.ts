@@ -2,13 +2,11 @@ import { getToday } from '@/hooks/useCycleStatus';
 
 const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
 
+type CycleDate = string | Date | undefined;
+
 /**
  * Extracts initials from a string and combines them with the remaining characters,
  * returning an uppercase string limited to the specified length.
- *
- * @param value - The input string from which to extract characters.
- * @param padded - The maximum length of the returned string. Defaults to 3.
- * @returns The uppercase string truncated to the specified length.
  */
 export const getExtractedLetterFromString = (value: string, padded?: number): string => {
   const words = value.trim().split(/\s+/).filter(Boolean);
@@ -22,10 +20,6 @@ export const getExtractedLetterFromString = (value: string, padded?: number): st
 
 /**
  * Calculates the percentage of a current value relative to a total.
- *
- * @param cur - The current value.
- * @param total - The total value.
- * @returns The rounded percentage, or 0 if the total is less than or equal to 0.
  */
 export const getPercentage = (cur: number, total: number): number => {
   if (total <= 0) return 0;
@@ -42,73 +36,98 @@ export const isMac =
     navigator.userAgent.toLowerCase().includes('mac'));
 
 /**
- * Formats a date string in YYYY-MM-DD format as an uppercase month abbreviation
- * followed by the day (e.g., "OCT 15").
- *
- * @param date - The date string in YYYY-MM-DD format.
- * @returns The formatted date string.
+ * Converts a date-only string or ISO timestamp to a valid Date.
+ * Supports YYYY-MM-DD, ISO timestamps, and Date instances.
+ */
+const parseCycleDate = (date?: CycleDate): Date | null => {
+  if (!date) return null;
+
+  const parsed =
+    date instanceof Date
+      ? new Date(date.getTime())
+      : /^\d{4}-\d{2}-\d{2}$/.test(date)
+        ? new Date(`${date}T00:00:00.000Z`)
+        : new Date(date);
+
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
+/**
+ * Formats a date as an uppercase month abbreviation and day (e.g., "OCT 27").
+ * Supports YYYY-MM-DD and ISO timestamps.
  */
 export const formatDate = (date: string): string => {
-  const [year, month, day] = date.split('-').map(Number);
+  const parsed = parseCycleDate(date);
 
-  return new Date(year, month - 1, day)
+  if (!parsed) return '';
+
+  return parsed
     .toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
+      timeZone: 'UTC',
     })
     .toUpperCase();
 };
 
 /**
- * Formats a date string in YYYY-MM-DD format as a short month and day
- * (e.g., "Oct 15").
- *
- * @param date - The date string in YYYY-MM-DD format.
- * @returns The formatted cycle date.
+ * Formats a cycle date as a short month and day (e.g., "Oct 27").
+ * Supports YYYY-MM-DD and ISO timestamps.
  */
 export const formatCycleDate = (date: string): string => {
-  return new Date(`${date}T00:00:00`).toLocaleDateString('en-US', {
+  const parsed = parseCycleDate(date);
+
+  if (!parsed) return '';
+
+  return parsed.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
+    timeZone: 'UTC',
   });
 };
 
 /**
- * Calculates the duration of a cycle in days using its start and end dates.
+ * Calculates the duration of a cycle in days.
+ * Supports YYYY-MM-DD and ISO timestamps.
  *
- * @param startDate - The cycle start date.
- * @param endDate - The cycle end date.
- * @returns The cycle duration in days, or 0 if either date is missing.
+ * Uses calendar dates in UTC and returns the inclusive cycle length.
  */
 export const getCycleLength = (startDate?: string, endDate?: string): number => {
-  if (!startDate || !endDate) return 0;
+  const start = parseCycleDate(startDate);
+  const end = parseCycleDate(endDate);
 
-  return (new Date(endDate).getTime() - new Date(startDate).getTime()) / MILLISECONDS_PER_DAY;
+  if (!start || !end || end < start) return 0;
+
+  const startDay = Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate());
+
+  const endDay = Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate());
+
+  return Math.floor((endDay - startDay) / MILLISECONDS_PER_DAY) + 1;
 };
 
 /**
- * Calculates the current day of a cycle, starting at day 1 on the start date
- * and capping the result at the cycle length.
- *
- * @param startDate - The cycle start date.
- * @param endDate - The cycle end date.
- * @param today - The date to calculate against. Defaults to getToday().
- * @returns The current cycle day, or 0 if dates are missing or the cycle length is invalid.
+ * Calculates the current day of a cycle.
+ * Day 1 is the start date, and the result is capped at the cycle length.
  */
 export const getCurrentCycleDay = (
   startDate?: string,
   endDate?: string,
   today: string | Date = getToday(),
 ): number => {
-  if (!startDate || !endDate) return 0;
+  const start = parseCycleDate(startDate);
+  const end = parseCycleDate(endDate);
+  const current = parseCycleDate(today);
+
+  if (!start || !end || !current) return 0;
 
   const cycleLength = getCycleLength(startDate, endDate);
 
   if (cycleLength <= 0) return 0;
 
-  const elapsedDays = Math.floor(
-    (new Date(today).getTime() - new Date(startDate).getTime()) / MILLISECONDS_PER_DAY,
-  );
+  const toUtcDay = (date: Date) =>
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+
+  const elapsedDays = Math.floor((toUtcDay(current) - toUtcDay(start)) / MILLISECONDS_PER_DAY);
 
   return Math.min(cycleLength, Math.max(1, elapsedDays + 1));
 };

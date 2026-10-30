@@ -47,7 +47,7 @@ const DashboardPage = () => {
     const userTasksMap = new Map<string, CycleTaskItem[]>();
 
     users.forEach((user) => {
-      userTasksMap.set(user.id, []);
+      userTasksMap.set(user.userId, []);
     });
 
     const unassignedTasks: CycleTaskItem[] = [];
@@ -117,7 +117,7 @@ const DashboardPage = () => {
 
     const tasksByUsers = users.map((user) => ({
       user,
-      tasks: userTasksMap.get(user.id) ?? [],
+      tasks: userTasksMap.get(user.userId) ?? [],
     }));
 
     return {

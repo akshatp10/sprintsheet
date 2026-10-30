@@ -3,18 +3,20 @@ import { getAllTypesByProject, getType } from '@/lib/db/dbFunctions/typeFunction
 import { errorMessage, type ApiResponse } from '../types';
 
 import type { GetProjectTypesResponse, GetTypeResponse } from './types';
+import axiosInstance from '@/lib/axiosInstance';
 
 export const getProjectTypesById = async (
   projectId: string,
 ): Promise<ApiResponse<GetProjectTypesResponse>> => {
   try {
-    const types = await getAllTypesByProject(projectId);
+    // const types = await getAllTypesByProject(projectId);
+    const response = await axiosInstance.post('/types/getAllProjectSTypes', { projectId }, {});
 
     return {
       status: 200,
       success: true,
       message: 'Successfully fetched project types',
-      data: types,
+      data: response.data.projectTypes,
     };
   } catch (error) {
     return {
@@ -28,9 +30,10 @@ export const getProjectTypesById = async (
 
 export const getTypeById = async (typeId: string): Promise<ApiResponse<GetTypeResponse>> => {
   try {
-    const type = await getType(typeId);
+    // const type = await getType(typeId);
+    const response = await axiosInstance.post('/types/getTypeById', { typeId });
 
-    if (!type) {
+    if (!response) {
       return {
         status: 404,
         success: false,
@@ -43,7 +46,7 @@ export const getTypeById = async (typeId: string): Promise<ApiResponse<GetTypeRe
       status: 200,
       success: true,
       message: 'Successfully fetched type',
-      data: type,
+      data: response.data.type,
     };
   } catch (error) {
     return {

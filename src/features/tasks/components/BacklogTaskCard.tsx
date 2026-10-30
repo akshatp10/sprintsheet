@@ -66,7 +66,7 @@ const BacklogTaskCard = ({
             <div className="flex min-w-0 items-center gap-2">
               <AvatarGroup>
                 {visibleUsers.map((assignee) => (
-                  <Avatar key={assignee.id} userName={assignee.name} />
+                  <Avatar key={assignee.userId} userName={assignee.name} />
                 ))}
 
                 {extraUsers > 0 && <Avatar extraUsers={extraUsers} />}

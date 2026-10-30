@@ -51,7 +51,7 @@ const useUserStore = create<UserStore>()(
         }
 
         set({
-          userId: response.data.id,
+          userId: response.data.userId,
           userName: response.data.name,
           userEmail: response.data.email,
           profilePicURL: null,
