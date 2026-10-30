@@ -7,12 +7,13 @@ export type AuthLoginRequest = z.infer<typeof loginSchema>;
 
 export interface AuthUser {
   id: string;
+  name: string;
   email: string;
 }
 
 export interface AuthData {
   user: AuthUser;
-  token: string;
+  token: { accessToken: string };
 }
 
 // Response types

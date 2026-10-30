@@ -16,7 +16,7 @@ import ToggleButtonBox from '@/components/common/ToggleButtonBox';
 import UserPanel from '@/components/sidebar/UserPanel';
 import Chip from '@/components/chips/Chip';
 import FormInputBox from '@/components/inputs/FormInputBox';
-import { currentUserEmail } from '@/config/features';
+import useUserStore from '@/store/userStore';
 
 interface PeopleStepProps {
   register: UseFormRegister<ProjectFormData>;
@@ -32,6 +32,8 @@ const PeopleStep = ({ register, control, watch, setValue }: PeopleStepProps) => 
 
   const [inviteInput, setInviteInput] = useState('');
   const [inviteRole, setInviteRole] = useState<ProjectPerson['role']>('member');
+
+  const currentUserEmail = useUserStore((state) => state.userEmail) ?? '';
 
   const handleAdd = () => {
     const emails = inviteInput
