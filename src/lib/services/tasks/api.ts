@@ -19,18 +19,20 @@ import type {
   UpdateTaskRequest,
   UpdateTaskResponse,
 } from './types';
+import axiosInstance from '@/lib/axiosInstance';
 
 export const createNewTask = async (
   input: CreateTaskRequest,
 ): Promise<ApiResponse<CreateTaskResponse>> => {
   try {
-    const task = await createTask(input);
+    // const task = await createTask(input);
+    const response = await axiosInstance.post('/tasks/createTask', input);
 
     return {
       status: 201,
       success: true,
       message: 'Successfully created task',
-      data: task,
+      data: response.data.task,
     };
   } catch (error) {
     return {
@@ -46,13 +48,14 @@ export const getAllProjectTasks = async (
   projectId: string,
 ): Promise<ApiResponse<GetProjectTasksResponse>> => {
   try {
-    const tasks = await getAllTasksByProject(projectId);
+    // const tasks = await getAllTasksByProject(projectId);
+    const response = await axiosInstance.get('/tasks/getAllTasks', { params: { projectId } });
 
     return {
       status: 200,
       success: true,
       message: 'Successfully fetched tasks',
-      data: tasks,
+      data: response.data.tasks,
     };
   } catch (error) {
     return {
@@ -68,13 +71,14 @@ export const getAllProjectBacklogTasks = async (
   projectId: string,
 ): Promise<ApiResponse<GetBacklogTasksResponse>> => {
   try {
-    const tasks = await getBacklogTasksByProject(projectId);
+    // const tasks = await getBacklogTasksByProject(projectId);
+    const response = await axiosInstance.get('/tasks/getBacklogTasks', { params: { projectId } });
 
     return {
       status: 200,
       success: true,
       message: 'Successfully fetched backlog tasks',
-      data: tasks,
+      data: response.data.tasks,
     };
   } catch (error) {
     return {
@@ -90,13 +94,14 @@ export const getAllCycleTasks = async (
   cycleId: string,
 ): Promise<ApiResponse<GetCycleTasksResponse>> => {
   try {
-    const tasks = await getTasksByCycle(cycleId);
+    // const tasks = await getTasksByCycle(cycleId);
+    const response = await axiosInstance.get('/tasks/getCycleTasks', { params: { cycleId } });
 
     return {
       status: 200,
       success: true,
       message: 'Successfully fetched cycle tasks',
-      data: tasks,
+      data: response.data.tasks,
     };
   } catch (error) {
     return {
@@ -112,13 +117,16 @@ export const getAllProjectCycleTasks = async (
   projectId: string,
 ): Promise<ApiResponse<GetProjectCycleTasksResponse>> => {
   try {
-    const tasks = await getCycleTasksByProject(projectId);
+    // const tasks = await getCycleTasksByProject(projectId);
+    const response = await axiosInstance.get('/tasks/getProjectCycleTasks', {
+      params: { projectId },
+    });
 
     return {
       status: 200,
       success: true,
       message: 'Successfully fetched cycle tasks',
-      data: tasks,
+      data: response.data.tasks,
     };
   } catch (error) {
     return {
@@ -135,9 +143,10 @@ export const updateExistingTask = async ({
   updates,
 }: UpdateTaskRequest): Promise<ApiResponse<UpdateTaskResponse>> => {
   try {
-    const task = await updateTask(id, updates);
+    // const task = await updateTask(id, updates);
+    const response = await axiosInstance.patch('/tasks/updateTask', { id, updates });
 
-    if (!task) {
+    if (!response) {
       return {
         status: 404,
         success: false,
@@ -150,7 +159,7 @@ export const updateExistingTask = async ({
       status: 200,
       success: true,
       message: 'Successfully updated task',
-      data: task,
+      data: response.data.task,
     };
   } catch (error) {
     return {

@@ -26,18 +26,20 @@ import type {
   UpdateTaskCycleStageRequest,
   UpdateTaskCycleStageResponse,
 } from './types';
+import axiosInstance from '@/lib/axiosInstance';
 
 export const createNewTaskCycle = async (
   input: CreateTaskCycleRequest,
 ): Promise<ApiResponse<CreateTaskCycleResponse>> => {
   try {
-    const taskCycle = await createTaskCycle(input);
+    // const taskCycle = await createTaskCycle(input);
+    const response = await axiosInstance.post('/taskCycles/createTaskCycle', input, {});
 
     return {
       status: 201,
       success: true,
       message: 'Successfully created task cycle',
-      data: taskCycle,
+      data: response.data.taskCycle,
     };
   } catch (error) {
     return {
@@ -54,13 +56,21 @@ export const updateExistingTaskCycleStage = async ({
   stageId,
 }: UpdateTaskCycleStageRequest): Promise<ApiResponse<UpdateTaskCycleStageResponse>> => {
   try {
-    const taskCycle = await updateTaskCycleStage(taskCycleId, stageId);
+    // const taskCycle = await updateTaskCycleStage(taskCycleId, stageId);
+    const response = await axiosInstance.patch(
+      '/taskCycles/updateTaskCycleStage',
+      {
+        taskCycleId,
+        stageId,
+      },
+      {},
+    );
 
     return {
       status: 200,
       success: true,
       message: 'Successfully updated task cycle stage',
-      data: taskCycle,
+      data: response.data.taskCycle,
     };
   } catch (error) {
     return {
@@ -78,13 +88,14 @@ export const moveTaskToDestination = async ({
   to,
 }: MoveTaskRequest): Promise<ApiResponse<MoveTaskResponse>> => {
   try {
-    const task = await moveTaskAcrossCycle(taskId, fromCycleId, to);
+    // const task = await moveTaskAcrossCycle(taskId, fromCycleId, to);
+    const response = await axiosInstance.patch('/taskCycles/moveTask', { taskId, fromCycleId, to });
 
     return {
       status: 200,
       success: true,
       message: 'Successfully moved task',
-      data: task,
+      data: response.data.task,
     };
   } catch (error) {
     return {
@@ -101,13 +112,14 @@ export const moveMultipleTasksToDestination = async ({
   to,
 }: MoveTasksRequest): Promise<ApiResponse<MoveTasksResponse>> => {
   try {
-    const moved = await moveMultipleTasksAcrossCycle(tasks, to);
+    // const moved = await moveMultipleTasksAcrossCycle(tasks, to);
+    const response = await axiosInstance.patch('/taskCycles/moveTasks', { tasks, to });
 
     return {
       status: 200,
       success: true,
       message: 'Successfully moved tasks',
-      data: moved,
+      data: response.data.tasks,
     };
   } catch (error) {
     return {
@@ -121,9 +133,10 @@ export const moveMultipleTasksToDestination = async ({
 
 export const getCycleTaskById = async (id: string): Promise<ApiResponse<GetTaskCycleResponse>> => {
   try {
-    const taskCycle = await getTaskCycleById(id);
+    // const taskCycle = await getTaskCycleById(id);
+    const response = await axiosInstance.get('/taskCycles/getTaskCycle', { params: { id } });
 
-    if (!taskCycle) {
+    if (!response) {
       return {
         status: 404,
         success: false,
@@ -136,7 +149,7 @@ export const getCycleTaskById = async (id: string): Promise<ApiResponse<GetTaskC
       status: 200,
       success: true,
       message: 'Successfully fetched task cycle',
-      data: taskCycle,
+      data: response.data.taskCycle,
     };
   } catch (error) {
     return {
@@ -152,13 +165,16 @@ export const getCycleTaskCycles = async (
   cycleId: string,
 ): Promise<ApiResponse<GetTaskCyclesResponse>> => {
   try {
-    const taskCycles = await getTaskCyclesByCycle(cycleId);
+    // const taskCycles = await getTaskCyclesByCycle(cycleId);
+    const response = await axiosInstance.get('/taskCycles/getTaskCyclesByCycle', {
+      params: { cycleId },
+    });
 
     return {
       status: 200,
       success: true,
       message: 'Successfully fetched task cycles',
-      data: taskCycles,
+      data: response.data.taskCycles,
     };
   } catch (error) {
     return {
@@ -174,13 +190,16 @@ export const getTaskTaskCycles = async (
   taskId: string,
 ): Promise<ApiResponse<GetTaskCyclesResponse>> => {
   try {
-    const taskCycles = await getTaskCyclesByTask(taskId);
+    // const taskCycles = await getTaskCyclesByTask(taskId);
+    const response = await axiosInstance.get('/taskCycles/getTaskCyclesByTask', {
+      params: { taskId },
+    });
 
     return {
       status: 200,
       success: true,
       message: 'Successfully fetched task cycles',
-      data: taskCycles,
+      data: response.data.taskCycles,
     };
   } catch (error) {
     return {
@@ -196,13 +215,16 @@ export const getAllTaskCyclesByProject = async (
   projectId: string,
 ): Promise<ApiResponse<GetTaskCyclesResponse>> => {
   try {
-    const taskCycles = await getTaskCyclesByProject(projectId);
+    // const taskCycles = await getTaskCyclesByProject(projectId);
+    const response = await axiosInstance.get('/taskCycles/getTaskCyclesByProject', {
+      params: { projectId },
+    });
 
     return {
       status: 200,
       success: true,
       message: 'Successfully fetched task cycles',
-      data: taskCycles,
+      data: response.data.taskCycles,
     };
   } catch (error) {
     return {
@@ -219,7 +241,10 @@ export const deleteTaskCycleById = async ({
   taskCycleId,
 }: DeleteTaskCycleRequest): Promise<ApiResponse<DeleteTaskCycleResponse>> => {
   try {
-    const result = await deleteTaskCycle(taskId, taskCycleId);
+    // const result = await deleteTaskCycle(taskId, taskCycleId);
+    const response = await axiosInstance.delete('/taskCycles/deleteTaskCycle', {
+      params: { taskId, taskCycleId },
+    });
 
     return {
       status: 200,
@@ -227,7 +252,7 @@ export const deleteTaskCycleById = async ({
       message: taskCycleId
         ? 'Successfully removed task from cycle'
         : 'Successfully deleted backlog task',
-      data: result,
+      data: response.data.deleted,
     };
   } catch (error) {
     return {

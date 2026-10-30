@@ -77,7 +77,7 @@ const TaskCard = ({ task, isDone, isOverlay = false }: TaskCardProps) => {
         {!!task?.assigneeIds.length ? (
           <AvatarGroup>
             {visibleUsers.map((assignee) => (
-              <Avatar key={assignee.id} userName={assignee.name} />
+              <Avatar key={assignee.userId} userName={assignee.name} />
             ))}
 
             {extraUsers > 0 && <Avatar extraUsers={extraUsers} />}

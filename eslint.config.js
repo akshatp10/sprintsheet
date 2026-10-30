@@ -20,6 +20,7 @@ export default defineConfig([
     },
     rules: {
       'no-extra-boolean-cast': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
 ]);
