@@ -17,9 +17,10 @@ import axiosInstance from '@/lib/axiosInstance';
 
 export const getUser = async (id: string): Promise<ApiResponse<GetUserResponse>> => {
   try {
-    const user = await getUserById(id);
+    // const user = await getUserById(id);
+    const response = await axiosInstance.get('/users/byId', { params: { userId: id } });
 
-    if (!user) {
+    if (!response.data.user) {
       return {
         status: 404,
         success: false,
@@ -32,7 +33,7 @@ export const getUser = async (id: string): Promise<ApiResponse<GetUserResponse>>
       status: 200,
       success: true,
       message: 'Successfully fetched user',
-      data: user,
+      data: response.data.user,
     };
   } catch (error) {
     return {
@@ -68,12 +69,13 @@ export const getCurrent = async (): Promise<ApiResponse<GetCurrentUserResponse>>
 export const getUsers = async (ids: string[]): Promise<ApiResponse<GetUsersResponse>> => {
   try {
     const users = await getUsersByIds(ids);
+    const response = await axiosInstance.post('/users/byIds', { userIds: ids });
 
     return {
       status: 200,
       success: true,
       message: 'Successfully fetched users',
-      data: users,
+      data: response.data.users,
     };
   } catch (error) {
     return {
