@@ -1,8 +1,8 @@
 import Text from '@/components/common/Text';
-import { useGetCurrentUser } from '@/lib/services/users/hooks';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import type { ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
+import useAuthRedirect from '../hooks/useAuthRedirect';
 
 interface AuthLayoutProps {
   title: string;
@@ -14,14 +14,10 @@ interface AuthLayoutProps {
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const AuthLayout = ({ title, subtitle, children, footer }: AuthLayoutProps) => {
-  const token = localStorage.getItem('accessToken');
+  const { isLoading, isAuthenticated } = useAuthRedirect();
 
-  const { data: user } = useGetCurrentUser({
-    enabled: !!token,
-  });
-
-  if (user) {
-    window.location.assign('/');
+  if (isLoading || isAuthenticated) {
+    return null;
   }
 
   return (
