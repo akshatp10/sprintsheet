@@ -45,9 +45,22 @@ const acceptErrorMessage = (error: unknown) => {
   return 'Something went wrong. Please try again.';
 };
 
-const InviteShell = (props: { title: string; subtitle?: string; children?: ReactNode }) => (
+const InviteShell = (props: {
+  title: string;
+  subtitle?: string;
+  children?: ReactNode;
+  showHomeButton?: boolean;
+}) => (
   <AuthCard title={props.title} subtitle={props.subtitle ?? ''} footer={null}>
-    {props.children}
+    <div className="flex flex-col gap-3">
+      {props.children}
+
+      {props.showHomeButton && (
+        <Button variant="primary" type="button" onClick={() => window.location.replace('/')}>
+          Go to Home
+        </Button>
+      )}
+    </div>
   </AuthCard>
 );
 
@@ -81,7 +94,7 @@ const InvitePage = () => {
 
   if (invitation.state !== 'pending') {
     const copy = UNUSABLE_COPY[invitation.state];
-    return <InviteShell title={copy.title} subtitle={copy.text} />;
+    return <InviteShell title={copy.title} subtitle={copy.text} showHomeButton />;
   }
 
   const invitedEmail = invitation.email ?? '';
