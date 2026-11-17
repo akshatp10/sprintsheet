@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getCurrent, getProjectUsers, getUser, getUsers } from './api';
+import { getCurrent, getProjectUsers } from './api';
 
 export const userQueryKeys = {
   all: ['users'] as const,
@@ -24,42 +24,6 @@ export const useGetCurrentUser = (options = {}) => {
       return response.data;
     },
     ...options,
-  });
-};
-
-export const useGetUser = (id: string) => {
-  return useQuery({
-    queryKey: userQueryKeys.detail(id),
-
-    queryFn: async () => {
-      const response = await getUser(id);
-
-      if (!response.success) {
-        throw new Error(response.message);
-      }
-
-      return response.data;
-    },
-
-    enabled: !!id,
-  });
-};
-
-export const useGetUsers = (ids: string[]) => {
-  return useQuery({
-    queryKey: userQueryKeys.byIds(ids),
-
-    queryFn: async () => {
-      const response = await getUsers(ids);
-
-      if (!response.success) {
-        throw new Error(response.message);
-      }
-
-      return response.data ?? [];
-    },
-
-    enabled: ids.length > 0,
   });
 };
 

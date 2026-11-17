@@ -24,6 +24,7 @@ import SignInPage from '@/pages/auths/SigninPage';
 import SignUpPage from '@/pages/auths/SignUpPage';
 import DashboardPage from '@/pages/DashboardPage';
 import ProtectedRoute from './ProtectedRoute';
+import InvitePage from '@/pages/auths/InvitePage';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,6 +32,7 @@ export const router = createBrowserRouter(
       {/* Public auth routes */}
       <Route path="/auth/login" element={<SignInPage />} />
       <Route path="/auth/register" element={<SignUpPage />} />
+      <Route path="/invite/:token" element={<InvitePage />} />
 
       {/* Protect every other route */}
       <Route element={<ProtectedRoute />}>

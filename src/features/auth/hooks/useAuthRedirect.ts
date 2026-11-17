@@ -1,11 +1,14 @@
 import { useEffect } from 'react';
 import { useGetCurrentUser } from '@/lib/services/users/hooks';
+import { getPostAuthRedirect } from '@/lib/redirect';
 
 interface UseAuthRedirectOptions {
   redirectTo?: string;
 }
 
-const useAuthRedirect = ({ redirectTo = '/' }: UseAuthRedirectOptions = {}) => {
+const useAuthRedirect = ({ redirectTo }: UseAuthRedirectOptions = {}) => {
+  // "/" normally, or "/invite/<token>" when we came from an invitation
+  const target = redirectTo ?? getPostAuthRedirect();
   const token = localStorage.getItem('accessToken');
 
   const {
@@ -18,9 +21,9 @@ const useAuthRedirect = ({ redirectTo = '/' }: UseAuthRedirectOptions = {}) => {
 
   useEffect(() => {
     if (user) {
-      window.location.assign(redirectTo);
+      window.location.assign(target);
     }
-  }, [user, redirectTo]);
+  }, [user, target]);
 
   return {
     user,

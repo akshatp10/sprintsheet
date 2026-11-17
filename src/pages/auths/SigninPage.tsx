@@ -5,7 +5,7 @@ import Input from '@/components/inputs/Input';
 import AuthLayout from '@/features/auth/components/AuthLayout';
 import GoogleButton from '@/features/auth/components/GoogleButton';
 
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import Button from '@/components/button/Button';
 import Text from '@/components/common/Text';
 import {
@@ -16,13 +16,17 @@ import {
 import { usePostLogin } from '@/lib/services/auth/hooks';
 
 const SignInPage = () => {
+  const [searchParams] = useSearchParams();
+  const { search } = useLocation();
+  const invitedEmail = searchParams.get('email') ?? '';
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: loginDefaultValues,
+    defaultValues: { ...loginDefaultValues, email: invitedEmail },
     mode: 'onChange',
     reValidateMode: 'onChange',
   });
@@ -40,8 +44,8 @@ const SignInPage = () => {
       footer={
         <div className="flex flex-wrap items-center justify-center gap-2">
           <Text className="text-ink-3">
-            Don't have an account?{' '}
-            <Link to="/auth/register" className="text-accent-mid">
+            Don't have an account? {/* keep ?email & ?redirect when switching pages */}
+            <Link to={`/auth/register${search}`} className="text-accent-mid">
               Register
             </Link>
           </Text>
@@ -55,7 +59,7 @@ const SignInPage = () => {
             type="email"
             autoComplete="email"
             placeholder="you@thealteroffice.com"
-            autoFocus
+            autoFocus={!invitedEmail}
           />
         </FormInputBox>
         <FormInputBox label="Password" error={errors.password?.message}>
@@ -64,6 +68,7 @@ const SignInPage = () => {
             type="password"
             autoComplete="current-password"
             placeholder="••••••••"
+            autoFocus={Boolean(invitedEmail)}
           />
         </FormInputBox>
         <Button
