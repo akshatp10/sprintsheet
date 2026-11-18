@@ -7,10 +7,14 @@ import UserHydration from '@/components/common/UserHydration';
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
-    onError: (error) => toast.error(getErrorMessage(error)),
+    onError: (error, query) => {
+      if (query.meta?.suppressGlobalError) return;
+      toast.error(getErrorMessage(error));
+    },
   }),
   mutationCache: new MutationCache({
-    onError: (error) => {
+    onError: (error, _variables, _context, mutation) => {
+      if (mutation.meta?.suppressGlobalError) return;
       toast.error(getErrorMessage(error));
     },
   }),

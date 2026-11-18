@@ -14,27 +14,25 @@ export const invitationKeys = {
   project: (projectId: string) => ['invitations', 'project', projectId] as const,
 };
 
-// Public invite page: what to show for this token
 export const usePreviewInvitation = (token: string) => {
   return useQuery({
     queryKey: invitationKeys.preview(token),
     queryFn: () => previewInvitation({ token }),
     select: (response) => response.invitation,
     enabled: Boolean(token),
-    retry: false, // an invalid token will not fix itself
+    retry: false,
     refetchOnWindowFocus: false,
+    meta: { suppressGlobalError: true },
   });
 };
 
-// Accept: the caller navigates (full reload) afterwards, so the new project
-// is loaded fresh. No cache invalidation needed here.
 export const useAcceptInvitation = () => {
   return useMutation({
     mutationFn: (token: string) => acceptInvitation({ token }),
+    meta: { suppressGlobalError: true },
   });
 };
 
-// Admin only on the backend (403 for everyone else)
 export const useProjectInvitations = (projectId: string) => {
   return useQuery({
     queryKey: invitationKeys.project(projectId),
