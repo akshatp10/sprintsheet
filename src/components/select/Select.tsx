@@ -262,7 +262,7 @@ export default function Select(props: SelectProps) {
               }
             }}
             className={cn(
-              'h-full w-full min-w-0 flex-1 bg-transparent',
+              'h-full w-full min-w-0 flex-1 cursor-pointer bg-transparent',
               'border-none p-0 text-inherit outline-none',
               'placeholder:text-ink-fades-placeholders focus:outline-none focus:ring-0',
               inputClassName,
