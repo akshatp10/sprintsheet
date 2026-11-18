@@ -101,7 +101,9 @@ const SignUpPage = () => {
         <span className="h-px flex-1 bg-[#DAD7D0]" />
       </div>
 
-      <GoogleButton />
+      <div className="w-full flex items-center justify-center">
+        <GoogleButton />
+      </div>
     </AuthLayout>
   );
 };

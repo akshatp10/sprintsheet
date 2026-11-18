@@ -17,6 +17,7 @@ export const features = {
 
   // Sidebar Setting
   VIEW_SETTING: isEnabled(import.meta.env.VITE_FEATURE_VIEW_SETTINGS),
+  VIEW_SEARCH: isEnabled(import.meta.env.VITE_FEATURE_VIEW_SEARCH),
 } as const;
 
 export type Feature = keyof typeof features;
