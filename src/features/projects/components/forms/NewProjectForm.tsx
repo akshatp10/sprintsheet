@@ -19,7 +19,7 @@ interface NewProjectFormProps {
 }
 
 const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
-  const { mutate: createProject } = useCreateProject();
+  const { mutate: createProject, isPending } = useCreateProject();
 
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -111,6 +111,7 @@ const NewProjectForm = ({ onClose }: NewProjectFormProps) => {
           onBack={handleBack}
           onNext={handleNext}
           isNextDisabled={!isValid}
+          isFormPending={isPending}
         />
       </form>
     </PopupModal>

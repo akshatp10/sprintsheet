@@ -7,6 +7,7 @@ import useShortcutSearch from '@/hooks/useShortcutSearch';
 import SearchInput from '../inputs/SearchInput';
 import { isMac } from '@/lib/utils';
 import { useBacklogTasks, useGetAllTasksByProject } from '@/lib/services/tasks/hooks';
+import { isFeatureEnabled } from '@/config/features';
 
 const AllTaskTopbar = () => {
   const [openTaskForm, setOpenTaskForm] = useState(false);
@@ -36,12 +37,14 @@ const AllTaskTopbar = () => {
 
         {/* Right Side */}
         <div className="flex items-center gap-2 shrink-0">
-          <SearchInput
-            value={searchProject}
-            onChange={setSearchProject}
-            placeholder={`Search tasks... ${isMac ? '⌘ K' : 'Ctrl K'}`}
-            searchElementId="taskSearch"
-          />
+          {isFeatureEnabled('VIEW_SEARCH') && (
+            <SearchInput
+              value={searchProject}
+              onChange={setSearchProject}
+              placeholder={`Search tasks... ${isMac ? '⌘ K' : 'Ctrl K'}`}
+              searchElementId="taskSearch"
+            />
+          )}
           <Button
             variant="primary"
             className="py-0.5 font-medium"

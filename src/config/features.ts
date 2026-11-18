@@ -6,6 +6,7 @@ export const features = {
   PROJECT_BOARD: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_BOARD),
   PROJECT_TASKS: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_TASKS),
   PROJECT_CYCLES: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_CYCLES),
+  PROJECT_PEOPLE: isEnabled(import.meta.env.VITE_FEATURE_PROJECT_PEOPLE),
   HOME_PEOPLE: isEnabled(import.meta.env.VITE_FEATURE_HOME_PEOPLE),
   SHOW_BACKLOG: isEnabled(import.meta.env.VITE_FEATURE_SHOW_BACKLOG),
   SHOW_RECENT_ACTIVITY: isEnabled(import.meta.env.VITE_FEATURE_SHOW_RECENT_ACTIVITY),
@@ -16,6 +17,7 @@ export const features = {
 
   // Sidebar Setting
   VIEW_SETTING: isEnabled(import.meta.env.VITE_FEATURE_VIEW_SETTINGS),
+  VIEW_SEARCH: isEnabled(import.meta.env.VITE_FEATURE_VIEW_SEARCH),
 } as const;
 
 export type Feature = keyof typeof features;

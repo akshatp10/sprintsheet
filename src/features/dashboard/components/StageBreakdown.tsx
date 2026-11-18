@@ -50,7 +50,12 @@ const StageBreakdown = ({
 
         <div className="flex flex-col gap-1 py-2">
           {tasksByUsers.map(({ user, tasks }) => (
-            <UserTaskData key={user.id} label={user.name} userName={user.name} totalTasks={tasks} />
+            <UserTaskData
+              key={user.userId}
+              label={user.name}
+              userName={user.name}
+              totalTasks={tasks}
+            />
           ))}
 
           <UserTaskData label="Unassigned" totalTasks={unassignedTasks} />

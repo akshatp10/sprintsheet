@@ -4,7 +4,7 @@ import FormInputBox from '@/components/inputs/FormInputBox';
 import Input from '@/components/inputs/Input';
 import AuthLayout from '@/features/auth/components/AuthLayout';
 import GoogleButton from '@/features/auth/components/GoogleButton';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import Button from '@/components/button/Button';
 import Text from '@/components/common/Text';
 import {
@@ -15,18 +15,22 @@ import {
 import { usePostRegister } from '@/lib/services/auth/hooks';
 
 const SignUpPage = () => {
+  const [searchParams] = useSearchParams();
+  const { search } = useLocation();
+  const invitedEmail = searchParams.get('email') ?? '';
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
-    defaultValues: registerDefaultValues,
+    defaultValues: { ...registerDefaultValues, email: invitedEmail },
     mode: 'onChange',
     reValidateMode: 'onChange',
   });
 
-  const { mutate: handleRegisterUser } = usePostRegister();
+  const { mutate: handleRegisterUser, isPending } = usePostRegister();
 
   const onSubmit = (data: RegisterFormData) => {
     handleRegisterUser(data);
@@ -39,8 +43,8 @@ const SignUpPage = () => {
       footer={
         <div className="flex flex-wrap items-center justify-center gap-2">
           <Text className="text-ink-3">
-            Already have an account?{' '}
-            <Link to="/auth/login" className="text-accent-mid">
+            Already have an account?
+            <Link to={`/auth/login${search}`} className="text-accent-mid">
               Sign in
             </Link>
           </Text>
@@ -62,6 +66,7 @@ const SignUpPage = () => {
             type="email"
             autoComplete="email"
             placeholder="you@thealteroffice.com"
+            readOnly={Boolean(invitedEmail)}
           />
         </FormInputBox>
         <FormInputBox label="Password" error={errors.password?.message}>
@@ -83,7 +88,7 @@ const SignUpPage = () => {
         <Button
           variant="primary"
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isPending}
           className="disabled:cursor-not-allowed disabled:opacity-60"
         >
           Create Account <span aria-hidden="true">→</span>
@@ -96,7 +101,9 @@ const SignUpPage = () => {
         <span className="h-px flex-1 bg-[#DAD7D0]" />
       </div>
 
-      <GoogleButton />
+      <div className="w-full flex items-center justify-center">
+        <GoogleButton />
+      </div>
     </AuthLayout>
   );
 };

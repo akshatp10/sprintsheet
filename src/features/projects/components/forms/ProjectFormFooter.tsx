@@ -8,6 +8,7 @@ interface ProjectFormFooterProps {
   onBack: () => void;
   onNext: () => void;
   isNextDisabled: boolean;
+  isFormPending: boolean;
 }
 
 const ProjectFormFooter = ({
@@ -16,6 +17,7 @@ const ProjectFormFooter = ({
   onBack,
   onNext,
   isNextDisabled,
+  isFormPending,
 }: ProjectFormFooterProps) => {
   return (
     <div className="flex items-center justify-end gap-2 py-4">
@@ -66,7 +68,8 @@ const ProjectFormFooter = ({
             key={currentStep.toString()}
             type="submit"
             variant="primary"
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isFormPending}
           >
             <Check className="text-surface" strokeWidth={1.5} size={15} />
 

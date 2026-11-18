@@ -1,20 +1,27 @@
 import Button from '@/components/button/Button';
 import Text from '@/components/common/Text';
 import Select, { type SelectOption } from '@/components/select/Select';
-import { useGetAllProjects } from '@/lib/services/projects/hooks';
 import type { Project } from '@/lib/services/projects/types';
 import { getExtractedLetterFromString } from '@/lib/utils';
 import { ChevronsUpDown } from 'lucide-react';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+type ProjectSummary = Pick<Project, 'id' | 'name'>;
+
 interface CurProjectSidebarCardProps {
-  project: Project;
+  project: ProjectSummary;
+  projects: ProjectSummary[];
+  isLoading: boolean;
   cycleName: string;
 }
 
-const CurProjectSidebarCard = ({ project, cycleName }: CurProjectSidebarCardProps) => {
-  const { data: projects = [], isLoading } = useGetAllProjects(false);
+const CurProjectSidebarCard = ({
+  project,
+  projects,
+  isLoading,
+  cycleName,
+}: CurProjectSidebarCardProps) => {
   const navigate = useNavigate();
 
   const initials = getExtractedLetterFromString(project.name, 2).toUpperCase();

@@ -6,6 +6,7 @@ import SearchInput from '../inputs/SearchInput';
 import NewProjectForm from '@/features/projects/components/forms/NewProjectForm';
 import useShortcutSearch from '@/hooks/useShortcutSearch';
 import { isMac } from '@/lib/utils';
+import { isFeatureEnabled } from '@/config/features';
 
 const WorkspaceTopbar = () => {
   const [searchProject, setSearchProject] = useState('');
@@ -33,12 +34,14 @@ const WorkspaceTopbar = () => {
 
         {/* Right side containing search project and new project buttons */}
         <div className="flex items-center gap-2">
-          <SearchInput
-            value={searchProject}
-            onChange={setSearchProject}
-            placeholder={`Search projects, tasks... ${isMac ? '⌘ K' : 'Ctrl K'}`}
-            searchElementId="projectSearch"
-          />
+          {isFeatureEnabled('VIEW_SEARCH') && (
+            <SearchInput
+              value={searchProject}
+              onChange={setSearchProject}
+              placeholder={`Search projects, tasks... ${isMac ? '⌘ K' : 'Ctrl K'}`}
+              searchElementId="projectSearch"
+            />
+          )}
 
           <Button variant="primary" className="h-full font-medium" onClick={handleClick}>
             + New Project
