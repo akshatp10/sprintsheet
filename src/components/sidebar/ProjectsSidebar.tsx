@@ -45,7 +45,7 @@ const ProjectsSidebar = () => {
       feature: 'PROJECT_CYCLES' as const,
     },
     {
-      label: 'Peoples',
+      label: 'Members',
       to: `/project/${projectid}/people`,
       icon: <Users size={20} strokeWidth={1.5} />,
       feature: 'PROJECT_PEOPLE' as const,

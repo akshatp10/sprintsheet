@@ -26,6 +26,7 @@ import DashboardPage from '@/pages/DashboardPage';
 import ProtectedRoute from './ProtectedRoute';
 import InvitePage from '@/pages/auths/InvitePage';
 import ProjectPeoplePage from '@/pages/ProjectPeoplePage';
+import ProjectPeopleTopbar from '@/components/topbar/ProjectPeopleTopbar';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -108,7 +109,7 @@ export const router = createBrowserRouter(
           element={
             <AppLayout
               dynamicSidebar={<ProjectsSidebar />}
-              dynamicTopBar={<ProjectsTopbar />}
+              dynamicTopBar={<ProjectPeopleTopbar />}
               usersPanel={<SidebarBottom />}
             />
           }
