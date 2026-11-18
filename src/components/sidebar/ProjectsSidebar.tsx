@@ -1,14 +1,14 @@
-import { ArrowLeft, ChartPie, ListChecks, RefreshCcw, Table2 } from 'lucide-react';
+import { ArrowLeft, ChartPie, ListChecks, RefreshCcw, Table2, Users } from 'lucide-react';
 
 import SidebarNavigations from './SidebarNavigations';
 import Text from '../common/Text';
 import Button from '../button/Button';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import CurProjectSidebarCard from '@/features/projects/components/CurProjectSidebarCard';
-import { useGetProjectDetails } from '@/lib/services/projects/hooks';
 import SidebarProjectCardSkeleton from '@/features/projects/components/skeletons/SidebarProjectCardSkeleton';
 import { useGetCycle } from '@/lib/services/cycles/hooks';
 import { isFeatureEnabled } from '@/config/features';
+import { useCurrentProject } from '@/hooks/useCurrentProject';
 
 const ProjectsSidebar = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const ProjectsSidebar = () => {
   const [searchParams] = useSearchParams();
   const cycleId = searchParams.get('cycle');
 
-  const { data: project } = useGetProjectDetails(projectid ?? '');
+  const { projects, project, isLoading } = useCurrentProject(projectid ?? '');
   const { data: cycle } = useGetCycle(cycleId ?? '');
 
   const options = [
@@ -44,6 +44,12 @@ const ProjectsSidebar = () => {
       icon: <RefreshCcw size={20} strokeWidth={1.5} />,
       feature: 'PROJECT_CYCLES' as const,
     },
+    {
+      label: 'Peoples',
+      to: `/project/${projectid}/people`,
+      icon: <Users size={20} strokeWidth={1.5} />,
+      feature: 'PROJECT_PEOPLE' as const,
+    },
   ];
 
   return (
@@ -62,7 +68,12 @@ const ProjectsSidebar = () => {
       </Button>
 
       {project ? (
-        <CurProjectSidebarCard project={project} cycleName={cycle?.name ?? ''} />
+        <CurProjectSidebarCard
+          project={project}
+          projects={projects}
+          isLoading={isLoading}
+          cycleName={cycle?.name ?? ''}
+        />
       ) : (
         <SidebarProjectCardSkeleton />
       )}

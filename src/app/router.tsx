@@ -25,6 +25,7 @@ import SignUpPage from '@/pages/auths/SignUpPage';
 import DashboardPage from '@/pages/DashboardPage';
 import ProtectedRoute from './ProtectedRoute';
 import InvitePage from '@/pages/auths/InvitePage';
+import ProjectPeoplePage from '@/pages/ProjectPeoplePage';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -100,6 +101,19 @@ export const router = createBrowserRouter(
           }
         >
           <Route path="/project/:projectid" element={<DashboardPage />} />
+        </Route>
+
+        {/* Project People routes */}
+        <Route
+          element={
+            <AppLayout
+              dynamicSidebar={<ProjectsSidebar />}
+              dynamicTopBar={<ProjectsTopbar />}
+              usersPanel={<SidebarBottom />}
+            />
+          }
+        >
+          <Route path="/project/:projectid/people" element={<ProjectPeoplePage />} />
         </Route>
       </Route>
     </>,

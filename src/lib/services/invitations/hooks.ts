@@ -33,12 +33,12 @@ export const useAcceptInvitation = () => {
   });
 };
 
-export const useProjectInvitations = (projectId: string) => {
+export const useProjectInvitations = (projectId: string, isAdmin?: boolean) => {
   return useQuery({
     queryKey: invitationKeys.project(projectId),
     queryFn: () => getProjectInvitations({ projectId }),
     select: (response) => response.invitations,
-    enabled: Boolean(projectId),
+    enabled: Boolean(projectId) && (isAdmin ?? false),
   });
 };
 
