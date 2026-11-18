@@ -30,7 +30,7 @@ const SignUpPage = () => {
     reValidateMode: 'onChange',
   });
 
-  const { mutate: handleRegisterUser } = usePostRegister();
+  const { mutate: handleRegisterUser, isPending } = usePostRegister();
 
   const onSubmit = (data: RegisterFormData) => {
     handleRegisterUser(data);
@@ -88,7 +88,7 @@ const SignUpPage = () => {
         <Button
           variant="primary"
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isPending}
           className="disabled:cursor-not-allowed disabled:opacity-60"
         >
           Create Account <span aria-hidden="true">→</span>

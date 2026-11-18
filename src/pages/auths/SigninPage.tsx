@@ -31,7 +31,7 @@ const SignInPage = () => {
     reValidateMode: 'onChange',
   });
 
-  const { mutate: handleLoginUser } = usePostLogin();
+  const { mutate: handleLoginUser, isPending } = usePostLogin();
 
   const onSubmit = (data: LoginFormData) => {
     handleLoginUser(data);
@@ -74,7 +74,7 @@ const SignInPage = () => {
         <Button
           variant="primary"
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isPending}
           className="disabled:cursor-not-allowed disabled:opacity-60"
         >
           Sign in <span aria-hidden="true">→</span>
