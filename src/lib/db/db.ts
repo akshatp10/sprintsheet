@@ -1,114 +1,13 @@
 import Dexie, { type EntityTable } from 'dexie';
 
-interface ProjectRow {
-  id: string;
+interface CacheRow {
   key: string;
-  nextTaskNumber: number;
-  name: string;
-  description: string;
-  cycleLength: 'default' | 'custom' | 'nocycle';
-  startingDay: string;
-  autoCycle: boolean;
-  isArchived: boolean;
-  createdAt: number;
-  updatedAt: number;
-}
-
-interface UserRow {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: number;
-  updatedAt: number;
-}
-
-interface ProjectMemberRow {
-  id: string;
-  projectId: string;
-  userId: string;
-  role: 'member' | 'admin';
-  createdAt: number;
-  updatedAt: number;
-}
-
-interface StageRow {
-  id: string;
-  name: string;
-  createdAt: number;
-  updatedAt: number;
-}
-
-interface ProjectStageRow {
-  id: string;
-  projectId: string;
-  stageId: string;
-  order: number;
-  name: string;
-  createdAt: number;
-  updatedAt: number;
-  isTerminal: boolean;
-}
-
-interface TypeRow {
-  id: string;
-  name: string;
-  createdAt: number;
-  updatedAt: number;
-}
-
-interface ProjectTypeRow {
-  id: string;
-  projectId: string;
-  typeId: string;
-  createdAt: number;
-  updatedAt: number;
-}
-
-interface TaskRow {
-  id: string;
-  projectId: string;
-  key: string;
-  typeId: string;
-  name: string;
-  description: string;
-  assigneeIds: string[];
-  dueDate: string | null;
-  tags: string[];
-  isBacklog: 0 | 1;
-  createdAt: number;
-  updatedAt: number;
-}
-
-interface CycleRow {
-  id: string;
-  projectId: string;
-  name: string;
-  startDate: string;
-  endDate: string;
-  createdAt: number;
-  updatedAt: number;
-}
-
-interface TaskCycleRow {
-  id: string;
-  taskId: string;
-  cycleId: string;
-  stageId: string;
-  createdAt: number;
+  data: unknown;
   updatedAt: number;
 }
 
 const db = new Dexie('SprintsheetDB') as Dexie & {
-  projects: EntityTable<ProjectRow, 'id'>;
-  users: EntityTable<UserRow, 'id'>;
-  projectMembers: EntityTable<ProjectMemberRow, 'id'>;
-  stages: EntityTable<StageRow, 'id'>;
-  projectStages: EntityTable<ProjectStageRow, 'id'>;
-  types: EntityTable<TypeRow, 'id'>;
-  projectTypes: EntityTable<ProjectTypeRow, 'id'>;
-  tasks: EntityTable<TaskRow, 'id'>;
-  cycles: EntityTable<CycleRow, 'id'>;
-  taskCycles: EntityTable<TaskCycleRow, 'id'>;
+  cache: EntityTable<CacheRow, 'key'>;
 };
 
 /**
@@ -161,17 +60,20 @@ db.version(2)
       });
   });
 
+db.version(3).stores({
+  projects: null,
+  users: null,
+  projectMembers: null,
+  stages: null,
+  projectStages: null,
+  types: null,
+  projectTypes: null,
+  tasks: null,
+  cycles: null,
+  taskCycles: null,
+  cache: 'key',
+});
+
 export default db;
 
-export type {
-  ProjectRow,
-  UserRow,
-  ProjectMemberRow,
-  StageRow,
-  ProjectStageRow,
-  TypeRow,
-  ProjectTypeRow,
-  TaskRow,
-  CycleRow,
-  TaskCycleRow,
-};
+export type { CacheRow };
