@@ -1,5 +1,3 @@
-import { getAllTypesByProject, getType } from '@/lib/db/dbFunctions/typeFunctions';
-
 import { errorMessage, type ApiResponse } from '../types';
 
 import type { GetProjectTypesResponse, GetTypeResponse } from './types';

@@ -1,10 +1,3 @@
-import {
-  getCurrentUser,
-  getUserById,
-  getUsersByIds,
-  getUsersByProject,
-} from '@/lib/db/dbFunctions/userFunctions';
-
 import { errorMessage, type ApiResponse } from '../types';
 
 import type { GetCurrentUserResponse, GetProjectUsersResponse } from './types';

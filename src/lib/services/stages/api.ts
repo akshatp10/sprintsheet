@@ -1,5 +1,3 @@
-import { getProjectStages } from '@/lib/db/dbFunctions/stageFunctions';
-
 import { errorMessage, type ApiResponse } from '../types';
 import type { GetStagesResponse } from './type';
 import axiosInstance from '@/lib/axiosInstance';
@@ -8,7 +6,6 @@ export const getStagesForProject = async (
   projectId: string,
 ): Promise<ApiResponse<GetStagesResponse>> => {
   try {
-    // const stages = await getProjectStages(projectId);
     const response = await axiosInstance.post('/stages/getAllProjectStages', { projectId });
 
     return {
