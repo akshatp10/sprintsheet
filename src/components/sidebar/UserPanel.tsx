@@ -14,7 +14,7 @@ const UserPanel = ({ userName, isSidebar, textVariant = 'body' }: UserPanelSideb
   return (
     <div className="flex min-w-0 items-center">
       <div className="flex min-w-0 items-center gap-2">
-        <Avatar userName={displayUserName} isSideBar={isSidebar} />
+        <Avatar userName={userName} isSideBar={isSidebar} />
 
         <Text variant={textVariant} maxLines={1}>
           {displayUserName}

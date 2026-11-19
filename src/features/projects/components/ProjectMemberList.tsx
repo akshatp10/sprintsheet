@@ -1,6 +1,7 @@
 import Text from '@/components/common/Text';
 import { getExtractedLetterFromString } from '@/lib/utils';
 import type { ProjectRole } from '@/lib/services/invitations/types';
+import Avatar from '@/components/avatar/Avatar';
 
 interface PeopleMember {
   id: string;
@@ -23,9 +24,7 @@ const ProjectMembersList = ({ members, currentUserId }: ProjectMembersListProps)
         {members.map((member) => (
           <li key={member.id} className="flex items-center justify-between gap-3 py-3">
             <div className="flex min-w-0 items-center gap-3">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-accent-tint text-xs text-accent">
-                {getExtractedLetterFromString(member.name, 2).toUpperCase()}
-              </span>
+              <Avatar userName={member.name} isSideBar />
 
               <Text maxLines={1}>
                 {member.name}
