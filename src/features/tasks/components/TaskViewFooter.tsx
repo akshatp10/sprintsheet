@@ -79,52 +79,53 @@ const TaskViewFooter = ({
         >
           <Plus strokeWidth={1.5} size={15} />
         </Button>
+        {hiddenCycles.length > 0 && (
+          <Select
+            options={cycleOptions}
+            value={null}
+            onChange={(cycleId) => {
+              if (cycleId !== null) {
+                setCurrentCycleId(cycleId);
+              }
+            }}
+            searchable={false}
+            listClassName="w-[256px]"
+            itemClassName="cursor-pointer"
+            dropdownPlacement="top"
+            emptyMessage="No Cycles Found"
+            dropdownOffset={8}
+            renderTrigger={({ open, toggleOpen }) => (
+              <Button
+                variant="tertiary"
+                className={`flex items-center gap-2 border-none p-1.5 hover:bg-surface-desk ${open && 'bg-accent-tint'}`}
+                onClick={toggleOpen}
+              >
+                <Text variant="mono">{cycleOptions.length}</Text>
+                <Menu strokeWidth={1.5} size={15} />
+              </Button>
+            )}
+            renderOption={(option) => {
+              const cycle = hiddenCycles.find((item) => item.id === option.value);
 
-        <Select
-          options={cycleOptions}
-          value={null}
-          onChange={(cycleId) => {
-            if (cycleId !== null) {
-              setCurrentCycleId(cycleId);
+              if (!cycle) {
+                return option.label;
+              }
+
+              return (
+                <div className="flex w-full min-w-0 items-center justify-between gap-3">
+                  <Text className="truncate">{cycle.name}</Text>
+
+                  <Text variant="body-sm" className="shrink-0 text-ink-3">
+                    {getCycleStatus(cycle)}
+                  </Text>
+                </div>
+              );
+            }}
+            getOptionClassName={(option) =>
+              option.value === currentCycleId ? 'bg-accent-wash-active text-accent-deep' : ''
             }
-          }}
-          searchable={false}
-          listClassName="w-[256px]"
-          itemClassName="cursor-pointer"
-          dropdownPlacement="top"
-          emptyMessage="No Cycles Found"
-          dropdownOffset={8}
-          renderTrigger={({ open, toggleOpen }) => (
-            <Button
-              variant="tertiary"
-              className={`flex items-center gap-2 border-none p-1.5 hover:bg-surface-desk ${open && 'bg-accent-tint'}`}
-              onClick={toggleOpen}
-            >
-              <Text variant="mono">{cycleOptions.length}</Text>
-              <Menu strokeWidth={1.5} size={15} />
-            </Button>
-          )}
-          renderOption={(option) => {
-            const cycle = hiddenCycles.find((item) => item.id === option.value);
-
-            if (!cycle) {
-              return option.label;
-            }
-
-            return (
-              <div className="flex w-full min-w-0 items-center justify-between gap-3">
-                <Text className="truncate">{cycle.name}</Text>
-
-                <Text variant="body-sm" className="shrink-0 text-ink-3">
-                  {getCycleStatus(cycle)}
-                </Text>
-              </div>
-            );
-          }}
-          getOptionClassName={(option) =>
-            option.value === currentCycleId ? 'bg-accent-wash-active text-accent-deep' : ''
-          }
-        />
+          />
+        )}
       </div>
 
       {/* Previous, active, and next planned cycles */}
