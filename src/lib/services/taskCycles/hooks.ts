@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {
   createNewTaskCycle,
@@ -20,7 +20,8 @@ import type {
   UpdateTaskCycleStageRequest,
 } from './types';
 import { taskQueryKeys } from '../tasks/hooks';
-import type { CycleTaskItem } from '../tasks/types';
+import { restoreCached, useCachedQuery } from '@/lib/db/queryCache';
+import { applyStageChange, applyTaskMove } from './cache';
 
 export const taskCycleQueryKeys = {
   all: ['taskCycles'] as const,
@@ -35,7 +36,7 @@ export const taskCycleQueryKeys = {
 };
 
 export const useGetTaskCyclesById = (id: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: taskCycleQueryKeys.id(id),
 
     queryFn: async () => {
@@ -53,7 +54,7 @@ export const useGetTaskCyclesById = (id: string) => {
 };
 
 export const useGetTaskCyclesByCycle = (cycleId: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: taskCycleQueryKeys.cycle(cycleId),
 
     queryFn: async () => {
@@ -71,7 +72,7 @@ export const useGetTaskCyclesByCycle = (cycleId: string) => {
 };
 
 export const useGetTaskCyclesByTask = (taskId: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: taskCycleQueryKeys.task(taskId),
 
     queryFn: async () => {
@@ -89,7 +90,7 @@ export const useGetTaskCyclesByTask = (taskId: string) => {
 };
 
 export const useGetAllTaskCyclesByProject = (projectId: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: taskCycleQueryKeys.project(projectId),
 
     queryFn: async () => {
@@ -150,34 +151,15 @@ export const useUpdateTaskCycleStage = () => {
       return response.data;
     },
 
-    onMutate: async ({ taskCycleId, cycleId, stageId }: UpdateTaskCycleStageRequest) => {
-      const queryKey = taskQueryKeys.cycle(cycleId);
+    onMutate: async (variables) => {
+      await queryClient.cancelQueries({ queryKey: taskQueryKeys.all });
 
-      await queryClient.cancelQueries({ queryKey });
-
-      const previousTasks = queryClient.getQueryData<CycleTaskItem[]>(queryKey);
-
-      queryClient.setQueryData<CycleTaskItem[]>(queryKey, (tasks) =>
-        tasks?.map((task) =>
-          task.taskCycleId === taskCycleId
-            ? { ...task, stage: { ...task.stage, id: stageId } }
-            : task,
-        ),
-      );
-
-      return { previousTasks, queryKey };
+      return { snapshot: await applyStageChange(variables) };
     },
 
-    onError: (_, __, context) => {
-      if (!context) return;
+    onError: (_, __, context) => restoreCached(context?.snapshot),
 
-      queryClient.setQueryData(context.queryKey, context.previousTasks);
-    },
-
-    onSettled: (_, __, ___, context) => {
-      if (!context) return;
-
-      queryClient.invalidateQueries({ queryKey: context.queryKey });
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: taskCycleQueryKeys.all });
       queryClient.invalidateQueries({ queryKey: taskQueryKeys.all });
     },
@@ -206,31 +188,13 @@ export const useMoveTaskAcrossCycle = () => {
       return response.data;
     },
 
-    onMutate: async ({ taskId, fromCycleId, to }: MoveTaskRequest) => {
-      const isSameCycle = to.type === 'cycle' && to.cycleId === fromCycleId;
+    onMutate: async (variables) => {
+      await queryClient.cancelQueries({ queryKey: taskQueryKeys.all });
 
-      if (!fromCycleId || isSameCycle) {
-        return { sourceKey: null, previousSource: undefined };
-      }
-
-      const sourceKey = taskQueryKeys.cycle(fromCycleId);
-
-      await queryClient.cancelQueries({ queryKey: sourceKey });
-
-      const previousSource = queryClient.getQueryData<CycleTaskItem[]>(sourceKey);
-
-      queryClient.setQueryData<CycleTaskItem[]>(sourceKey, (tasks) =>
-        tasks?.filter((t) => t.id !== taskId),
-      );
-
-      return { sourceKey, previousSource };
+      return { snapshot: await applyTaskMove(variables) };
     },
 
-    onError: (_, __, ctx) => {
-      if (ctx?.sourceKey) {
-        queryClient.setQueryData(ctx.sourceKey, ctx.previousSource);
-      }
-    },
+    onError: (_, __, context) => restoreCached(context?.snapshot),
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: taskQueryKeys.all });

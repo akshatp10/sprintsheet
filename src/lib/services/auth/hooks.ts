@@ -3,6 +3,7 @@ import type { AuthLoginRequest, AuthRegisterRequest, AuthResponse } from './type
 import { googleOAuthLogin, loginUser, logoutUser, registerUser } from './api';
 import useUserStore from '@/store/userStore';
 import { getPostAuthRedirect } from '@/lib/redirect';
+import db from '@/lib/db/db';
 
 const setTokens = ({ accessToken }: { accessToken: string }) => {
   localStorage.setItem('accessToken', accessToken);
@@ -110,9 +111,10 @@ export const useLogOutUser = () => {
 
       return response.data;
     },
-    onSuccess: (_data, options) => {
+    onSuccess: async (_data, options) => {
       useUserStore.getState().removeUser();
       localStorage.removeItem('accessToken');
+      await db.cache.clear();
       window.location.replace(options?.loginPath ?? '/auth/login');
     },
   });

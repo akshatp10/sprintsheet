@@ -1,5 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
-
+import { useCachedQuery } from '@/lib/db/queryCache';
 import { getCurrent, getProjectUsers } from './api';
 
 export const userQueryKeys = {
@@ -11,7 +10,7 @@ export const userQueryKeys = {
 };
 
 export const useGetCurrentUser = (options = {}) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: userQueryKeys.current(),
 
     queryFn: async () => {
@@ -28,7 +27,7 @@ export const useGetCurrentUser = (options = {}) => {
 };
 
 export const useGetProjectUsers = (projectId: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: userQueryKeys.project(projectId),
 
     queryFn: async () => {

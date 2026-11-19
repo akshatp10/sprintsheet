@@ -59,6 +59,8 @@ const InvitePage = () => {
 
   const invitation = preview.data;
 
+  if (invitation === undefined) return null;
+
   if (invitation.state !== 'pending') {
     const [title, text] = UNUSABLE[invitation.state];
     return (

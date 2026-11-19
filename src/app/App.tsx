@@ -3,6 +3,7 @@ import { router } from './router';
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import UserHydration from '@/components/common/UserHydration';
 import { notifyError } from '@/lib/notifyError';
+import { GlobalSyncIndicator } from '@/features/sync/hooks/components/GlobalSyncingIndicator';
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -23,6 +24,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <UserHydration />
+      <GlobalSyncIndicator />
       <RouterProvider router={router} />
     </QueryClientProvider>
   );

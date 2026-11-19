@@ -84,9 +84,16 @@ export const useCachedQuery = <TData, TSelected = TData>({
   const query = useQuery({
     ...rest,
     queryKey,
+    meta: {
+      ...rest.meta,
+      syncIndicator: true,
+    },
     queryFn: async () => {
       const data = await queryFn();
-      await putCached(queryKey, data);
+      const previous = await getCached(queryKey);
+      if (JSON.stringify(previous) !== JSON.stringify(data)) {
+        await putCached(queryKey, data);
+      }
       return data;
     },
   });

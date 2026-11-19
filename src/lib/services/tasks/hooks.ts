@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { projectQueryKeys } from '../projects/hooks';
 import {
@@ -11,6 +11,7 @@ import {
 } from './api';
 
 import type { CreateTaskRequest, CycleTaskItem, UpdateTaskRequest } from './types';
+import { useCachedQuery } from '@/lib/db/queryCache';
 
 export const taskQueryKeys = {
   all: ['tasks'] as const,
@@ -31,7 +32,7 @@ const groupByStage = (tasks: CycleTaskItem[]) => groupBy(tasks, (task) => task.s
 const groupByCycle = (tasks: CycleTaskItem[]) => groupBy(tasks, (task) => task.cycleId);
 
 export const useGetAllTasksByProject = (projectId: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: taskQueryKeys.project(projectId),
 
     queryFn: async () => {
@@ -49,7 +50,7 @@ export const useGetAllTasksByProject = (projectId: string) => {
 };
 
 export const useBacklogTasks = (projectId: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: taskQueryKeys.backlog(projectId),
 
     queryFn: async () => {
@@ -83,16 +84,16 @@ const cycleTasksQueryOptions = (cycleId: string) => ({
 });
 
 export const useTasksByCycle = (cycleId: string) => {
-  return useQuery(cycleTasksQueryOptions(cycleId));
+  return useCachedQuery(cycleTasksQueryOptions(cycleId));
 };
 
 export const useTasksByStage = (cycleId: string) => {
-  return useQuery({ ...cycleTasksQueryOptions(cycleId), select: groupByStage });
+  return useCachedQuery({ ...cycleTasksQueryOptions(cycleId), select: groupByStage });
 };
 
 // Was useGetTasksByCycle(projectId)
 export const useTasksGroupedByCycle = (projectId: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: taskQueryKeys.projectCycles(projectId),
 
     queryFn: async () => {

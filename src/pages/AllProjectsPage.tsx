@@ -16,7 +16,7 @@ const AllProjectsPage = () => {
 
   const [projectsView, setProjectsView] = useState<ProjectsView>('grid');
 
-  const { data: projects = [], isLoading, isError, error } = useGetAllProjects(false);
+  const { data: projects = [], isLoading } = useGetAllProjects(false);
 
   const activeCount = projects.filter((p) => !p.isArchived).length;
   const archivedCount = projects.length - activeCount;
@@ -41,10 +41,6 @@ const AllProjectsPage = () => {
         </div>
       </div>
     );
-  }
-
-  if (isError) {
-    return <div>Failed to load projects. {error?.message}</div>;
   }
 
   return (

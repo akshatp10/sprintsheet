@@ -26,12 +26,9 @@ const TaskViewPage = () => {
   const view = searchParams.get('view') === 'cards' ? 'cards' : 'table';
   const { projectid } = useParams<{ projectid: string }>();
 
-  const {
-    data: tasksByStage = {},
-    isLoading: isTasksLoading,
-    isError,
-    error,
-  } = useTasksByStage(currentCycleId ?? '');
+  const { data: tasksByStage = {}, isLoading: isTasksLoading } = useTasksByStage(
+    currentCycleId ?? '',
+  );
   const { data: stages = [] } = useGetStagesPerProject(projectid ?? '');
   const { data: cycles = [], isLoading: isCyclesLoading } = useGetAllCyclesByProject(
     projectid ?? '',
@@ -88,8 +85,6 @@ const TaskViewPage = () => {
       stageId,
     });
   };
-
-  if (isError) return <div>Error: {error.message}</div>;
 
   if (isCyclesLoading) {
     return <LoadingPage />;

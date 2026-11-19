@@ -1,8 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { createNewProject, getProjectDetails, getProjectMembers, getProjects } from './api';
 
 import type { CreateProjectRequest } from './types';
+import { useCachedQuery } from '@/lib/db/queryCache';
 
 export const projectQueryKeys = {
   all: ['projects'] as const,
@@ -15,7 +16,7 @@ export const projectQueryKeys = {
 };
 
 export const useGetAllProjects = (includeArchived: boolean = false) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: projectQueryKeys.list(includeArchived),
     queryFn: async () => {
       const response = await getProjects(includeArchived);
@@ -30,7 +31,7 @@ export const useGetAllProjects = (includeArchived: boolean = false) => {
 };
 
 export const useGetProjectDetails = (projectId: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: projectQueryKeys.detail(projectId),
     queryFn: async () => {
       const response = await getProjectDetails(projectId);
@@ -60,7 +61,7 @@ export const projectMembersQuery = (projectId: string) => ({
 });
 
 export const useGetProjectMembers = (projectId: string) => {
-  return useQuery(projectMembersQuery(projectId));
+  return useCachedQuery(projectMembersQuery(projectId));
 };
 
 export const useCreateProject = () => {

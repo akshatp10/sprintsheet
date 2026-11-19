@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useCachedQuery } from '@/lib/db/queryCache';
 import { getProjectTypesById, getTypeById } from './api';
 
 export const typeQueryKeys = {
@@ -8,7 +8,7 @@ export const typeQueryKeys = {
 };
 
 export const useProjectTypes = (projectId: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: typeQueryKeys.project(projectId),
     queryFn: async () => {
       const response = await getProjectTypesById(projectId);
@@ -24,7 +24,7 @@ export const useProjectTypes = (projectId: string) => {
 };
 
 export const useTypeById = (typeId: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: typeQueryKeys.detail(typeId),
     queryFn: async () => {
       const response = await getTypeById(typeId);
