@@ -110,8 +110,6 @@ const ProjectPeople = ({ projectId, members, isAdmin, currentUserId }: ProjectPe
           <section className="flex flex-col gap-2">
             <Text variant="h2">Invited ({invited.length})</Text>
 
-            {invitations.isPending && <Text className="text-sm text-ink-3">Loading…</Text>}
-
             {invitations.isError && (
               <Text className="text-sm text-red-600">Could not load invitations.</Text>
             )}
