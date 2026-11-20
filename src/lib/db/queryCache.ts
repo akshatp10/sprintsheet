@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery, type QueryKey, type UseQueryOptions } from '@tanstack/react-query';
 import { useLiveQuery } from 'dexie-react-hooks';
-import db, { PROJECT_TABLES, TABLE_NAMES, type TableName } from './db';
+import db, { TABLE_NAMES, type TableName } from './db';
 
 type CachedQueryOptions<TData, TSelected> = Omit<
   UseQueryOptions<TData, Error, TData, QueryKey>,
@@ -126,7 +126,7 @@ export const useCachedQuery = <TData, TSelected = TData>({
 
   const data = useMemo(
     () => (raw === undefined ? undefined : select ? select(raw) : (raw as unknown as TSelected)),
-    [raw],
+    [raw, select],
   );
 
   return {
