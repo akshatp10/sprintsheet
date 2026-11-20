@@ -95,13 +95,12 @@ export const useCachedQuery = <TData, TSelected = TData>({
   const key = toKey(queryKey);
 
   // undefined = still reading, null = nothing stored yet
-  const cached = useLiveQuery(
-    () =>
-      tableFor(queryKey)
-        .get(key)
-        .then((row) => row ?? null),
+  const live = useLiveQuery(
+    async () => ({ key, row: (await tableFor(queryKey).get(key)) ?? null }),
     [key],
   );
+
+  const cached = live?.key === key ? live.row : undefined;
 
   const query = useQuery({
     ...rest,
