@@ -4,6 +4,7 @@ import { googleOAuthLogin, loginUser, logoutUser, registerUser } from './api';
 import useUserStore from '@/store/userStore';
 import { getPostAuthRedirect } from '@/lib/redirect';
 import db from '@/lib/db/db';
+import { clearAllTables } from '@/lib/db/queryCache';
 
 const setTokens = ({ accessToken }: { accessToken: string }) => {
   localStorage.setItem('accessToken', accessToken);
@@ -114,7 +115,7 @@ export const useLogOutUser = () => {
     onSuccess: async (_data, options) => {
       useUserStore.getState().removeUser();
       localStorage.removeItem('accessToken');
-      await db.cache.clear();
+      await clearAllTables();
       window.location.replace(options?.loginPath ?? '/auth/login');
     },
   });

@@ -1,14 +1,29 @@
 import Dexie, { type EntityTable } from 'dexie';
 
-interface CacheRow {
+export const TABLE_NAMES = [
+  'cycles',
+  'invites',
+  'projects',
+  'stages',
+  'taskCycles',
+  'tasks',
+  'types',
+  'users',
+] as const;
+
+export type TableName = (typeof TABLE_NAMES)[number];
+
+// Tables holding one project's data (removed when the project changes)
+export const PROJECT_TABLES: TableName[] = ['cycles', 'stages', 'taskCycles', 'tasks', 'types'];
+
+// One stored api response
+interface ResponseRow {
   key: string;
   data: unknown;
   updatedAt: number;
 }
 
-const db = new Dexie('SprintsheetDB') as Dexie & {
-  cache: EntityTable<CacheRow, 'key'>;
-};
+const db = new Dexie('SprintsheetDB') as Dexie & Record<TableName, EntityTable<ResponseRow, 'key'>>;
 
 /**
  * Version 1
@@ -74,6 +89,11 @@ db.version(3).stores({
   cache: 'key',
 });
 
+db.version(4).stores({
+  ...Object.fromEntries(TABLE_NAMES.map((name) => [name, 'key'])),
+  cache: null,
+});
+
 export default db;
 
-export type { CacheRow };
+export type { ResponseRow };

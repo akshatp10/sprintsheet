@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery, type QueryKey, type UseQueryOptions } from '@tanstack/react-query';
 import { useLiveQuery } from 'dexie-react-hooks';
-import db from './db';
+import db, { PROJECT_TABLES, TABLE_NAMES, type TableName } from './db';
 
 type CachedQueryOptions<TData, TSelected> = Omit<
   UseQueryOptions<TData, Error, TData, QueryKey>,
@@ -16,27 +16,35 @@ export type CacheSnapshot = Awaited<ReturnType<typeof snapshotCached>>;
 
 const toKey = (queryKey: QueryKey) => JSON.stringify(queryKey);
 
-// Every row whose key starts with this key's segments, e.g. ['tasks'] matches ['tasks', 'cycle', id]
+// The first part of a query key is the table name, e.g. ['tasks', ...] is stored in db.tasks
+const tableNameOf = (queryKey: QueryKey) => queryKey[0] as TableName;
+
+const tableFor = (queryKey: QueryKey) => {
+  const table = db[tableNameOf(queryKey)];
+  if (!table) throw new Error(`No table for "${String(queryKey[0])}"`);
+  return table;
+};
+
+// All rows whose key starts with the given key, e.g. ['tasks'] matches ['tasks', 'cycle', id]
 const rowsByPrefix = (prefix: QueryKey) =>
-  db.cache.where('key').startsWith(toKey(prefix).slice(0, -1));
+  tableFor(prefix).where('key').startsWith(toKey(prefix).slice(0, -1));
 
 export const getCached = async <T>(queryKey: QueryKey) =>
-  (await db.cache.get(toKey(queryKey)))?.data as T | undefined;
+  (await tableFor(queryKey).get(toKey(queryKey)))?.data as T | undefined;
 
 export const putCached = (queryKey: QueryKey, data: unknown) =>
-  db.cache.put({ key: toKey(queryKey), data, updatedAt: Date.now() });
+  tableFor(queryKey).put({ key: toKey(queryKey), data, updatedAt: Date.now() });
 
 export const updateCached = async <T>(queryKey: QueryKey, updater: (data: T | undefined) => T) =>
   putCached(queryKey, updater(await getCached<T>(queryKey)));
 
 export const clearCached = (prefix: QueryKey) => rowsByPrefix(prefix).delete();
 
-// Applies `updater` to every cached array under the prefix.
-// Returns the rows as they were before, for rollback.
+// Updates every array stored under the prefix and returns the old rows for rollback
 export const patchCacheByPrefix = async <T>(prefix: QueryKey, updater: (data: T) => T) => {
   const rows = await rowsByPrefix(prefix).toArray();
 
-  await db.cache.bulkPut(
+  await tableFor(prefix).bulkPut(
     rows.map((row) => ({
       ...row,
       data: Array.isArray(row.data) ? updater(row.data as T) : row.data,
@@ -44,20 +52,24 @@ export const patchCacheByPrefix = async <T>(prefix: QueryKey, updater: (data: T)
     })),
   );
 
-  return rows;
+  return rows.map((row) => ({ table: tableNameOf(prefix), row }));
 };
 
-// Saves the current rows for these keys, so a failed mutation can restore them.
-export const snapshotCached = async (queryKeys: QueryKey[]) =>
-  (await db.cache.bulkGet(queryKeys.map(toKey))).filter(
-    (row): row is NonNullable<typeof row> => row !== undefined,
+export const snapshotCached = async (queryKeys: QueryKey[]) => {
+  const saved = await Promise.all(
+    queryKeys.map(async (queryKey) => ({
+      table: tableNameOf(queryKey),
+      row: await tableFor(queryKey).get(toKey(queryKey)),
+    })),
   );
 
-export const restoreCached = async (snapshot?: CacheSnapshot) => {
-  if (snapshot) await db.cache.bulkPut(snapshot);
+  return saved.flatMap(({ table, row }) => (row ? [{ table, row }] : []));
 };
 
-// First item matching `match` in any cached array under the prefix.
+export const restoreCached = async (snapshot: CacheSnapshot = []) => {
+  await Promise.all(snapshot.map(({ table, row }) => db[table].put(row)));
+};
+
 export const findInCached = async <T>(prefix: QueryKey, match: (item: T) => boolean) => {
   const rows = await rowsByPrefix(prefix).toArray();
 
@@ -69,6 +81,11 @@ export const findInCached = async <T>(prefix: QueryKey, match: (item: T) => bool
   return undefined;
 };
 
+// Clears everything, used on logout
+export const clearAllTables = async () => {
+  await Promise.all(TABLE_NAMES.map((name) => db[name].clear()));
+};
+
 export const useCachedQuery = <TData, TSelected = TData>({
   queryKey,
   queryFn,
@@ -77,10 +94,15 @@ export const useCachedQuery = <TData, TSelected = TData>({
 }: CachedQueryOptions<TData, TSelected>) => {
   const key = toKey(queryKey);
 
-  // undefined = still reading Dexie, null = nothing stored yet
-  const cached = useLiveQuery(() => db.cache.get(key).then((row) => row ?? null), [key]);
+  // undefined = still reading, null = nothing stored yet
+  const cached = useLiveQuery(
+    () =>
+      tableFor(queryKey)
+        .get(key)
+        .then((row) => row ?? null),
+    [key],
+  );
 
-  // The fetch only writes into Dexie; the UI reads from it.
   const query = useQuery({
     ...rest,
     queryKey,
@@ -91,9 +113,11 @@ export const useCachedQuery = <TData, TSelected = TData>({
     queryFn: async () => {
       const data = await queryFn();
       const previous = await getCached(queryKey);
+
       if (JSON.stringify(previous) !== JSON.stringify(data)) {
         await putCached(queryKey, data);
       }
+
       return data;
     },
   });

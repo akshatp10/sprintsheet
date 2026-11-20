@@ -11,8 +11,8 @@ import type { InvitePerson } from './types';
 import { useCachedQuery } from '@/lib/db/queryCache';
 
 export const invitationKeys = {
-  preview: (token: string) => ['invitations', 'preview', token] as const,
-  project: (projectId: string) => ['invitations', 'project', projectId] as const,
+  preview: (token: string) => ['invites', 'preview', token] as const,
+  project: (projectId: string) => ['invites', 'project', projectId] as const,
 };
 
 export const usePreviewInvitation = (token: string) => {
