@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   acceptInvitation,
   getProjectInvitations,
@@ -8,14 +8,15 @@ import {
   revokeInvitation,
 } from './api';
 import type { InvitePerson } from './types';
+import { useCachedQuery } from '@/lib/db/queryCache';
 
 export const invitationKeys = {
-  preview: (token: string) => ['invitations', 'preview', token] as const,
-  project: (projectId: string) => ['invitations', 'project', projectId] as const,
+  preview: (token: string) => ['invites', 'preview', token] as const,
+  project: (projectId: string) => ['invites', 'project', projectId] as const,
 };
 
 export const usePreviewInvitation = (token: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: invitationKeys.preview(token),
     queryFn: () => previewInvitation({ token }),
     select: (response) => response.invitation,
@@ -34,7 +35,7 @@ export const useAcceptInvitation = () => {
 };
 
 export const useProjectInvitations = (projectId: string, isAdmin?: boolean) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: invitationKeys.project(projectId),
     queryFn: () => getProjectInvitations({ projectId }),
     select: (response) => response.invitations,

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useCachedQuery } from '@/lib/db/queryCache';
 import { getStagesForProject } from './api';
 import { BACKLOG_STAGE_NAME } from './type';
 
@@ -25,18 +25,18 @@ const stagesQueryOptions = (projectId: string) => ({
 });
 
 export const useGetStagesPerProject = (projectId: string) => {
-  return useQuery(stagesQueryOptions(projectId));
+  return useCachedQuery(stagesQueryOptions(projectId));
 };
 
 export const useGetBacklogStagePerProject = (projectId: string) => {
-  return useQuery({
+  return useCachedQuery({
     ...stagesQueryOptions(projectId),
     select: (stages) => stages.find((stage) => stage.name === BACKLOG_STAGE_NAME)?.id ?? '',
   });
 };
 
 export const useGetTerminalStagePerProject = (projectId: string) => {
-  return useQuery({
+  return useCachedQuery({
     ...stagesQueryOptions(projectId),
     select: (stages) => stages.find((stage) => stage.isTerminal)?.id ?? '',
   });

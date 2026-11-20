@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { taskCycleQueryKeys } from '../taskCycles/hooks';
 import { taskQueryKeys } from '../tasks/hooks';
@@ -11,6 +11,7 @@ import {
 } from './api';
 
 import type { CreateCycleInput, DeleteCycleRequest, UpdateCycleRequest } from './types';
+import { useCachedQuery } from '@/lib/db/queryCache';
 
 export const cycleQueryKeys = {
   all: ['cycles'] as const,
@@ -21,7 +22,7 @@ export const cycleQueryKeys = {
 };
 
 export const useGetAllCyclesByProject = (projectId: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: cycleQueryKeys.project(projectId),
 
     queryFn: async () => {
@@ -39,7 +40,7 @@ export const useGetAllCyclesByProject = (projectId: string) => {
 };
 
 export const useGetCycle = (cycleId: string) => {
-  return useQuery({
+  return useCachedQuery({
     queryKey: cycleQueryKeys.detail(cycleId),
 
     queryFn: async () => {

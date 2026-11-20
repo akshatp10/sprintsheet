@@ -1,11 +1,3 @@
-import {
-  createCycle,
-  deleteCycle,
-  getCycleById,
-  getCyclesByProject,
-  updateCycle,
-} from '@/lib/db/dbFunctions/cycleFunctions';
-
 import { errorMessage, type ApiResponse } from '../types';
 
 import type {
@@ -132,7 +124,8 @@ export const deleteExistingCycle = async ({
   id,
 }: DeleteCycleRequest): Promise<ApiResponse<null>> => {
   try {
-    const deleted = await deleteCycle(id);
+    //TODO : Implement cycleDeletion from backend
+    const deleted = undefined;
 
     if (!deleted) {
       return {

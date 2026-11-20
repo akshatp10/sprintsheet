@@ -26,12 +26,9 @@ const TaskViewPage = () => {
   const view = searchParams.get('view') === 'cards' ? 'cards' : 'table';
   const { projectid } = useParams<{ projectid: string }>();
 
-  const {
-    data: tasksByStage = {},
-    isLoading: isTasksLoading,
-    isError,
-    error,
-  } = useTasksByStage(currentCycleId ?? '');
+  const { data: tasksByStage = {}, isLoading: isTasksLoading } = useTasksByStage(
+    currentCycleId ?? '',
+  );
   const { data: stages = [] } = useGetStagesPerProject(projectid ?? '');
   const { data: cycles = [], isLoading: isCyclesLoading } = useGetAllCyclesByProject(
     projectid ?? '',
@@ -43,12 +40,12 @@ const TaskViewPage = () => {
   useEffect(() => {
     if (currentCycleId) return;
 
-    if (cycles.length === 0) return;
+    const projectCycles = cycles.filter((cycle) => cycle.projectId === projectid);
+    if (projectCycles.length === 0) return;
 
     const now = new Date();
 
-    // Get active cycle on the basis of current date
-    const currentCycle = cycles.find((cycle) => {
+    const currentCycle = projectCycles.find((cycle) => {
       const startDate = new Date(cycle.startDate);
       const endDate = new Date(cycle.endDate);
 
@@ -64,7 +61,7 @@ const TaskViewPage = () => {
       },
       { replace: true },
     );
-  }, [currentCycleId, cycles, setSearchParams]);
+  }, [currentCycleId, cycles, projectid, setSearchParams]);
 
   const handleCycleChange = (cycleId: string) => {
     setSearchParams((prev) => {
@@ -88,8 +85,6 @@ const TaskViewPage = () => {
       stageId,
     });
   };
-
-  if (isError) return <div>Error: {error.message}</div>;
 
   if (isCyclesLoading) {
     return <LoadingPage />;
